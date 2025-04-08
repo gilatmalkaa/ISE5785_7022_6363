@@ -89,4 +89,16 @@ public class Point {
         double dz = other._xyz.d3() - _xyz.d3();
         return dx * dx + dy * dy + dz * dz;
     }
+
+    /**
+     * Calculates the distance between 2 points
+     *
+     * @param other Another point from which the distance is calculated
+     * @return A number
+     */
+    public double distance(Point other) {
+        return Math.sqrt(distanceSquared(other));
+    }
 }
+
+

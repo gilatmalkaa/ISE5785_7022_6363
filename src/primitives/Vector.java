@@ -99,9 +99,7 @@ public class Vector extends Point {
         return Math.sqrt(lengthSquared());
     }
 
-    /**git add .
-     git commit -m "First commit of project"
-     git push origin main
+    /**
      * Normalizes this vector (makes its length 1).
      *
      * @return the normalized vector
