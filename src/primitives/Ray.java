@@ -8,18 +8,19 @@ import java.util.Objects;
 public class Ray {
 
     /**
-     *  Creating the point
-     *  */
+     * Creating the point
+     */
     private final Point head;
 
     /**
      * Creating the vector
-     * */
+     */
     private final Vector direction;
 
     /**
      * Constructor that accepts point and vector parameters.
-     * @param head the point at the origin of the ray
+     *
+     * @param head      the point at the origin of the ray
      * @param direction the direction vector of the ray, which will be normalized
      */
     public Ray(Point head, Vector direction) {
@@ -30,6 +31,7 @@ public class Ray {
     /**
      * Returns a string representation of the ray.
      * The string includes the head and direction of the ray.
+     *
      * @return a string representation of the ray in the format: "Ray= head: head, direction: direction"
      */
     @Override
@@ -39,6 +41,7 @@ public class Ray {
 
     /**
      * Compares this ray to another object for equality.
+     *
      * @param object the object to compare this ray to
      * @return true if the object is a Ray and has the same head and direction as this ray, false otherwise
      */
@@ -52,6 +55,7 @@ public class Ray {
 
     /**
      * Returns a hash code for the ray.
+     *
      * @return an integer hash code representing this ray
      */
     @Override

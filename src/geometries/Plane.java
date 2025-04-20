@@ -2,7 +2,9 @@ package geometries;
 
 import primitives.*;
 
-/** A class that represents a plane */
+/**
+ * A class that represents a plane
+ */
 public class Plane extends Geometry {
 
     /**
@@ -16,7 +18,8 @@ public class Plane extends Geometry {
 
     /**
      * Constructor with parameters.
-     * @param q the point on the plane
+     *
+     * @param q      the point on the plane
      * @param normal the normal vector to the plane
      */
     public Plane(Point q, Vector normal) {
@@ -26,6 +29,7 @@ public class Plane extends Geometry {
 
     /**
      * Builder that gets points and calculates the normal vector.
+     *
      * @param q1 the first point on the plane
      * @param q2 the second point on the plane
      * @param q3 the third point on the plane
@@ -37,6 +41,7 @@ public class Plane extends Geometry {
 
     /**
      * Getter for the normal vector.
+     *
      * @return the normal vector of the plane
      */
     public Vector getNormal() {
@@ -45,6 +50,7 @@ public class Plane extends Geometry {
 
     /**
      * Calculates the normal vector at a given point on the plane.
+     *
      * @param point the point on the plane
      * @return the normal vector at the given point
      */
