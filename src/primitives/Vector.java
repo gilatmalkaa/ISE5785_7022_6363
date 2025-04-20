@@ -86,8 +86,7 @@ public class Vector extends Point {
      * @return the squared length of the vector
      */
     public double lengthSquared() {
-        // Multiplying each coordinate by itself and adding them together
-        return _xyz.d1() * _xyz.d1() + _xyz.d2() * _xyz.d2() + _xyz.d3() * _xyz.d3();
+        return dotProduct(this);
     }
 
     /**

@@ -3,7 +3,7 @@ package geometries;
 import primitives.*;
 
 /**
- * An interface that characterizes a geometric shap
+ * An interface that characterizes a geometric shape
  */
 public abstract class Geometry {
     /**
