@@ -28,23 +28,13 @@ public class Ray {
         this.direction = direction.normalize();
     }
 
-    /**
-     * Returns a string representation of the ray.
-     * The string includes the head and direction of the ray.
-     *
-     * @return a string representation of the ray in the format: "Ray= head: head, direction: direction"
-     */
+    
     @Override
     public String toString() {
         return "Ray= " + "head: " + head + ", direction: " + direction + '}';
     }
 
-    /**
-     * Compares this ray to another object for equality.
-     *
-     * @param object the object to compare this ray to
-     * @return true if the object is a Ray and has the same head and direction as this ray, false otherwise
-     */
+    
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -53,11 +43,7 @@ public class Ray {
                 && this.direction.equals(other.direction);
     }
 
-    /**
-     * Returns a hash code for the ray.
-     *
-     * @return an integer hash code representing this ray
-     */
+   
     @Override
     public int hashCode() {
         return Objects.hash(head, direction);
