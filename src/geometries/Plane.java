@@ -39,21 +39,7 @@ public class Plane extends Geometry {
         q = q1;
     }
 
-    /**
-     * Getter for the normal vector.
-     *
-     * @return the normal vector of the plane
-     */
-    public Vector getNormal() {
-        return normal;
-    }
-
-    /**
-     * Calculates the normal vector at a given point on the plane.
-     *
-     * @param point the point on the plane
-     * @return the normal vector at the given point
-     */
+    
     @Override
     public Vector getNormal(Point point) {
         return normal;
