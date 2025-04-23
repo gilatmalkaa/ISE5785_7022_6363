@@ -5,7 +5,6 @@ package unittests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import static java.lang.Math.sqrt;
 import org.junit.jupiter.api.Test;
 
 import primitives.Double3;
@@ -19,18 +18,6 @@ import primitives.Vector;
  * @author Gilat Kedem and Shira Amar
  */
 class VectorTests {
-
-	/** A sample vector for general testing: (1, 2, 3) */
-	private final Vector V1 = new Vector(1, 2, 3);
-
-	/** A vector not parallel to V1: (-2, -4, -1) */
-	private final Vector V2 = new Vector(-2, -4, -1);
-
-	/** A vector parallel to V1: (2, 4, 6) */
-	private final Vector V1_PARALLEL = new Vector(2, 4, 6);
-
-	/** An orthogonal vector to V1 */
-	private final Vector V_ORTHOGONAL = new Vector(0, 3, -2);
 
 	/**
 	 * Test method for {@link primitives.Vector#Vector(double, double, double)}

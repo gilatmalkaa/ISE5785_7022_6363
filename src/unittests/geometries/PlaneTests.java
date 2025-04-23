@@ -18,6 +18,10 @@ import primitives.Vector;
  */
 class PlaneTests {
 
+	/**
+	 * Accuracy tolerance used for comparing floating-point values in tests. This
+	 * small value accounts for rounding errors when comparing doubles.
+	 */
 	private static final double DELTA = 1e-10;
 
 	/**

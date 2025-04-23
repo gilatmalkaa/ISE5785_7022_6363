@@ -33,8 +33,8 @@ public class Tube extends RadialGeometry {
 	 * @return the normal vector at the given point
 	 */
 	public Vector getNormal(Point point) {
-		Point p0 = _ray.getP0();
-		Vector dir = _ray.getDir();
+		Point p0 = _ray.getP0();// start point
+		Vector dir = _ray.getDir();// direction vector
 		Vector p0ToPoint = point.subtract(p0);
 		double t = dir.dotProduct(p0ToPoint);
 		Point o = p0.add(dir.scale(t));

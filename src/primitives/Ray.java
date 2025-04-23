@@ -55,8 +55,8 @@ public class Ray {
 	}
 
 	/**
-	 * Returns the direction vector of the ray.
-	 * The vector is normalized upon construction of the ray.
+	 * Returns the direction vector of the ray. The vector is normalized upon
+	 * construction of the ray.
 	 *
 	 * @return the normalized direction vector of the ray
 	 */
