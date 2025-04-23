@@ -17,12 +17,6 @@ import primitives.Vector;
 class TubeTests {
 
 	/**
-	 * Accuracy tolerance used for comparing floating-point values in tests. This
-	 * small value accounts for rounding errors when comparing doubles.
-	 */
-	private static final double DELTA = 1e-10;
-
-	/**
 	 * Test constructor of {@link geometries.Tube}. Ensures invalid radius or
 	 * axisRay inputs are rejected.
 	 */

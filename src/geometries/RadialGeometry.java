@@ -1,5 +1,7 @@
 package geometries;
 
+import static primitives.Util.*;
+
 /**
  * An abstract class that implements the geometry interface
  */
@@ -19,7 +21,7 @@ public abstract class RadialGeometry extends Geometry {
 	 * @param radius the radius of the round shape
 	 */
 	RadialGeometry(double radius) {
-		if (radius <= 0)
+		if (alignZero(radius) <= 0)
 			throw new IllegalArgumentException("Radius must be positive");
 		_radius = radius;
 		_radiusSquared = radius * radius;

@@ -10,11 +10,11 @@ public class Plane extends Geometry {
 	/**
 	 * The point that lies on the plane
 	 */
-	private final Point q;
+	private final Point _q;
 	/**
 	 * The normal vector to the plane
 	 */
-	private final Vector normal;
+	private final Vector _normal;
 
 	/**
 	 * Constructor with parameters.
@@ -23,8 +23,8 @@ public class Plane extends Geometry {
 	 * @param normal the normal vector to the plane
 	 */
 	public Plane(Point q, Vector normal) {
-		this.q = q;
-		this.normal = normal.normalize();
+		this._q = q;
+		this._normal = normal.normalize();
 	}
 
 	/**
@@ -35,14 +35,14 @@ public class Plane extends Geometry {
 	 * @param q3 the third point on the plane
 	 */
 	public Plane(Point q1, Point q2, Point q3) {
-		q = q1;
+		_q = q1;
 		Vector v1 = q2.subtract(q1);
 		Vector v2 = q3.subtract(q1);
-		normal = v1.crossProduct(v2).normalize();
+		_normal = v1.crossProduct(v2).normalize();
 	}
 
 	@Override
 	public Vector getNormal(Point point) {
-		return normal;
+		return _normal;
 	}
 }
