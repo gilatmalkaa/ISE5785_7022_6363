@@ -45,10 +45,21 @@ public class Ray {
 		return Objects.hash(head, direction);
 	}
 
+	/**
+	 * Returns the origin point (head) of the ray.
+	 *
+	 * @return the origin point of the ray
+	 */
 	public Point getP0() {
 		return head;
 	}
 
+	/**
+	 * Returns the direction vector of the ray.
+	 * The vector is normalized upon construction of the ray.
+	 *
+	 * @return the normalized direction vector of the ray
+	 */
 	public Vector getDir() {
 		return direction;
 	}
