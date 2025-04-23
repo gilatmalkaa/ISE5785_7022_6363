@@ -9,10 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import geometries.Sphere;
 import primitives.Point;
+import primitives.Vector;
 
 /**
- *  Unit tests for {@link geometries.Sphere} class.
- *  @author Gilat Kedem and Shira Amar
+ * Unit tests for {@link geometries.Sphere} class.
+ * 
+ * @author Gilat Kedem and Shira Amar
  */
 class SphereTests {
 
@@ -24,21 +26,17 @@ class SphereTests {
 	void testGetNormal() {
 		Sphere sphere = new Sphere(new Point(0, 0, 0), 1);
 
-        // ============ Equivalence Partitions Tests ==============
+		// ============ Equivalence Partitions Tests ==============
 
-        // TC01: A regular point on the surface → should return null (current stub)
-        assertNull(
-            sphere.getNormal(new Point(1, 0, 0)),
-            "getNormal() for sphere should return null (stub)"
-        );
+		// TC01: A regular point on the surface → should return normalized vector
+		assertEquals(new Vector(1, 0, 0), sphere.getNormal(new Point(1, 0, 0)),
+				"getNormal() did not return the expected normal vector");
 
-        // =============== Boundary Values Tests ==================
+		// =============== Boundary Values Tests ==================
 
-        // TC11: Edge point on axis (e.g. top of sphere)
-        assertNull(
-            sphere.getNormal(new Point(0, 0, 1)),
-            "getNormal() on axial point should return null (stub)"
-	);
+		// TC11: A point on the top of the sphere
+		assertEquals(new Vector(0, 0, 1), sphere.getNormal(new Point(0, 0, 1)),
+				"getNormal() did not return the expected normal on the axial point");
 	}
 
 	/**
@@ -47,24 +45,20 @@ class SphereTests {
 	 */
 	@Test
 	void testSphere() {
-		 // ============ Equivalence Partitions Tests ==============
+		// ============ Equivalence Partitions Tests ==============
 
-	    // TC01: Valid sphere with positive radius
-	    assertDoesNotThrow(() ->
-	        new Sphere(new Point(1, 1, 1), 1),
-	        "Constructor failed on valid input");
+		// TC01: Valid sphere with positive radius
+		assertDoesNotThrow(() -> new Sphere(new Point(1, 1, 1), 1), "Constructor failed on valid input");
 
-	    // =============== Boundary Values Tests ==================
+		// =============== Boundary Values Tests ==================
 
-	    // TC11: Radius is 0 → should throw exception
-	    assertThrows(IllegalArgumentException.class,
-	        () -> new Sphere(new Point(1, 1, 1), 0),
-	        "Constructor should throw exception on radius = 0");
+		// TC11: Radius is 0 → should throw exception
+		assertThrows(IllegalArgumentException.class, () -> new Sphere(new Point(1, 1, 1), 0),
+				"Constructor should throw exception on radius = 0");
 
-	    // TC12: Radius is negative → should throw exception
-	    assertThrows(IllegalArgumentException.class,
-	        () -> new Sphere(new Point(1, 1, 1), -1),
-	        "Constructor should throw exception on negative radius");
+		// TC12: Radius is negative → should throw exception
+		assertThrows(IllegalArgumentException.class, () -> new Sphere(new Point(1, 1, 1), -1),
+				"Constructor should throw exception on negative radius");
 	}
 
 }
