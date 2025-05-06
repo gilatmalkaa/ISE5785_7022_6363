@@ -61,9 +61,6 @@ public class Point {
 	public Vector subtract(Point other) {
 		Double3 result = _xyz.subtract(other._xyz);
 
-		if (result.equals(Double3.ZERO)) {
-			throw new IllegalArgumentException("ZERO vector not allowed");
-		}
 		return new Vector(result);
 	}
 

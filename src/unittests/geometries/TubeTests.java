@@ -1,13 +1,13 @@
 package unittests.geometries;
 
+import primitives.Ray;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import primitives.Point;
+import primitives.Vector;
 
 import geometries.Tube;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
 
 /**
  * Unit tests for {@link geometries.Tube} class.
@@ -66,5 +66,14 @@ class TubeTests {
 		Vector actual = tube.getNormal(new Point(1, 0, 5));
 
 		assertEquals(expected, actual, "getNormal() did not return the expected normal vector");
+
+		// TC14: Point exactly on axis (0,0,5) → undefined, should throw
+		assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 0, 5)),
+				"getNormal() should throw for point on axis (no defined normal)");
+	}
+
+	@Test
+	void testFindIntersections() {
+		// Not implemented
 	}
 }

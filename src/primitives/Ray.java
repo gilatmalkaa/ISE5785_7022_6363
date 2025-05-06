@@ -63,4 +63,24 @@ public class Ray {
 	public Vector getDir() {
 		return direction;
 	}
+
+	/**
+	 * Calculates a point along the ray at a given distance {@code t} from the ray's
+	 * origin.
+	 * <p>
+	 * The point is calculated using the formula: P = P₀ + t·v, where P₀ is the
+	 * ray's origin and v is the direction vector.
+	 * </p>
+	 * 
+	 * @param t the distance from the ray's origin along the direction vector. If
+	 *          {@code t} is 0, the origin point is returned.
+	 * @return the point at distance {@code t} from the origin along the ray's
+	 *         direction.
+	 */
+	public Point getPoint(double t) {
+		// if t is zero, return the head point
+		if (Util.isZero(t))
+			return head;
+		return head.add(direction.scale(t));
+	}
 }

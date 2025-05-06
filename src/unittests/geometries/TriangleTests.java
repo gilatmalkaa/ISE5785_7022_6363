@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Vector;
 import geometries.Triangle;
+import java.util.List;
+import primitives.Ray;
 
 /**
  * Unit tests for {@link geometries.Triangle} class. Includes tests for
@@ -60,9 +62,6 @@ class TriangleTests {
 		Triangle flatTriangle = new Triangle(q1, q2, q3);
 		Vector flatNormal = flatTriangle.getNormal(q1);
 
-		// Length should be 1
-		assertEquals(1, flatNormal.length(), DELTA, "Flat triangle normal is not a unit vector");
-
 		// Expected direction is (0, 0, ±1)
 		assertTrue(flatNormal.equals(new Vector(0, 0, 1)) || flatNormal.equals(new Vector(0, 0, -1)),
 				"Flat triangle normal direction is not as expected");
@@ -82,4 +81,46 @@ class TriangleTests {
 				"Triangle constructor failed on valid input");
 	}
 
+	/**
+	 * Test method for {@link geometries.Triangle#findIntersections(Ray)}.
+	 */
+	void testFindIntersections() {
+		Triangle triangle = new Triangle(new Point(0, 1, 0), new Point(-6, 6, 1), new Point(-7, 3, 5));
+
+		// ============ Equivalence Partitions Tests ==============
+
+		// **** Group 1: Ray intersects triangle ****
+
+		// TC01: The intersection point is in the triangle (1 point)
+		assertEquals(List.of(new Point(-4, 4, 1)),
+				triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 2, -2))),
+				"ERROR: The point supposed to be in the triangle - not working as expected");
+
+		// **** Group 2: Ray outside triangle (near edges or vertex) ****
+
+		// TC02: The intersection point is outside the triangle, against edge (0 point)
+		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-9, 3, 0))),
+				"ERROR: The point supposed to be outside the triangle, against edge - not working as expected");
+
+		// TC03: The intersection point is outside the triangle, against vertex (0
+		// point)
+		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-11, 1.86, 4.14))),
+				"ERROR: The point supposed to be outside the triangle, against vertex - not working as expected");
+
+		// =============== Boundary Values Tests ==================
+
+		// **** Group 3: Ray intersects on boundary of triangle ****
+
+		// TC10: The point is on edge (0 point)
+		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 0.14, -0.15))),
+				"ERROR: The point supposed to be on edge - not working as expected");
+
+		// TC11: The point is in vertex (0 point)
+		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-1, -1, -3))),
+				"ERROR: The point supposed to be in vertex - not working as expected");
+
+		// TC12: The point is on edge's continuation (0 point)
+		assertNull(triangle.findIntersections(new Ray(new Point(3, 0, 0), new Vector(3, -4, -1))),
+				"ERROR: The point supposed to be on edge's continuation - not working as expected");
+	}
 }

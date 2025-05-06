@@ -1,6 +1,9 @@
 package geometries;
 
-import primitives.*;
+import java.util.List;
+import primitives.Ray;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * A class that represents a tube. It extends the RadialGeometry class and
@@ -38,6 +41,15 @@ public class Tube extends RadialGeometry {
 		Vector p0ToPoint = point.subtract(p0);
 		double t = dir.dotProduct(p0ToPoint);
 		Point o = p0.add(dir.scale(t));
+		Vector normal = point.subtract(o);
+		if (normal.lengthSquared() == 0)
+			throw new IllegalArgumentException("Point lies on the axis of the tube – normal is undefined");
 		return point.subtract(o).normalize();
+	}
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		// Not implemented
+		return null;
 	}
 }
