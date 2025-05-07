@@ -48,6 +48,7 @@ public class Plane extends Geometry {
 	@Override
 	public Vector getNormal(Point point) {
 		return _normal;
+<<<<<<< HEAD
 	}
 
 	@Override
@@ -76,5 +77,7 @@ public class Plane extends Geometry {
 		}
 
 		return List.of(_ray.getPoint(_t));
+=======
+>>>>>>> branch 'main' of https://github.com/Gilat1/ISE5785_7022_6363.git
 	}
 }

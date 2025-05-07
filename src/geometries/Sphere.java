@@ -24,8 +24,6 @@ public class Sphere extends RadialGeometry {
 	 */
 	public Sphere(Point center, double radius) {
 		super(radius);
-		if (radius <= 0)
-			throw new IllegalArgumentException("Radius must be positive");
 		_center = center;
 	}
 

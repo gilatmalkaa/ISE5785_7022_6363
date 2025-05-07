@@ -169,6 +169,7 @@ class VectorTests {
 	 */
 	@Test
 	void testLengthSquared() {
+<<<<<<< HEAD
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: V = (1, 2, 3) → lengthSquared = 1^2 + 2^2 + 3^2 = 14
@@ -186,6 +187,21 @@ class VectorTests {
 	void testLength() {
 		// ============ Equivalence Partitions Tests ==============
 
+=======
+		// TC01: V = (1, 2, 3) → lengthSquared = 1^2 + 2^2 + 3^2 = 14
+		assertEquals(14, new Vector(1, 2, 3).lengthSquared(), "lengthSquared() failed on positive vector");
+
+		// TC02: V = (-1, -2, -3) → same result: 1 + 4 + 9 = 14
+		assertEquals(14, new Vector(-1, -2, -3).lengthSquared(), "lengthSquared() failed on negative vector");
+	}
+
+	/**
+	 * Test method for {@link primitives.Vector#length()}. This test checks the
+	 * actual length (magnitude) of a vector.
+	 */
+	@Test
+	void testLength() {
+>>>>>>> branch 'main' of https://github.com/Gilat1/ISE5785_7022_6363.git
 		// TC01: Vector = (1, 2, 3), expected length = sqrt(14)
 		assertEquals(Math.sqrt(14), new Vector(1, 2, 3).length(), 1e-10, "length() failed on regular vector");
 
