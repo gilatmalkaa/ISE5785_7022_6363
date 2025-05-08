@@ -58,7 +58,7 @@ public class Triangle extends Polygon {
 			if (_uCrossW.dotProduct(_uCrossV) < 0) {
 				return null;
 			}
-			
+
 			// Step 7: Compute barycentric coordinates (optional, for clarity)
 			double _denominator = alignZero(_uCrossV.length());
 			double _x = alignZero(_vCrossW.length() / _denominator);

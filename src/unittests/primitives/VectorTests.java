@@ -85,32 +85,34 @@ class VectorTests {
 		assertThrows(IllegalArgumentException.class, () -> new Vector(1, 2, 3).add(new Vector(-1, -2, -3)),
 				"add() should throw for resulting zero vector");
 	}
-	
+
 	/**
-	 * Test method for {@link primitives.Vector#subtract(primitives.Vector)}.
-	 * This test checks vector subtraction and ensures exception is thrown when result is zero vector
+	 * Test method for {@link primitives.Vector#subtract(primitives.Vector)}. This
+	 * test checks vector subtraction and ensures exception is thrown when result is
+	 * zero vector
 	 */
 	@Test
 	void testSubtract() {
-	    // ============ Equivalence Partitions Tests ==============
+		// ============ Equivalence Partitions Tests ==============
 
-	    // TC01: Subtract two regular vectors → should return the difference
-	    assertEquals(new Vector(0, -1, -2), new Vector(1, 1, 1).subtract(new Vector(1, 2, 3)),
-	            "subtract() failed on regular vectors");
+		// TC01: Subtract two regular vectors → should return the difference
+		assertEquals(new Vector(0, -1, -2), new Vector(1, 1, 1).subtract(new Vector(1, 2, 3)),
+				"subtract() failed on regular vectors");
 
-	    // TC02: Subtract vector with negative components
-	    assertEquals(new Vector(2, 4, 6), new Vector(1, 2, 3).subtract(new Vector(-1, -2, -3)),
-	            "subtract() failed with negative components");
+		// TC02: Subtract vector with negative components
+		assertEquals(new Vector(2, 4, 6), new Vector(1, 2, 3).subtract(new Vector(-1, -2, -3)),
+				"subtract() failed with negative components");
 
-	    // =============== Boundary Values Tests ==================
+		// =============== Boundary Values Tests ==================
 
-	    // TC11: Subtract identical vector → should throw exception (resulting in zero vector)
-	    assertThrows(IllegalArgumentException.class, () -> new Vector(1, 2, 3).subtract(new Vector(1, 2, 3)),
-	            "subtract() should throw for resulting zero vector");
+		// TC11: Subtract identical vector → should throw exception (resulting in zero
+		// vector)
+		assertThrows(IllegalArgumentException.class, () -> new Vector(1, 2, 3).subtract(new Vector(1, 2, 3)),
+				"subtract() should throw for resulting zero vector");
 
-	    // TC12: Subtract resulting in one coordinate zero
-	    assertEquals(new Vector(1, 0, 1), new Vector(2, 2, 2).subtract(new Vector(1, 2, 1)),
-	            "subtract() failed when one component becomes zero");
+		// TC12: Subtract resulting in one coordinate zero
+		assertEquals(new Vector(1, 0, 1), new Vector(2, 2, 2).subtract(new Vector(1, 2, 1)),
+				"subtract() failed when one component becomes zero");
 	}
 
 	/**
@@ -212,7 +214,7 @@ class VectorTests {
 	@Test
 	void testLength() {
 		// ============ Equivalence Partitions Tests ==============
-		
+
 		// TC01: V = (1, 2, 3) → lengthSquared = 1^2 + 2^2 + 3^2 = 14
 		assertEquals(14, new Vector(1, 2, 3).lengthSquared(), "lengthSquared() failed on positive vector");
 
