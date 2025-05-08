@@ -44,7 +44,7 @@ public class Tube extends RadialGeometry {
 		Vector normal = point.subtract(o);
 		if (normal.lengthSquared() == 0)
 			throw new IllegalArgumentException("Point lies on the axis of the tube – normal is undefined");
-		return point.subtract(o).normalize();
+		return normal.normalize();
 	}
 
 	@Override

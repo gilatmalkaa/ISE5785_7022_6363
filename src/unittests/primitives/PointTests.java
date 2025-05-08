@@ -19,13 +19,13 @@ import primitives.Vector;
 class PointTests {
 
 	/** A sample point for tests: (1, 2, 3) */
-	private static final Point _P1 = new Point(1, 2, 3);
+	private final static Point _P1 = new Point(1, 2, 3);
 
 	/** Another point for tests: origin (0, 0, 0) */
-	private static final Point _P2 = new Point(0, 0, 0);
+	private final static Point _P2 = new Point(0, 0, 0);
 
 	/** A sample vector for vector-point operations */
-	private static final Vector _V1 = new Vector(1, -1, 2);
+	private final static Vector _V1 = new Vector(1, -1, 2);
 
 	/**
 	 * Test method for {@link primitives.Point#subtract(primitives.Point)} This test
