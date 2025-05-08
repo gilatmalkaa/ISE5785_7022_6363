@@ -62,8 +62,9 @@ class TubeTests {
 		assertEquals(expected, actual, "getNormal() did not return the expected normal vector");
 
 		// TC02: Point on tube at height 0 (t = 0), expected normal is (0, 1, 0)
-		Vector normal2 = tube.getNormal(new Point(0, 1, 0));
-		assertEquals(new Vector(0, 1, 0), normal2, "getNormal() failed for point at height 0 (t=0)");
+		Vector expectedNormal = new Vector(0, 1, 0);
+		Vector actualNormal = tube.getNormal(new Point(0, 1, 0));
+		assertTrue(expectedNormal.equals(actualNormal), "Expected normal (0,1,0) but got: " + actualNormal);
 
 		// TC14: Point exactly on axis (0,0,5) → undefined, should throw
 		assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 0, 5)),
