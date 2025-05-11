@@ -11,6 +11,7 @@ public class Cylinder extends Tube {
 	/**
 	 * The height of the cylinder.
 	 */
+	@SuppressWarnings("unused")
 	final private double _height;
 
 	/**

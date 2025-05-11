@@ -1,16 +1,20 @@
 /**
  * 
  */
-package unittests.geometries;
+package geometries;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
-import primitives.Ray;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import geometries.Sphere;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 /**
@@ -80,8 +84,6 @@ class SphereTests {
 
 		// TC02: Ray starts before and crosses the sphere (2 points)
 		Ray _ray2 = new Ray(new Point(-1, 0, 0), new Vector(3, 1, 0));
-		Point _gp1 = new Point(0.065, 0.355, 0);
-		Point _gp2 = new Point(1.535, 0.845, 0);
 		List<Point> _result2 = _sphere.findIntersections(_ray2);
 		assertNotNull(_result2, "TC02: Expected two intersection points");
 		assertEquals(2, _result2.size(), "TC02: Wrong number of points");

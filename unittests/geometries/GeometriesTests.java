@@ -1,16 +1,13 @@
-package unittests.geometries;
+package geometries;
 
-import geometries.Polygon;
-import geometries.Geometries;
-import geometries.Sphere;
-import geometries.Triangle;
-import geometries.Plane;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+
 import primitives.Point;
 import primitives.Ray;
-import org.junit.jupiter.api.Test;
 import primitives.Vector;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link geometries.Geometries} class. This class tests the

@@ -1,17 +1,20 @@
 /**
  * 
  */
-package unittests.geometries;
+package geometries;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import primitives.Point;
-import primitives.Vector;
-import geometries.Triangle;
-import java.util.List;
 import primitives.Ray;
+import primitives.Vector;
 
 /**
  * Unit tests for {@link geometries.Triangle} class. Includes tests for
