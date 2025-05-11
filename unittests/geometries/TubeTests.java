@@ -73,8 +73,4 @@ class TubeTests {
 				"getNormal() should throw for point on axis (no defined normal)");
 	}
 
-	@Test
-	void testFindIntersections() {
-		// Not implemented
-	}
 }

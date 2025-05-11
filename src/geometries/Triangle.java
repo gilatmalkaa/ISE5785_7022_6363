@@ -1,10 +1,12 @@
 package geometries;
 
+import static primitives.Util.alignZero;
+
 import java.util.List;
-import primitives.Ray;
+
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
-import static primitives.Util.*;
 
 /**
  * A class that represents a triangle, which is a specific type of polygon. The
@@ -27,9 +29,8 @@ public class Triangle extends Polygon {
 	public List<Point> findIntersections(Ray _ray) {
 		// Step 1: Check for intersection with the plane
 		List<Point> _intersections = plane.findIntersections(_ray);
-		if (_intersections == null) {
+		if (_intersections == null)
 			return null;
-		}
 
 		// Step 2: Get intersection point with the plane
 		Point _intersectionPoint = _intersections.getFirst();
@@ -42,31 +43,28 @@ public class Triangle extends Polygon {
 		// Step 4: Compute vectors
 		Vector _u = _b.subtract(_a); // a → b
 		Vector _v = _c.subtract(_a); // a → c
-		Vector _w = _intersectionPoint.subtract(_a); // a → P
-
 		try {
+			Vector _w = _intersectionPoint.subtract(_a); // a → P
+
 			// Step 5: First orientation test
 			Vector _vCrossW = _v.crossProduct(_w);
 			Vector _vCrossU = _v.crossProduct(_u);
-			if (_vCrossW.dotProduct(_vCrossU) < 0) {
+			if (_vCrossW.dotProduct(_vCrossU) < 0)
 				return null;
-			}
 
 			// Step 6: Second orientation test
 			Vector _uCrossW = _u.crossProduct(_w);
 			Vector _uCrossV = _u.crossProduct(_v);
-			if (_uCrossW.dotProduct(_uCrossV) < 0) {
+			if (_uCrossW.dotProduct(_uCrossV) < 0)
 				return null;
-			}
 
 			// Step 7: Compute barycentric coordinates (optional, for clarity)
-			double _denominator = alignZero(_uCrossV.length());
+			double _denominator = _uCrossV.length();
 			double _x = alignZero(_vCrossW.length() / _denominator);
 			double _y = alignZero(_uCrossW.length() / _denominator);
 
-			if (_x > 0 && _y > 0 && (_x + _y) < 1) {
+			if (_x > 0 && _y > 0 && alignZero(_x + _y - 1) < 0)
 				return _intersections;
-			}
 
 		} catch (IllegalArgumentException e) {
 			// One of the vectors used in crossProduct was a ZERO vector – point lies on

@@ -15,6 +15,9 @@ import primitives.Vector;
  * objects.
  */
 class GeometriesTests {
+	/** Empty explicit default constructor to make javadoc generator happy */
+	public GeometriesTests() {
+	}
 
 	/**
 	 * Test method for {@link geometries.Geometries#findIntersections(Ray)}.

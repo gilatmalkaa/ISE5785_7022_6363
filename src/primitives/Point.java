@@ -59,9 +59,7 @@ public class Point {
 	 * @throws IllegalArgumentException if the subtraction results in a zero vector
 	 */
 	public Vector subtract(Point other) {
-		Double3 result = _xyz.subtract(other._xyz);
-
-		return new Vector(result);
+		return new Vector(_xyz.subtract(other._xyz));
 	}
 
 	/**

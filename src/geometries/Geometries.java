@@ -1,11 +1,11 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Ray;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import primitives.Point;
+import primitives.Ray;
 
 /**
  * Class Geometries represents a collection of geometries in the 3D space The
@@ -44,10 +44,10 @@ public class Geometries implements Intersectable {
 		for (Intersectable geometry : geometries) {
 			List<Point> geometryIntersections = geometry.findIntersections(ray);
 			if (geometryIntersections != null) {
-				if (intersections == null) {
-					intersections = new LinkedList<Point>();
-				}
-				intersections.addAll(geometryIntersections);
+				if (intersections == null)
+					intersections = new LinkedList<Point>(geometryIntersections);
+				else
+					intersections.addAll(geometryIntersections);
 			}
 		}
 		return intersections;

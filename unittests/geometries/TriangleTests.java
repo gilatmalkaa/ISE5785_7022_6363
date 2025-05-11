@@ -87,6 +87,7 @@ class TriangleTests {
 	/**
 	 * Test method for {@link geometries.Triangle#findIntersections(Ray)}.
 	 */
+	@Test
 	void testFindIntersections() {
 		Triangle triangle = new Triangle(new Point(0, 1, 0), new Point(-6, 6, 1), new Point(-7, 3, 5));
 
@@ -118,7 +119,7 @@ class TriangleTests {
 		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 0.14, -0.15))),
 				"ERROR: The point supposed to be on edge - not working as expected");
 
-		// TC11: The point is in vertex (0 point)
+		// TC11: The point is in a vertex (0 point)
 		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-1, -1, -3))),
 				"ERROR: The point supposed to be in vertex - not working as expected");
 

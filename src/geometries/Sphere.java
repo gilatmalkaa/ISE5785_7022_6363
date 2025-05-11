@@ -1,10 +1,12 @@
 package geometries;
 
+import static primitives.Util.alignZero;
+
 import java.util.List;
-import primitives.Ray;
+
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
-import static primitives.Util.*;
 
 /**
  * Department for representation Sphere
@@ -39,24 +41,23 @@ public class Sphere extends RadialGeometry {
 
 	@Override
 	public List<Point> findIntersections(Ray _ray) {
-		if (_center.equals(_ray.getP0())) {
+		Vector _u;
+		try {
+			_u = _center.subtract(_ray.getP0());
+		} catch (IllegalArgumentException ignored) {
 			return List.of(_center.add(_ray.getDir().scale(_radius)));
 		}
 
-		Vector _u = _center.subtract(_ray.getP0());
 		double _tm = alignZero(_ray.getDir().dotProduct(_u));
-		double _d = alignZero(Math.sqrt(_u.lengthSquared() - _tm * _tm));
-
-		if (_d >= _radius) {
+		double _dSquared = _u.lengthSquared() - _tm * _tm;
+		double thSquared = alignZero(_radiusSquared - _dSquared);
+		if (thSquared <= 0)
 			return null;
-		}
+		double _th = alignZero(Math.sqrt(thSquared));
 
-		double _th = alignZero(Math.sqrt(_radius * _radius - _d * _d));
 		double _t2 = alignZero(_tm + _th);
-
-		if (_t2 <= 0) {
+		if (_t2 <= 0)
 			return null; // both t1 and t2 are not positive – no intersections
-		}
 
 		double _t1 = alignZero(_tm - _th);
 

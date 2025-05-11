@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.isZero;
+
 import java.util.Objects;
 
 /**
@@ -79,8 +81,6 @@ public class Ray {
 	 */
 	public Point getPoint(double t) {
 		// if t is zero, return the head point
-		if (Util.isZero(t))
-			return head;
-		return head.add(direction.scale(t));
+		return isZero(t) ? head : head.add(direction.scale(t));
 	}
 }
