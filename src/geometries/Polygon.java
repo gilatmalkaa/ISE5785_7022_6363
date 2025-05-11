@@ -1,11 +1,13 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Vector;
-import primitives.Ray;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 import java.util.List;
-import static primitives.Util.*;
+
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -95,21 +97,17 @@ public class Polygon extends Geometry {
 	@Override
 	public List<Point> findIntersections(Ray _ray) {
 		List<Point> _intersections = plane.findIntersections(_ray);
-		if (_intersections == null) {
+		if (_intersections == null)
 			return null;
-		}
 
-		Point _intersectionPoint = _intersections.getFirst();
 		Point _p0 = _ray.getP0();
 		Vector _v = _ray.getDir();
 
 		Vector _v1 = vertices.getLast().subtract(_p0);
-		Vector _v2;
-
 		double _sign = 0;
 
 		for (Point _vertex : vertices) {
-			_v2 = _vertex.subtract(_p0);
+			Vector _v2 = _vertex.subtract(_p0);
 
 			Vector _cross = _v1.crossProduct(_v2);
 			double _currentSign = alignZero(_v.dotProduct(_cross));
@@ -127,7 +125,8 @@ public class Polygon extends Geometry {
 			_v1 = _v2;
 		}
 
-		return _intersections;
+		Point _intersectionPoint = _intersections.getFirst();
+		return List.of(_intersectionPoint);
 	}
 
 }
