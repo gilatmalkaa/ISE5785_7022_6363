@@ -1,6 +1,8 @@
 package geometries;
 
+import primitives.Point;
 import primitives.Ray;
+import primitives.Vector;
 
 /**
  * A class that represents a cylinder. The cylinder is defined by its axis (a
@@ -24,6 +26,12 @@ public class Cylinder extends Tube {
 	public Cylinder(Ray ray, double radius, double height) {
 		super(ray, radius); // Calling the constructor of Tube to set the ray and radius
 		this._height = height;
+	}
+
+	@Override
+	public Vector getNormal(Point point) {
+		// Stub for testing
+		return null;
 	}
 
 }

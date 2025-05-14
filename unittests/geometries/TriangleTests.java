@@ -93,14 +93,10 @@ class TriangleTests {
 
 		// ============ Equivalence Partitions Tests ==============
 
-		// **** Group 1: Ray intersects triangle ****
-
 		// TC01: The intersection point is in the triangle (1 point)
 		assertEquals(List.of(new Point(-4, 4, 1)),
 				triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 2, -2))),
 				"ERROR: The point supposed to be in the triangle - not working as expected");
-
-		// **** Group 2: Ray outside triangle (near edges or vertex) ****
 
 		// TC02: The intersection point is outside the triangle, against edge (0 point)
 		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-9, 3, 0))),
@@ -113,7 +109,7 @@ class TriangleTests {
 
 		// =============== Boundary Values Tests ==================
 
-		// **** Group 3: Ray intersects on boundary of triangle ****
+		
 
 		// TC10: The point is on edge (0 point)
 		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 0.14, -0.15))),
