@@ -17,7 +17,7 @@ public class Plane extends Geometry {
 	/**
 	 * The point that lies on the plane
 	 */
-	private final Point _q;
+	private final Point _point;
 	/**
 	 * The normal vector to the plane
 	 */
@@ -26,25 +26,25 @@ public class Plane extends Geometry {
 	/**
 	 * Constructor with parameters.
 	 *
-	 * @param q      the point on the plane
+	 * @param point  the point on the plane
 	 * @param normal the normal vector to the plane
 	 */
-	public Plane(Point q, Vector normal) {
-		this._q = q;
+	public Plane(Point point, Vector normal) {
+		this._point = point;
 		this._normal = normal.normalize();
 	}
 
 	/**
 	 * Builder that gets points and calculates the normal vector.
 	 *
-	 * @param q1 the first point on the plane
-	 * @param q2 the second point on the plane
-	 * @param q3 the third point on the plane
+	 * @param p1 the first point on the plane
+	 * @param p2 the second point on the plane
+	 * @param p3 the third point on the plane
 	 */
-	public Plane(Point q1, Point q2, Point q3) {
-		_q = q1;
-		Vector v1 = q2.subtract(q1);
-		Vector v2 = q3.subtract(q1);
+	public Plane(Point p1, Point p2, Point p3) {
+		_point = p1;
+		Vector v1 = p2.subtract(p1);
+		Vector v2 = p3.subtract(p1);
 		_normal = v1.crossProduct(v2).normalize();
 	}
 
@@ -56,22 +56,22 @@ public class Plane extends Geometry {
 	@Override
 	public List<Point> findIntersections(Ray ray) {
 		// if the ray is parallel to the plane, there is no intersection
-		double _nv = _normal.dotProduct(ray.getDir());
-		if (isZero(_nv))
+		double nDotV = _normal.dotProduct(ray.getDir());
+		if (isZero(nDotV))
 			return null;
 
 		// if the ray starts on the plane, there is no intersection
-		Vector u;
+		Vector vector;
 		try {
-			u = _q.subtract(ray.getP0());
+			vector = _point.subtract(ray.getP0());
 		} catch (IllegalArgumentException ignored) {
 			return null;
 		}
 
 		// if the ray lies in the plane, there is no intersection
-		double _nQMinusP0 = alignZero(_normal.dotProduct(u));
-		double _t = alignZero(_nQMinusP0 / _nv);
+		double nQMinusP0 = alignZero(_normal.dotProduct(vector));
+		double t = alignZero(nQMinusP0 / nDotV);
 		// if the intersection point is behind or at the ray's origin, return null
-		return _t <= 0 ? null : List.of(ray.getPoint(_t));
+		return t <= 0 ? null : List.of(ray.getPoint(t));
 	}
 }
