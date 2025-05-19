@@ -12,13 +12,17 @@ import primitives.Ray;
  * class is based on the Intersectable
  */
 public class Geometries implements Intersectable {
-	final private List<Intersectable> geometries = new LinkedList<Intersectable>();
+
+	/**
+	 * List of all geometries in the composite.
+	 */
+	private final List<Intersectable> _geometries = new LinkedList<Intersectable>();
 
 	/**
 	 * Default empty Constructor for a collection of geometries in the 3D space
 	 */
 	public Geometries() {
-	};
+	}
 
 	/**
 	 * Constructor for a collection of geometries in the 3D space
@@ -35,13 +39,13 @@ public class Geometries implements Intersectable {
 	 * @param geometries the geometries to add to the collection
 	 */
 	public void add(Intersectable... geometries) {
-		Collections.addAll(this.geometries, geometries);
+		Collections.addAll(this._geometries, geometries);
 	}
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
 		List<Point> intersections = null;
-		for (Intersectable geometry : geometries) {
+		for (Intersectable geometry : _geometries) {
 			List<Point> geometryIntersections = geometry.findIntersections(ray);
 			if (geometryIntersections != null) {
 				if (intersections == null)
