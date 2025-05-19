@@ -1,7 +1,5 @@
 package geometries;
 
-import static primitives.Util.alignZero;
-
 import java.util.List;
 
 import primitives.Point;
@@ -40,29 +38,38 @@ public class Sphere extends RadialGeometry {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray _ray) {
-		Vector _u;
+
+	public List<Point> findIntersections(Ray ray) {
+		Vector u;
 		try {
-			_u = _center.subtract(_ray.getP0());
-		} catch (IllegalArgumentException ignored) {
-			return List.of(_center.add(_ray.getDir().scale(_radius)));
+			u = _center.subtract(ray.getP0());
+		} catch (IllegalArgumentException e) {
+			// Ray starts exactly at the center of the sphere – return one point
+			return List.of(ray.getPoint(_radius));
 		}
 
-		double _tm = alignZero(_ray.getDir().dotProduct(_u));
-		double _dSquared = _u.lengthSquared() - _tm * _tm;
-		double thSquared = alignZero(_radiusSquared - _dSquared);
-		if (thSquared <= 0)
-			return null;
-		double _th = alignZero(Math.sqrt(thSquared));
+		double tm = ray.getDir().dotProduct(u);
+		double dSquared = u.lengthSquared() - tm * tm;
+		double thSquared = _radiusSquared - dSquared;
 
-		double _t2 = alignZero(_tm + _th);
-		if (_t2 <= 0)
-			return null; // both t1 and t2 are not positive – no intersections
+		if (thSquared <= 0) {
+			return null; // No intersections: ray misses the sphere
+		}
 
-		double _t1 = alignZero(_tm - _th);
+		double th = Math.sqrt(thSquared);
+		double t1 = tm - th;
+		double t2 = tm + th;
 
-		// return the points in the correct order – the first point is closest to ray's
-		// head
-		return _t1 <= 0 ? List.of(_ray.getPoint(_t2)) : List.of(_ray.getPoint(_t1), _ray.getPoint(_t2));
+		if (t1 > 0 && t2 > 0) {
+			return List.of(ray.getPoint(t1), ray.getPoint(t2)); // two intersections
+		}
+		if (t1 > 0) {
+			return List.of(ray.getPoint(t1)); // only t1 is valid
+		}
+		if (t2 > 0) {
+			return List.of(ray.getPoint(t2)); // only t2 is valid
+		}
+
+		return null; // both are behind the ray's origin
 	}
 }
