@@ -1,11 +1,14 @@
 package geometries;
 
-import primitives.Ray;
-import primitives.Point;
 import java.util.List;
 
+import primitives.Point;
+import primitives.Ray;
+
 /**
- * Interface for geometric shapes that can be intersected by a ray.
+ * Interface for geometric shapes that can be intersected by a ray. Any shape
+ * implementing this interface must implement a method to find intersection
+ * points with a given ray.
  */
 public interface Intersectable {
 	/**
