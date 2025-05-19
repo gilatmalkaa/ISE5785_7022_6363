@@ -64,13 +64,16 @@ class TubeTests {
 		assertEquals(expected, actual, "getNormal() did not return the expected normal vector");
 
 		// =============== Boundary Values Tests ==================
-		
+
 		// TC11: Point perpendicular to axis from ray start – at (0,1,0)
 		Vector expectedNormal = new Vector(0, 1, 0);
 		Vector actualNormal = tube.getNormal(new Point(0, 1, 0));
 		assertTrue(expectedNormal.equals(actualNormal), "Expected normal (0,1,0) but got: " + actualNormal);
 
-	
+		// TC12: Point lies exactly on the axis → should throw exception
+		assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 0, 1)),
+				"Expected exception when point lies exactly on the axis (undefined normal)");
+
 	}
 
 }

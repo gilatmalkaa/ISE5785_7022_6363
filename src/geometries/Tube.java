@@ -1,11 +1,13 @@
 package geometries;
 
-import java.util.List;
-import primitives.Ray;
-import primitives.Point;
-import primitives.Vector;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+
+import java.util.List;
+
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 /**
  * A class that represents a tube. It extends the RadialGeometry class and
@@ -40,28 +42,28 @@ public class Tube extends RadialGeometry {
 	@Override
 	public Vector getNormal(Point point) {
 		// Get the base point and direction of the tube's axis ray
-		Point _p0 = _ray.getP0();
-		Vector _dir = _ray.getDir();
+		Point p0 = _ray.getP0();
+		Vector dir = _ray.getDir();
 
 		// Vector from the axis base point to the given point
-		Vector _p0ToPoint = point.subtract(_p0);
+		Vector p0ToPoint = point.subtract(p0);
 
 		// Project the vector onto the axis direction to find parameter t
-		double _t = alignZero(_dir.dotProduct(_p0ToPoint));
+		double t = alignZero(dir.dotProduct(p0ToPoint));
 
 		// Compute the closest point on the axis to the given point
-		Point _o = isZero(_t) ? _p0 : _p0.add(_dir.scale(_t));
+		Point o = _ray.getPoint(t);
 
 		// Compute the normal vector from the axis to the point
-		Vector _normal = point.subtract(_o);
+		Vector normal = point.subtract(o);
 
 		// If the point lies exactly on the axis (normal vector is zero), throw
 		// exception
-		if (isZero(_normal.lengthSquared()))
+		if (isZero(normal.lengthSquared()))
 			throw new IllegalArgumentException("Point lies on the axis of the tube – normal is undefined");
 
 		// Return the normalized normal vector
-		return _normal.normalize();
+		return normal.normalize();
 	}
 
 	@Override
