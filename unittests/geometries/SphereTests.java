@@ -30,11 +30,11 @@ class SphereTests {
 	 */
 
 	/** A point used in some tests */
-	private final Point p001 = new Point(0, 0, 1);
+	private final Point _p001 = new Point(0, 0, 1);
 	/** A point used in some tests */
-	private final Point p100 = new Point(1, 0, 0);
+	private final Point _p100 = new Point(1, 0, 0);
 	/** A vector used in some tests */
-	private final Vector v001 = new Vector(0, 0, 1);
+	private final Vector _v001 = new Vector(0, 0, 1);
 
 	@Test
 	void testGetNormal() {
@@ -43,13 +43,14 @@ class SphereTests {
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: A regular point on the surface → should return normalized vector
-		assertEquals(new Vector(1, 0, 0), sphere.getNormal(p100),
+		assertEquals(new Vector(1, 0, 0), sphere.getNormal(_p100),
 				"getNormal() did not return the expected normal vector");
 
 		// =============== Boundary Values Tests ==================
 
 		// TC11: A point on the top of the sphere
-		assertEquals(v001, sphere.getNormal(p001), "getNormal() did not return the expected normal on the axial point");
+		assertEquals(_v001, sphere.getNormal(_p001),
+				"getNormal() did not return the expected normal on the axial point");
 	}
 
 	/**
@@ -79,7 +80,7 @@ class SphereTests {
 	 */
 	@Test
 	void testFindIntersections() {
-		final Sphere _sphere = new Sphere(p100, 1d);
+		final Sphere sphere = new Sphere(_p100, 1d);
 		final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
 		final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
 		final var exp = List.of(gp1, gp2);
@@ -90,25 +91,23 @@ class SphereTests {
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: Ray's line is outside the sphere (0 points)
-		Ray _ray1 = new Ray(p01, v110);
-		assertNull(_sphere.findIntersections(_ray1), "TC01: Ray's line is outside the sphere");
+		Ray ray1 = new Ray(p01, v110);
+		assertNull(sphere.findIntersections(ray1), "TC01: Ray's line is outside the sphere");
 
 		// TC02: Ray starts before and crosses the sphere (2 points)
-		Ray _ray2 = new Ray(p01, v310);
-		List<Point> _result2 = _sphere.findIntersections(_ray2);
-		assertNotNull(_result2, "TC02: Expected two intersection points");
-		assertEquals(2, _result2.size(), "TC02: Wrong number of points");
-		assertEquals(exp, _result2, "TC02: Ray crosses sphere");
+		Ray ray2 = new Ray(p01, v310);
+		List<Point> result2 = sphere.findIntersections(ray2);
+		assertEquals(exp, result2, "TC02: Ray crosses sphere");
 
 		// TC03: Ray starts inside the sphere (1 point)
-		Ray _ray3 = new Ray(p100, v001); // Starting inside the sphere
-		List<Point> _result3 = _sphere.findIntersections(_ray3);
-		assertNotNull(_result3, "TC03: Ray starts inside – should intersect once");
-		assertEquals(1, _result3.size(), "TC03: Expected one point");
+		Ray ray3 = new Ray(_p100, _v001); // Starting inside the sphere
+		List<Point> result3 = sphere.findIntersections(ray3);
+		assertNotNull(result3, "TC03: Ray starts inside – should intersect once");
+		assertEquals(1, result3.size(), "TC03: Expected one point");
 
 		// TC04: Ray starts after the sphere (0 points)
-		Ray _ray4 = new Ray(new Point(3, 0, 0), new Vector(1, 0, 0));
-		assertNull(_sphere.findIntersections(_ray4), "TC04: Ray starts after the sphere");
+		Ray ray4 = new Ray(new Point(3, 0, 0), new Vector(1, 0, 0));
+		assertNull(sphere.findIntersections(ray4), "TC04: Ray starts after the sphere");
 
 		// =============== Boundary Values Tests ==================
 
@@ -116,74 +115,74 @@ class SphereTests {
 		// exits"
 
 		// TC11: Ray starts at sphere and goes inside (1 point)
-		Ray _ray5 = new Ray(new Point(0, 0, 0), v001); // On the surface, heading inward
-		List<Point> _result5 = _sphere.findIntersections(_ray5);
-		assertNotNull(_result5, "TC11: Expected one intersection from surface inward");
-		assertEquals(1, _result5.size(), "TC11: Expected one point");
+		Ray ray5 = new Ray(new Point(1, 0, 1), new Vector(0, 0, -1));
+		List<Point> result5 = sphere.findIntersections(ray5);
+		assertNotNull(result5, "TC11: Expected one intersection from surface inward");
+		assertEquals(1, result5.size(), "TC11: Expected one point");
 
 		// TC12: Ray starts at sphere and goes outside (0 points)
-		Ray _ray6 = new Ray(new Point(0, 0, 0), new Vector(-1, 0, 0)); // Exiting the surface
-		assertNull(_sphere.findIntersections(_ray6), "TC12: Ray exits from surface");
+		Ray ray6 = new Ray(new Point(0, 0, 0), new Vector(-1, 0, 0)); // Exiting the surface
+		assertNull(sphere.findIntersections(ray6), "TC12: Ray exits from surface");
 
 		// **** Group 2: Ray goes through center
 
 		// TC21: Ray goes through center, starts before (2 points)
-		Ray _ray7 = new Ray(new Point(-1, 0, 0), new Vector(1, 0, 0)); // Passing through the center
-		List<Point> _result7 = _sphere.findIntersections(_ray7);
-		assertNotNull(_result7, "TC21: Ray through center");
-		assertEquals(2, _result7.size(), "TC21: Expected two points");
+		Ray ray7 = new Ray(new Point(-1, 0, 0), new Vector(1, 0, 0)); // Passing through the center
+		List<Point> result7 = sphere.findIntersections(ray7);
+		assertNotNull(result7, "TC21: Ray through center");
+		assertEquals(2, result7.size(), "TC21: Expected two points");
 
 		// TC22: Ray through center, starts at surface (1 point)
-		Ray _ray8 = new Ray(new Point(0, 0, 0), v001); // At the surface, heading toward the center
-		List<Point> _result8 = _sphere.findIntersections(_ray8);
-		assertNotNull(_result8, "TC22: Ray through center from surface");
-		assertEquals(1, _result8.size(), "TC22: Expected one point");
+		Ray ray8 = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)); // At the surface, heading toward the center
+		List<Point> result8 = sphere.findIntersections(ray8);
+		assertNotNull(result8, "TC22: Ray through center from surface");
+		assertEquals(1, result8.size(), "TC22: Expected one point");
 
 		// TC23: Ray through center, starts inside (1 point)
-		Ray _ray9 = new Ray(p100, v001); // Starting inside the sphere
-		List<Point> _result9 = _sphere.findIntersections(_ray9);
-		assertNotNull(_result9, "TC23: Inside ray");
-		assertEquals(1, _result9.size(), "TC23: Expected one point");
+		Ray ray9 = new Ray(_p100, _v001); // Starting inside the sphere
+		List<Point> result9 = sphere.findIntersections(ray9);
+		assertNotNull(result9, "TC23: Inside ray");
+		assertEquals(1, result9.size(), "TC23: Expected one point");
 
 		// TC24: Ray through center, starts at center (1 point)
-		Ray _ray10 = new Ray(p100, v001); // Starting at the center
-		List<Point> _result10 = _sphere.findIntersections(_ray10);
-		assertNotNull(_result10, "TC24: From center");
-		assertEquals(1, _result10.size(), "TC24: Expected one point");
+		Ray ray10 = new Ray(_p100, _v001); // Starting at the center
+		List<Point> result10 = sphere.findIntersections(ray10);
+		assertNotNull(result10, "TC24: From center");
+		assertEquals(1, result10.size(), "TC24: Expected one point");
 
 		// TC25: Ray through center, starts after (0 points)
-		Ray _ray11 = new Ray(new Point(2, 0, 0), v001); // Starting after the sphere
-		assertNull(_sphere.findIntersections(_ray11), "TC25: Ray starts after sphere");
+		Ray ray11 = new Ray(new Point(2, 0, 0), _v001); // Starting after the sphere
+		assertNull(sphere.findIntersections(ray11), "TC25: Ray starts after sphere");
 
 		// TC26: Ray through center, starts after sphere and goes backward (1 point)
 		Ray rayBackward = new Ray(new Point(2, 0, 0), new Vector(-1, 0, 0)); // Going backward through the center
-		List<Point> resultBackward = _sphere.findIntersections(rayBackward);
+		List<Point> resultBackward = sphere.findIntersections(rayBackward);
 		assertNotNull(resultBackward, "TC26: Ray goes backward through center");
 		assertEquals(1, resultBackward.size(), "TC26: Expected one point");
 
 		// **** Group 3: Ray is tangent to the sphere (0 points)
 
 		// TC31: Ray starts before the tangent point
-		Ray _ray12 = new Ray(new Point(0, 1, 0), new Vector(1, 0, 0));
-		assertNull(_sphere.findIntersections(_ray12), "TC31: Tangent before");
+		Ray ray12 = new Ray(new Point(0, 1, 0), new Vector(1, 0, 0));
+		assertNull(sphere.findIntersections(ray12), "TC31: Tangent before");
 
 		// TC32: Ray starts at the tangent point
-		Ray _ray13 = new Ray(new Point(1, 1, 0), new Vector(1, 0, 0));
-		assertNull(_sphere.findIntersections(_ray13), "TC32: Tangent at point");
+		Ray ray13 = new Ray(new Point(1, 1, 0), new Vector(1, 0, 0));
+		assertNull(sphere.findIntersections(ray13), "TC32: Tangent at point");
 
 		// TC33: Ray starts after the tangent point
-		Ray _ray14 = new Ray(new Point(2, 1, 0), new Vector(1, 0, 0));
-		assertNull(_sphere.findIntersections(_ray14), "TC33: Tangent after");
+		Ray ray14 = new Ray(new Point(2, 1, 0), new Vector(1, 0, 0));
+		assertNull(sphere.findIntersections(ray14), "TC33: Tangent after");
 
 		// **** Group 4: Special cases
 
 		// TC41: Ray orthogonal to line from center, misses sphere
-		Ray _ray15 = new Ray(new Point(0, -2, 0), new Vector(1, 0, 0));
-		assertNull(_sphere.findIntersections(_ray15), "TC41: Ray orthogonal and misses");
+		Ray ray15 = new Ray(new Point(0, -2, 0), new Vector(1, 0, 0));
+		assertNull(sphere.findIntersections(ray15), "TC41: Ray orthogonal and misses");
 
 		// TC43: Ray orthogonal to line from center, starts inside sphere
-		Ray rayInsideOrthogonal = new Ray(new Point(0, 0, 0.5), new Vector(1, 0, 0));
-		List<Point> resultInsideOrthogonal = _sphere.findIntersections(rayInsideOrthogonal);
+		Ray rayInsideOrthogonal = new Ray(new Point(0.5, 0, 0), new Vector(0, 1, 0));
+		List<Point> resultInsideOrthogonal = sphere.findIntersections(rayInsideOrthogonal);
 		assertNotNull(resultInsideOrthogonal, "TC43: Ray orthogonal, starts inside – expect 1 intersection");
 		assertEquals(1, resultInsideOrthogonal.size(), "TC43: Expected one point");
 	}
