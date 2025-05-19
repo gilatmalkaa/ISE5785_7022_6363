@@ -99,17 +99,15 @@ class TriangleTests {
 				"ERROR: The point supposed to be in the triangle - not working as expected");
 
 		// TC02: The intersection point is outside the triangle, against edge (0 point)
-		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-9, 3, 0))),
-				"ERROR: The point supposed to be outside the triangle, against edge - not working as expected");
+		Ray ray2 = (new Ray(new Point(1, 2, 3), new Vector(-6, 6, -1)));
+		assertNull(triangle.findIntersections(ray2), "TC02: Should be outside the triangle, against edge");
 
 		// TC03: The intersection point is outside the triangle, against vertex (0
 		// point)
-		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-11, 1.86, 4.14))),
+		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-11, 1.5, 4.14))),
 				"ERROR: The point supposed to be outside the triangle, against vertex - not working as expected");
 
 		// =============== Boundary Values Tests ==================
-
-		
 
 		// TC10: The point is on edge (0 point)
 		assertNull(triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 0.14, -0.15))),

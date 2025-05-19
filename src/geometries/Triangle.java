@@ -1,7 +1,5 @@
 package geometries;
 
-import static primitives.Util.alignZero;
-
 import java.util.List;
 
 import primitives.Point;
@@ -26,52 +24,49 @@ public class Triangle extends Polygon {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray _ray) {
-		// Step 1: Check for intersection with the plane
-		List<Point> _intersections = plane.findIntersections(_ray);
-		if (_intersections == null)
+	public List<Point> findIntersections(Ray ray) {
+		// Step 1: Intersect the ray with the triangle's plane
+		List<Point> intersections = _plane.findIntersections(ray);
+		if (intersections == null)
 			return null;
 
-		// Step 2: Get intersection point with the plane
-		Point _intersectionPoint = _intersections.getFirst();
+		Point intersectionPoint = intersections.getFirst();
 
-		// Step 3: Get triangle vertices
-		Point _a = vertices.get(0);
-		Point _b = vertices.get(1);
-		Point _c = vertices.get(2);
+		// Step 2: Exclude the case where the ray starts at the intersection point
+		if (intersectionPoint.equals(ray.getP0()))
+			return null;
 
-		// Step 4: Compute vectors
-		Vector _u = _b.subtract(_a); // a → b
-		Vector _v = _c.subtract(_a); // a → c
+		// Step 3: Extract triangle vertices
+		Point a = _vertices.get(0);
+		Point b = _vertices.get(1);
+		Point c = _vertices.get(2);
+
+		// Step 4: Compute edge vectors from vertex A to B and C
+		Vector u = b.subtract(a); // AB
+		Vector v = c.subtract(a); // AC
+
 		try {
-			Vector _w = _intersectionPoint.subtract(_a); // a → P
+			// Vector from A to the intersection point
+			Vector w = intersectionPoint.subtract(a);
 
-			// Step 5: First orientation test
-			Vector _vCrossW = _v.crossProduct(_w);
-			Vector _vCrossU = _v.crossProduct(_u);
-			if (_vCrossW.dotProduct(_vCrossU) < 0)
+			// Step 5: First orientation test (based on cross products)
+			Vector vCrossW = v.crossProduct(w);
+			Vector vCrossU = v.crossProduct(u);
+			if (vCrossW.dotProduct(vCrossU) < 0)
 				return null;
 
 			// Step 6: Second orientation test
-			Vector _uCrossW = _u.crossProduct(_w);
-			Vector _uCrossV = _u.crossProduct(_v);
-			if (_uCrossW.dotProduct(_uCrossV) < 0)
+			Vector uCrossW = u.crossProduct(w);
+			Vector uCrossV = u.crossProduct(v);
+			if (uCrossW.dotProduct(uCrossV) < 0)
 				return null;
 
-			// Step 7: Compute barycentric coordinates (optional, for clarity)
-			double _denominator = _uCrossV.length();
-			double _x = alignZero(_vCrossW.length() / _denominator);
-			double _y = alignZero(_uCrossW.length() / _denominator);
-
-			if (_x > 0 && _y > 0 && alignZero(_x + _y - 1) < 0)
-				return _intersections;
+			// If both tests passed, the point lies inside the triangle
+			return intersections;
 
 		} catch (IllegalArgumentException e) {
-			// One of the vectors used in crossProduct was a ZERO vector – point lies on
-			// edge or vertex
+			// One of the vectors was a zero vector — the point lies on an edge or vertex
 			return null;
 		}
-
-		return null;
 	}
 }
