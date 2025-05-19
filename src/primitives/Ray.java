@@ -12,12 +12,12 @@ public class Ray {
 	/**
 	 * Creating the point
 	 */
-	private final Point head;
+	private final Point _head;
 
 	/**
 	 * Creating the vector
 	 */
-	private final Vector direction;
+	private final Vector _direction;
 
 	/**
 	 * Constructor that accepts point and vector parameters.
@@ -26,25 +26,25 @@ public class Ray {
 	 * @param direction the direction vector of the ray, which will be normalized
 	 */
 	public Ray(Point head, Vector direction) {
-		this.head = head;
-		this.direction = direction.normalize();
+		this._head = head;
+		this._direction = direction.normalize();
 	}
 
 	@Override
 	public String toString() {
-		return "Ray= " + "head: " + head + ", direction: " + direction + '}';
+		return "Ray= " + "head: " + _head + ", direction: " + _direction + '}';
 	}
 
 	@Override
 	public boolean equals(Object object) {
 		if (this == object)
 			return true;
-		return (object instanceof Ray other) && this.head.equals(other.head) && this.direction.equals(other.direction);
+		return (object instanceof Ray other) && this._head.equals(other._head) && this._direction.equals(other._direction);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(head, direction);
+		return Objects.hash(_head, _direction);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class Ray {
 	 * @return the origin point of the ray
 	 */
 	public Point getP0() {
-		return head;
+		return _head;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class Ray {
 	 * @return the normalized direction vector of the ray
 	 */
 	public Vector getDir() {
-		return direction;
+		return _direction;
 	}
 
 	/**
@@ -81,6 +81,6 @@ public class Ray {
 	 */
 	public Point getPoint(double t) {
 		// if t is zero, return the head point
-		return isZero(t) ? head : head.add(direction.scale(t));
+		return isZero(t) ? _head : _head.add(_direction.scale(t));
 	}
 }
