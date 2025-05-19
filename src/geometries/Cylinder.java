@@ -1,5 +1,8 @@
 package geometries;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -13,8 +16,7 @@ public class Cylinder extends Tube {
 	/**
 	 * The height of the cylinder.
 	 */
-	@SuppressWarnings("unused")
-	final private double _height;
+	private final double _height;
 
 	/**
 	 * Constructor to create a cylinder with a specified axis, radius, and height.
@@ -30,8 +32,24 @@ public class Cylinder extends Tube {
 
 	@Override
 	public Vector getNormal(Point point) {
-		// Stub for testing
-		return null;
+		// Get the base point and direction vector of the cylinder's axis
+		Point p0 = _ray.getP0();
+		Vector dir = _ray.getDir();
+
+		// Compute the projection of the point onto the axis
+		Vector p0ToPoint = point.subtract(p0);
+		double t = alignZero(dir.dotProduct(p0ToPoint));
+
+		// Check if the point lies on the bottom base (t ≈ 0)
+		if (isZero(t))
+			return dir.scale(-1); // Normal points opposite to the axis direction
+
+		// Check if the point lies on the top base (t ≈ height)
+		if (isZero(t - _height))
+			return dir; // Normal points in the axis direction
+
+		// Otherwise, the point lies on the side surface – use the Tube logic
+		return super.getNormal(point);
 	}
 
 }
