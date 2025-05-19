@@ -19,15 +19,15 @@ public class Polygon extends Geometry {
 	/**
 	 * List of polygon's vertices
 	 */
-	protected final List<Point> vertices;
+	protected final List<Point> _vertices;
 	/**
 	 * Associated plane in which the polygon lays
 	 */
-	protected final Plane plane;
+	protected final Plane _plane;
 	/**
 	 * The size of the polygon - the amount of the vertices in the polygon
 	 */
-	private final int size;
+	private final int _size;
 
 	/**
 	 * Polygon constructor based on vertices list. The list must be ordered by edge
@@ -53,21 +53,21 @@ public class Polygon extends Geometry {
 	public Polygon(Point... vertices) {
 		if (vertices.length < 3)
 			throw new IllegalArgumentException("A polygon can't have less than 3 vertices");
-		this.vertices = List.of(vertices);
-		size = vertices.length;
+		this._vertices = List.of(vertices);
+		_size = vertices.length;
 
 		// Generate the plane according to the first three vertices and associate the
 		// polygon with this plane.
 		// The plane holds the invariant normal (orthogonal unit) vector to the polygon
-		plane = new Plane(vertices[0], vertices[1], vertices[2]);
-		if (size == 3)
+		_plane = new Plane(vertices[0], vertices[1], vertices[2]);
+		if (_size == 3)
 			return; // no need for more tests for a Triangle
 
-		Vector n = plane.getNormal(vertices[0]);
+		Vector n = _plane.getNormal(vertices[0]);
 		// Subtracting any subsequent points will throw an IllegalArgumentException
 		// because of Zero Vector if they are in the same point
-		Vector edge1 = vertices[size - 1].subtract(vertices[size - 2]);
-		Vector edge2 = vertices[0].subtract(vertices[size - 1]);
+		Vector edge1 = vertices[_size - 1].subtract(vertices[_size - 2]);
+		Vector edge2 = vertices[0].subtract(vertices[_size - 1]);
 
 		// Cross Product of any subsequent edges will throw an IllegalArgumentException
 		// because of Zero Vector if they connect three vertices that lay in the same
@@ -77,7 +77,7 @@ public class Polygon extends Geometry {
 		// with the normal. If all the rest consequent edges will generate the same sign
 		// - the polygon is convex ("kamur" in Hebrew).
 		boolean positive = edge1.crossProduct(edge2).dotProduct(n) > 0;
-		for (var i = 1; i < size; ++i) {
+		for (var i = 1; i < _size; ++i) {
 			// Test that the point is in the same plane as calculated originally
 			if (!isZero(vertices[i].subtract(vertices[0]).dotProduct(n)))
 				throw new IllegalArgumentException("All vertices of a polygon must lay in the same plane");
@@ -91,42 +91,42 @@ public class Polygon extends Geometry {
 
 	@Override
 	public Vector getNormal(Point point) {
-		return plane.getNormal(point);
+		return _plane.getNormal(point);
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray _ray) {
-		List<Point> _intersections = plane.findIntersections(_ray);
-		if (_intersections == null)
+	public List<Point> findIntersections(Ray ray) {
+		List<Point> intersections = _plane.findIntersections(ray);
+		if (intersections == null)
 			return null;
 
-		Point _p0 = _ray.getP0();
-		Vector _v = _ray.getDir();
+		Point p0 = ray.getP0();
+		Vector v = ray.getDir();
 
-		Vector _v1 = vertices.getLast().subtract(_p0);
-		double _sign = 0;
+		Vector v1 = _vertices.getLast().subtract(p0);
+		double sign = 0;
 
-		for (Point _vertex : vertices) {
-			Vector _v2 = _vertex.subtract(_p0);
+		for (Point vertex : _vertices) {
+			Vector v2 = vertex.subtract(p0);
 
-			Vector _cross = _v1.crossProduct(_v2);
-			double _currentSign = alignZero(_v.dotProduct(_cross));
+			Vector cross = v1.crossProduct(v2);
+			double currentSign = alignZero(v.dotProduct(cross));
 
-			if (isZero(_currentSign)) {
+			if (isZero(currentSign)) {
 				return null; // on edge or vertex → not inside polygon
 			}
 
-			if (_sign == 0) {
-				_sign = _currentSign > 0 ? 1 : -1;
-			} else if (_sign * _currentSign < 0) {
+			if (sign == 0) {
+				sign = currentSign > 0 ? 1 : -1;
+			} else if (sign * currentSign < 0) {
 				return null; // point is outside
 			}
 
-			_v1 = _v2;
+			v1 = v2;
 		}
 
-		Point _intersectionPoint = _intersections.getFirst();
-		return List.of(_intersectionPoint);
+		Point intersectionPoint = intersections.getFirst();
+		return List.of(intersectionPoint);
 	}
 
 }
