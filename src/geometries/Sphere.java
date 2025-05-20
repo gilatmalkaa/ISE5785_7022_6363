@@ -1,5 +1,7 @@
 package geometries;
 
+import static primitives.Util.alignZero;
+
 import java.util.List;
 
 import primitives.Point;
@@ -7,7 +9,14 @@ import primitives.Ray;
 import primitives.Vector;
 
 /**
- * Department for representation Sphere
+ * Sphere class represents a three-dimensional sphere in 3D space. A sphere is
+ * defined by its center point and a radius. This class extends
+ * {@link RadialGeometry} and supports calculating the normal at a given point
+ * and finding intersection points with a ray.
+ * 
+ * The sphere is considered to be infinite in all directions (no bounding box).
+ * 
+ * @author Gilat Kedem and Shira Amar
  */
 public class Sphere extends RadialGeometry {
 
@@ -42,34 +51,25 @@ public class Sphere extends RadialGeometry {
 	public List<Point> findIntersections(Ray ray) {
 		Vector u;
 		try {
+			// u = vector from ray origin to sphere center
 			u = _center.subtract(ray.getP0());
 		} catch (IllegalArgumentException e) {
-			// Ray starts exactly at the center of the sphere – return one point
+			// Ray starts exactly at the center of the sphere → return one point
 			return List.of(ray.getPoint(_radius));
 		}
 
 		double tm = ray.getDir().dotProduct(u);
 		double dSquared = u.lengthSquared() - tm * tm;
-		double thSquared = _radiusSquared - dSquared;
+		double thSquared = alignZero(_radiusSquared - dSquared);
 
-		if (thSquared <= 0) {
-			return null; // No intersections: ray misses the sphere
-		}
+		if (thSquared <= 0)
+			return null; // no intersections
 
 		double th = Math.sqrt(thSquared);
-		double t1 = tm - th;
-		double t2 = tm + th;
+		double t1 = alignZero(tm - th);
+		double t2 = alignZero(tm + th);
 
-		if (t1 > 0 && t2 > 0) {
-			return List.of(ray.getPoint(t1), ray.getPoint(t2)); // two intersections
-		}
-		if (t1 > 0) {
-			return List.of(ray.getPoint(t1)); // only t1 is valid
-		}
-		if (t2 > 0) {
-			return List.of(ray.getPoint(t2)); // only t2 is valid
-		}
-
-		return null; // both are behind the ray's origin
+		return t1 > 0 && t2 > 0 ? List.of(ray.getPoint(t1), ray.getPoint(t2))
+				: t1 > 0 ? List.of(ray.getPoint(t1)) : t2 > 0 ? List.of(ray.getPoint(t2)) : null;
 	}
 }

@@ -3,7 +3,6 @@ package geometries;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -68,7 +67,7 @@ class TubeTests {
 		// TC11: Point perpendicular to axis from ray start – at (0,1,0)
 		Vector expectedNormal = new Vector(0, 1, 0);
 		Vector actualNormal = tube.getNormal(new Point(0, 1, 0));
-		assertTrue(expectedNormal.equals(actualNormal), "Expected normal (0,1,0) but got: " + actualNormal);
+		assertEquals(expectedNormal, actualNormal, "TC11: Expected normal (0,1,0)");
 
 		// TC12: Point lies exactly on the axis → should throw exception
 		assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 0, 1)),

@@ -1,5 +1,7 @@
 package geometries;
 
+import static primitives.Util.alignZero;
+
 import java.util.List;
 
 import primitives.Point;
@@ -52,18 +54,18 @@ public class Triangle extends Polygon {
 			// Step 5: First orientation test (based on cross products)
 			Vector vCrossW = v.crossProduct(w);
 			Vector vCrossU = v.crossProduct(u);
-			if (vCrossW.dotProduct(vCrossU) < 0)
+			if (alignZero(vCrossW.dotProduct(vCrossU)) < 0)
 				return null;
 
 			// Step 6: Second orientation test
 			Vector uCrossW = u.crossProduct(w);
 			Vector uCrossV = u.crossProduct(v);
-			if (uCrossW.dotProduct(uCrossV) < 0)
+			if (alignZero(uCrossW.dotProduct(uCrossV)) < 0)
 				return null;
 
 			// If both tests passed, the point lies inside the triangle
 			return intersections;
-
+			// Catching exception in case of zero vector: point lies on edge or vertex
 		} catch (IllegalArgumentException e) {
 			// One of the vectors was a zero vector — the point lies on an edge or vertex
 			return null;

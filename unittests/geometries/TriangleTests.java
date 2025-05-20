@@ -79,6 +79,7 @@ class TriangleTests {
 	 */
 	@Test
 	void testTriangle() {
+
 		// TC01: Sanity - triangle builds without exception
 		assertDoesNotThrow(() -> new Triangle(new Point(0, 0, 0), new Point(1, 0, 0), new Point(0, 1, 0)),
 				"Triangle constructor failed on valid input");
@@ -94,9 +95,9 @@ class TriangleTests {
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: The intersection point is in the triangle (1 point)
-		assertEquals(List.of(new Point(-4, 4, 1)),
-				triangle.findIntersections(new Ray(new Point(1, 2, 3), new Vector(-5, 2, -2))),
-				"ERROR: The point supposed to be in the triangle - not working as expected");
+		assertEquals(List.of(new Point(-4.33, 3.33, 2.0)),
+				triangle.findIntersections(new Ray(new Point(0, 0, 5), new Vector(-4.33, 3.33, -3))),
+				"TC01: The point should be inside the triangle");
 
 		// TC02: The intersection point is outside the triangle, against edge (0 point)
 		Ray ray2 = (new Ray(new Point(1, 2, 3), new Vector(-6, 6, -1)));
