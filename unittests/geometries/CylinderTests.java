@@ -1,5 +1,0 @@
-package geometries;
-
-class CylinderTests {
-
-}

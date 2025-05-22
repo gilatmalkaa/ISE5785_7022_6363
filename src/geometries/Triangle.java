@@ -27,48 +27,52 @@ public class Triangle extends Polygon {
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
-		// Step 1: Intersect the ray with the triangle's plane
-		List<Point> intersections = _plane.findIntersections(ray);
-		if (intersections == null)
+		List<Point> intersectionPoints = _plane.findIntersections(ray);
+		if (intersectionPoints == null)
 			return null;
 
-		Point intersectionPoint = intersections.getFirst();
+		Point p = intersectionPoints.get(0); // Intersection point with the plane
 
-		// Step 2: Exclude the case where the ray starts at the intersection point
-		if (intersectionPoint.equals(ray.getP0()))
-			return null;
+		Point v1 = _vertices.get(0);
+		Point v2 = _vertices.get(1);
+		Point v3 = _vertices.get(2);
 
-		// Step 3: Extract triangle vertices
-		Point a = _vertices.get(0);
-		Point b = _vertices.get(1);
-		Point c = _vertices.get(2);
+		Vector v = ray.getDir();
 
-		// Step 4: Compute edge vectors from vertex A to B and C
-		Vector u = b.subtract(a); // AB
-		Vector v = c.subtract(a); // AC
+		// Vectors from triangle vertices to the intersection point
+		Vector p1, p2, p3;
 
 		try {
-			// Vector from A to the intersection point
-			Vector w = intersectionPoint.subtract(a);
-
-			// Step 5: First orientation test (based on cross products)
-			Vector vCrossW = v.crossProduct(w);
-			Vector vCrossU = v.crossProduct(u);
-			if (alignZero(vCrossW.dotProduct(vCrossU)) < 0)
-				return null;
-
-			// Step 6: Second orientation test
-			Vector uCrossW = u.crossProduct(w);
-			Vector uCrossV = u.crossProduct(v);
-			if (alignZero(uCrossW.dotProduct(uCrossV)) < 0)
-				return null;
-
-			// If both tests passed, the point lies inside the triangle
-			return intersections;
-			// Catching exception in case of zero vector: point lies on edge or vertex
+			p1 = p.subtract(v1);
+			p2 = p.subtract(v2);
+			p3 = p.subtract(v3);
 		} catch (IllegalArgumentException e) {
-			// One of the vectors was a zero vector — the point lies on an edge or vertex
+			// If the intersection point is exactly at one of the triangle's vertices,
+			// the resulting vector will be zero → considered outside
 			return null;
 		}
+
+		// Edge vectors of the triangle
+		Vector v1v2 = v2.subtract(v1);
+		Vector v2v3 = v3.subtract(v2);
+		Vector v3v1 = v1.subtract(v3);
+
+		try {
+			double s1 = alignZero(v1v2.crossProduct(p1).dotProduct(v));
+			double s2 = alignZero(v2v3.crossProduct(p2).dotProduct(v));
+			double s3 = alignZero(v3v1.crossProduct(p3).dotProduct(v));
+
+			// If all dot products have the same sign, the point is inside the triangle
+			if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
+				return List.of(p);
+			}
+		} catch (IllegalArgumentException e) {
+			// One of the cross products resulted in a zero vector → point is on an edge
+			// or vertex → not considered inside
+			return null;
+		}
+
+		return null;
 	}
+
 }

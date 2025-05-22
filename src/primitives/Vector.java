@@ -5,6 +5,10 @@ package primitives;
  */
 public class Vector extends Point {
 
+	public static final Vector AXIS_X = new Vector(1, 0, 0);
+	public static final Vector AXIS_Y = new Vector(0, 1, 0);
+	public static final Vector AXIS_Z = new Vector(0, 0, 1);
+
 	/**
 	 * Creates a vector from 3 coordinates.
 	 *
