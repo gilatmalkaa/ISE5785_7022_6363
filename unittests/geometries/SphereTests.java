@@ -36,6 +36,17 @@ class SphereTests {
 	/** A vector used in some tests */
 	private final Vector _v001 = new Vector(0, 0, 1);
 
+	/**
+	 * Default constructor for {@link SphereTests}. Initializes reusable test data
+	 * points and vectors.
+	 */
+	public SphereTests() {
+
+	}
+
+	/**
+	 * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
+	 */
 	@Test
 	void testGetNormal() {
 		Sphere sphere = new Sphere(new Point(0, 0, 0), 1);

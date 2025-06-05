@@ -1,10 +1,11 @@
 package test;
 
 import static java.lang.System.out;
-
 import static primitives.Util.isZero;
 
-import primitives.*;
+import primitives.Double3;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * Test program for the 1st stage
@@ -45,6 +46,14 @@ public final class Main {
 	 * A vector for tests to (1,2,2)
 	 */
 	private static final Vector V4 = new Vector(1, 2, 2);
+
+	/**
+	 * Default constructor for {@link Main}. Prevents instantiation of utility
+	 * class.
+	 */
+	private Main() {
+
+	}
 
 	/**
 	 * Main program to tests initial functionality of the 1st stage

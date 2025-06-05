@@ -26,10 +26,18 @@ class PointTests {
 	private final static Vector _V1 = new Vector(1, -1, 2);
 
 	/**
+	 * Default constructor for {@link PointTests}. Initializes the test class – no
+	 * setup required as fields are predefined.
+	 */
+	public PointTests() {
+	}
+
+	/**
 	 * Test method for {@link primitives.Point#subtract(primitives.Point)} This test
 	 * checks subtraction between two points, and returns a vector from the second
 	 * point to the first.
 	 */
+
 	@Test
 	void testSubtract() {
 		// ============ Equivalence Partitions Tests ==============

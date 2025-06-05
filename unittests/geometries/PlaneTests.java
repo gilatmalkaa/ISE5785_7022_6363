@@ -31,9 +31,17 @@ class PlaneTests {
 	private static final double DELTA = 1e-10;
 
 	/**
+	 * Default constructor for {@link PlaneTests}. Initializes the test class – no
+	 * special setup required.
+	 */
+	public PlaneTests() {
+	}
+
+	/**
 	 * Tests {@link geometries.Plane#getNormal(Point)}. Ensures returned vector is
 	 * normalized and orthogonal to vectors in the plane.
 	 */
+
 	@Test
 	void testGetNormal() {
 

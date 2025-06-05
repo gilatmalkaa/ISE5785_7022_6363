@@ -18,6 +18,13 @@ import org.junit.jupiter.api.Test;
  * @author Gilat Kedem and Shira Amar
  */
 class VectorTests {
+	/**
+	 * Default constructor for {@link VectorTests}. No initialization required –
+	 * test data is created within test methods.
+	 */
+	public VectorTests() {
+
+	}
 
 	/**
 	 * Test method for {@link primitives.Vector#Vector(double, double, double)}

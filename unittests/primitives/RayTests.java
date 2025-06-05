@@ -10,6 +10,13 @@ import org.junit.jupiter.api.Test;
 class RayTests {
 
 	/**
+	 * Default constructor for {@link RayTests}. Initializes the test class – no
+	 * setup required.
+	 */
+	public RayTests() {
+	}
+
+	/**
 	 * Test method for {@link primitives.Ray#getPoint(double)}.
 	 */
 	@Test

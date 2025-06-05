@@ -30,6 +30,14 @@ class TriangleTests {
 	private static final double DELTA = 1e-10;
 
 	/**
+	 * Default constructor for {@link TriangleTests}. No initialization required –
+	 * constants are defined statically.
+	 */
+	public TriangleTests() {
+
+	}
+
+	/**
 	 * Test method for {@link geometries.Triangle#getNormal(primitives.Point)}.
 	 * Verifies that the returned vector is normalized and orthogonal to the
 	 * triangle.

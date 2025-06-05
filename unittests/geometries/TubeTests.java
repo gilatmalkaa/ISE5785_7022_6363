@@ -18,6 +18,14 @@ import primitives.Vector;
 class TubeTests {
 
 	/**
+	 * Default constructor for {@link TubeTests}. No initialization required – test
+	 * methods create needed instances.
+	 */
+	public TubeTests() {
+
+	}
+
+	/**
 	 * Test constructor of {@link geometries.Tube}. Ensures invalid radius or
 	 * axisRay inputs are rejected.
 	 */
