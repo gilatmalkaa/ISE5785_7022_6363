@@ -9,3 +9,4 @@ images/
 .springBeans
 .sts4-cache
 bin/
+/images/
