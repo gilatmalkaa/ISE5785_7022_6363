@@ -15,10 +15,18 @@ import primitives.Vector;
  * @author Dan
  */
 class CameraTest {
+
 	/** Camera builder for the tests */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder().setLocation(Point.ZERO).setVpDistance(10);
 	/** Assert failure message for a bad ray */
 	private static final String BAD_RAY = "Bad ray";
+
+	/**
+	 * Default constructor for {@link CameraTest}. Initializes the camera builder
+	 * with default location and view plane distance.
+	 */
+	public CameraTest() {
+	}
 
 	/**
 	 * Test method for {@link renderer.Camera#constructRay(int, int, int, int)}.
@@ -54,6 +62,10 @@ class CameraTest {
 
 	}
 
+	/**
+	 * Test method for {@link renderer.Camera.Builder#setDirection(Point)} and
+	 * {@link renderer.Camera.Builder#setDirection(Point, Vector)}.
+	 */
 	@Test
 	void testBuilder() {
 		cameraBuilder.setVpSize(4, 4).setResolution(2, 2);
