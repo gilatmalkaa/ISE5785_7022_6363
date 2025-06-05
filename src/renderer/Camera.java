@@ -205,60 +205,32 @@ public class Camera implements Cloneable {
 		}
 
 		/**
-		 * Finalizes the building process of the Camera. Validates required fields and
-		 * completes any missing configuration.
+		 * Finalizes the building process of the Camera object. This method ensures that
+		 * all required fields are properly set. If any critical rendering data is
+		 * missing, a MissingResourceException is thrown. If validation succeeds, the
+		 * method calculates the missing direction vector (vRight), and returns a clone
+		 * of the fully configured Camera.
 		 *
-		 * @return a fully configured Camera object (clone of the internal one)
-		 * @throws MissingResourceException if any required data is missing
+		 * @return a clone of the configured Camera object
+		 * @throws MissingResourceException if any critical rendering data is missing
 		 */
 		public Camera build() {
-			validate(_camera);
-			return _camera.clone();
-		}
-
-		/**
-		 * Validates the internal Camera fields before construction. Completes default
-		 * values where applicable and ensures orthogonality.
-		 *
-		 * @param camera the Camera object to validate
-		 * @throws MissingResourceException if critical fields are missing
-		 */
-		private void validate(Camera camera) {
 			final String MISSING = "Missing rendering data";
 			final String CLASS_NAME = "Camera";
 
-			if (camera._width == 0 || camera._height == 0)
-				throw new MissingResourceException(MISSING, CLASS_NAME, "view plane size (width/height)");
+			if (_camera._p0 == null)
+				throw new MissingResourceException(MISSING, CLASS_NAME, "Camera position (p0)");
+			if (_camera._vTo == null)
+				throw new MissingResourceException(MISSING, CLASS_NAME, "Forward direction (vTo)");
+			if (_camera._vUp == null)
+				throw new MissingResourceException(MISSING, CLASS_NAME, "Up direction (vUp)");
+			if (_camera._distance == 0)
+				throw new MissingResourceException(MISSING, CLASS_NAME, "View plane distance");
+			if (_camera._width == 0 || _camera._height == 0)
+				throw new MissingResourceException(MISSING, CLASS_NAME, "View plane size");
 
-			if (camera._distance == 0.0)
-				throw new MissingResourceException(MISSING, CLASS_NAME, "distance");
-
-			if (camera._p0 == null)
-				camera._p0 = Point.ZERO;
-
-			if (camera._vTo == null)
-				camera._vTo = new Vector(0, 0, 1); // Default forward direction
-
-			if (camera._vUp == null)
-				camera._vUp = new Vector(0, 1, 0); // Default upward direction
-
-			if (!isZero(camera._vTo.dotProduct(camera._vUp))) {
-				camera._vUp = camera._vTo.crossProduct(camera._vUp).crossProduct(camera._vTo).normalize();
-			}
-
-			camera._vRight = camera._vTo.crossProduct(camera._vUp).normalize();
-			camera._vTo = camera._vTo.normalize();
-			camera._vUp = camera._vRight.crossProduct(camera._vTo).normalize();
-		}
-
-		/**
-		 * Utility method for comparing double values to zero using tolerance.
-		 *
-		 * @param val the value to check
-		 * @return true if close enough to zero
-		 */
-		private boolean isZero(double val) {
-			return Math.abs(val) < 1e-10;
+			_camera._vRight = _camera._vTo.crossProduct(_camera._vUp).normalize();
+			return _camera.clone();
 		}
 	}
 
@@ -285,7 +257,7 @@ public class Camera implements Cloneable {
 		double rX = _width / nX;
 		double rY = _height / nY;
 		double xj = (j - (nX - 1) / 2.0) * rX;
-		double yi = -1 * (i - (nY - 1) / 2.0) * rY;
+		double yi = -(i - (nY - 1) / 2.0) * rY;
 		Point pij = pc;
 		if (!isZero(xj)) {
 			pij = pij.add(_vRight.scale(xj));
