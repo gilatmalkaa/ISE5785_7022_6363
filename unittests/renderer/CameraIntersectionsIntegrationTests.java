@@ -2,8 +2,6 @@ package renderer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import geometries.Intersectable;
@@ -11,84 +9,102 @@ import geometries.Plane;
 import geometries.Sphere;
 import geometries.Triangle;
 import primitives.Point;
-import primitives.Ray;
 import primitives.Vector;
 
 /**
- * Integration tests between camera rays and geometric shapes. Tests are based
- * on ray construction from camera and their intersections with Sphere, Plane,
- * and Triangle. Each test checks the number of intersections between the rays
- * and the given shape.
+ * Integration tests for Camera ray construction and intersection with
+ * geometries. This class checks that rays constructed through the view plane
+ * intersect correctly with various geometric shapes.
  */
-class CameraIntersectionsIntegrationTests {
+public class CameraIntersectionsIntegrationTests {
 
 	/**
-	 * Helper method to count the total number of intersection points between camera
-	 * rays and a geometry.
-	 *
-	 * @param camera      the camera creating the rays
-	 * @param geometry    the geometry to intersect with
-	 * @param expected    the expected number of intersection points
-	 * @param description description to identify the test case
+	 * Default constructor for {@link CameraIntersectionsIntegrationTests}.
 	 */
-	private void assertCountIntersections(Camera camera, Intersectable geometry, int expected, String description) {
-		int nX = 3;
-		int nY = 3;
-		int count = 0;
+	public CameraIntersectionsIntegrationTests() {
+	}
 
-		for (int i = 0; i < nY; i++) {
-			for (int j = 0; j < nX; j++) {
-				Ray ray = camera.constructRay(nX, nY, j, i);
-				List<Point> intersections = geometry.findIntersections(ray);
-				if (intersections != null) {
+	/** Preconfigured camera builder for test cases */
+	private final Camera camera = Camera.getBuilder().setLocation(new Point(0, 0, 0))
+			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)).setVpDistance(1).setVpSize(3, 3).build();
+
+	/**
+	 * Helper method to count intersections of all rays through the view plane with
+	 * the given geometry.
+	 *
+	 * @param geometry the geometry to intersect
+	 * @return total number of intersections
+	 */
+	private int countIntersections(Intersectable geometry) {
+		int count = 0;
+		for (int j = 0; j < 3; j++) {
+			for (int i = 0; i < 3; i++) {
+				var intersections = geometry.findIntersections(camera.constructRay(3, 3, j, i));
+				if (intersections != null)
 					count += intersections.size();
-				}
+
 			}
 		}
-
-		assertEquals(expected, count, "Wrong number of intersections in test: " + description);
+		return count;
 	}
 
 	/**
-	 * Integration test of camera rays with a sphere. Verifies that multiple rays
-	 * intersect with a sphere at different positions and configurations.
+	 * Tests intersection of rays with Sphere in various configurations.
 	 */
 	@Test
-	void testCameraRaySphereIntersections() {
-		Camera camera = Camera.getBuilder().setLocation(new Point(0, 0, 0.5))
-				.setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1).setVpSize(3, 3)
-				.setResolution(3, 3).build();
+	void testSphereIntersections() {
+		// TC01: Small sphere, 2 intersections (centered in front of camera)
+		assertEquals(2, countIntersections(new Sphere(new Point(0, 0, -3), 1)),
+				"TC01: Expected 2 intersections with sphere");
 
-		Sphere sphere = new Sphere(new Point(0, 0, -2.5), 2.5);
-		assertCountIntersections(camera, sphere, 18, "Camera-Sphere integration");
+		// TC02: Sphere encompassing all rays, 18 intersections
+		assertEquals(18, countIntersections(new Sphere(new Point(0, 0, -3), 2.5)),
+				"TC02: Expected 18 intersections with large sphere");
+
+		// TC03: Sphere partially within view, 10 intersections
+		assertEquals(10, countIntersections(new Sphere(new Point(0, 0, -2.5), 2)),
+				"TC03: Expected 10 intersections with medium sphere");
+
+		// TC04: Sphere enclosing the camera, 9 intersections (one per ray)
+		assertEquals(9, countIntersections(new Sphere(new Point(0, 0, -1), 4)),
+				"TC04: Expected 9 intersections with very large sphere");
+
+		// TC05: Sphere behind camera, 0 intersections
+		assertEquals(0, countIntersections(new Sphere(new Point(0, 0, 1), 0.5)),
+				"TC05: Expected 0 intersections with sphere behind camera");
 	}
 
 	/**
-	 * Integration test of camera rays with a plane. Verifies that all rays
-	 * intersect a plane located in front of the camera.
+	 * Tests intersection of rays with Plane in different orientations.
 	 */
 	@Test
-	void testCameraRayPlaneIntersections() {
-		Camera camera = Camera.getBuilder().setLocation(new Point(0, 0, 0))
-				.setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1).setVpSize(3, 3)
-				.setResolution(3, 3).build();
+	void testPlaneIntersections() {
+		// TC01: Plane orthogonal to view direction, 9 intersections
+		assertEquals(9, countIntersections(new Plane(new Point(0, 0, -1), new Vector(0, 0, -1))),
+				"TC01: Expected 9 intersections with perpendicular plane");
 
-		Plane plane = new Plane(new Point(0, 0, -5), new Vector(0, 0, 1));
-		assertCountIntersections(camera, plane, 9, "Camera-Plane integration");
+		// TC02: Plane with small tilt, still intersecting all rays
+		assertEquals(9, countIntersections(new Plane(new Point(0, 0, -1), new Vector(0, 1, -2))),
+				"TC02: Expected 9 intersections with slightly angled plane");
+
+		// TC03: Plane with steep angle, some rays miss (only 6 intersect)
+		assertEquals(6, countIntersections(new Plane(new Point(0, 0, -1), new Vector(0, -1, -1))),
+				"TC03: Expected 6 intersections with steeply angled plane");
 	}
 
 	/**
-	 * Integration test of camera rays with a triangle. Verifies that only the
-	 * center ray intersects a small triangle.
+	 * Tests intersection of rays with Triangle in different configurations.
 	 */
 	@Test
-	void testCameraRayTriangleIntersections() {
-		Camera camera = Camera.getBuilder().setLocation(new Point(0, 0, 0))
-				.setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1).setVpSize(3, 3)
-				.setResolution(3, 3).build();
+	void testTriangleIntersections() {
+		// TC01: Small triangle within center pixel, only one ray intersects
+		assertEquals(1,
+				countIntersections(new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2))),
+				"TC01: Expected 1 intersection with small triangle");
 
-		Triangle triangle = new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2));
-
-		assertCountIntersections(camera, triangle, 1, "Camera-Triangle integration");
+		// TC02: Larger triangle covering center and adjacent pixels, 2 intersections
+		assertEquals(2,
+				countIntersections(new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2))),
+				"TC02: Expected 2 intersections with larger triangle");
 	}
 }
