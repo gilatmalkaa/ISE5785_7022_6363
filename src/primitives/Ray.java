@@ -2,6 +2,7 @@ package primitives;
 
 import static primitives.Util.isZero;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,7 +40,8 @@ public class Ray {
 	public boolean equals(Object object) {
 		if (this == object)
 			return true;
-		return (object instanceof Ray other) && this._head.equals(other._head) && this._direction.equals(other._direction);
+		return (object instanceof Ray other) && this._head.equals(other._head)
+				&& this._direction.equals(other._direction);
 	}
 
 	@Override
@@ -82,5 +84,30 @@ public class Ray {
 	public Point getPoint(double t) {
 		// if t is zero, return the head point
 		return isZero(t) ? _head : _head.add(_direction.scale(t));
+	}
+
+	/*
+	 * Finds the point closest to the ray's origin (p0) from a given list.
+	 *
+	 * @param points List of points to evaluate
+	 * 
+	 * @return Closest point to the ray's origin or null if the list is empty or
+	 * null
+	 */
+	public Point findClosestPoint(List<Point> points) {
+		if (points == null || points.isEmpty())
+			return null;
+
+		Point closest = null;
+		double minDistance = Double.MAX_VALUE;
+
+		for (Point point : points) {
+			double distance = _head.distance(point);
+			if (distance < minDistance) {
+				minDistance = distance;
+				closest = point;
+			}
+		}
+		return closest;
 	}
 }
