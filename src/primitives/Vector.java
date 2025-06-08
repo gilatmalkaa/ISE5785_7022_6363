@@ -5,8 +5,13 @@ package primitives;
  */
 public class Vector extends Point {
 
+	/** Constant vector representing the X axis (1, 0, 0). */
 	public static final Vector AXIS_X = new Vector(1, 0, 0);
+
+	/** Constant vector representing the Y axis (0, 1, 0). */
 	public static final Vector AXIS_Y = new Vector(0, 1, 0);
+
+	/** Constant vector representing the Z axis (0, 0, 1). */
 	public static final Vector AXIS_Z = new Vector(0, 0, 1);
 
 	/**

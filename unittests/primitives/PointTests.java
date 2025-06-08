@@ -34,6 +34,7 @@ class PointTests {
 	 * checks subtraction between two points, and returns a vector from the second
 	 * point to the first.
 	 */
+
 	@Test
 	void testSubtract() {
 		// ============ Equivalence Partitions Tests ==============

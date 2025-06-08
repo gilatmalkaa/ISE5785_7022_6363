@@ -57,6 +57,10 @@ class CameraTest {
 
 	}
 
+	/**
+	 * Test method for {@link renderer.Camera.Builder#setDirection(Point)} and
+	 * {@link renderer.Camera.Builder#setDirection(Point, Vector)}.
+	 */
 	@Test
 	void testBuilder() {
 		cameraBuilder.setVpSize(4, 4).setResolution(2, 2);

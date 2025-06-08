@@ -32,6 +32,7 @@ class PlaneTests {
 	 * Tests {@link geometries.Plane#getNormal(Point)}. Ensures returned vector is
 	 * normalized and orthogonal to vectors in the plane.
 	 */
+
 	@Test
 	void testGetNormal() {
 
