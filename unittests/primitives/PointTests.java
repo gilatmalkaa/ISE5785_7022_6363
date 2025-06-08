@@ -3,8 +3,7 @@
  */
 package primitives;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +14,11 @@ import org.junit.jupiter.api.Test;
  */
 
 class PointTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public PointTests() {
+	}
 
 	/** A sample point for tests: (1, 2, 3) */
 	private final static Point _P1 = new Point(1, 2, 3);

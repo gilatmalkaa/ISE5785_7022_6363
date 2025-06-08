@@ -3,20 +3,13 @@
  */
 package geometries;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Unit tests for {@link geometries.Plane} class.
@@ -24,6 +17,11 @@ import primitives.Vector;
  * @author Gilat Kedem and Shira Amar
  */
 class PlaneTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public PlaneTests() {
+	}
 
 	/**
 	 * Accuracy tolerance used for comparing floating-point values in tests.

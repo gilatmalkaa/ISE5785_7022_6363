@@ -3,10 +3,7 @@
  */
 package primitives;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +15,11 @@ import org.junit.jupiter.api.Test;
  * @author Gilat Kedem and Shira Amar
  */
 class VectorTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public VectorTests() {
+	}
 
 	/**
 	 * Test method for {@link primitives.Vector#Vector(double, double, double)}

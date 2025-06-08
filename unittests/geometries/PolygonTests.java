@@ -1,18 +1,12 @@
 package geometries;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Testing Polygons
@@ -20,6 +14,12 @@ import primitives.Vector;
  * @author Dan
  */
 class PolygonTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public PolygonTests() {
+	}
+
 	/**
 	 * Delta value for accuracy when comparing the numbers of type 'double' in
 	 * assertEquals
@@ -96,50 +96,45 @@ class PolygonTests {
 	 */
 	@Test
 	void testFindIntersections() {
-		
-		  Polygon polygon = new Polygon(
-			        new Point(0, 0, 0),
-			        new Point(2, 0, 0),
-			        new Point(2, 2, 0),
-			        new Point(0, 2, 0)
-			    );
 
-			    // ============ Equivalence Partitions Tests ==============
+		Polygon polygon = new Polygon(new Point(0, 0, 0), new Point(2, 0, 0), new Point(2, 2, 0), new Point(0, 2, 0));
 
-			    // TC01: Intersection inside the polygon
-			    Ray ray1 = new Ray(new Point(1, 1, 1), new Vector(0, 0, -1));
-			    List<Point> result1 = polygon.findIntersections(ray1);
-			    assertNotNull(result1, "TC01: Expected intersection inside polygon");
-			    assertEquals(1, result1.size(), "TC01: One point expected");
+		// ============ Equivalence Partitions Tests ==============
 
-			    // TC02: Intersection outside polygon (against edge)
-			    Ray ray2 = new Ray(new Point(3, 1, 1), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray2), "TC02: Should be outside – edge");
+		// TC01: Intersection inside the polygon
+		Ray ray1 = new Ray(new Point(1, 1, 1), new Vector(0, 0, -1));
+		List<Point> result1 = polygon.findIntersections(ray1);
+		assertNotNull(result1, "TC01: Expected intersection inside polygon");
+		assertEquals(1, result1.size(), "TC01: One point expected");
 
-			    // TC03: Intersection outside polygon (against vertex)
-			    Ray ray3 = new Ray(new Point(3, 3, 1), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray3), "TC03: Should be outside – vertex");
+		// TC02: Intersection outside polygon (against edge)
+		Ray ray2 = new Ray(new Point(3, 1, 1), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray2), "TC02: Should be outside – edge");
 
-			    // =============== Boundary Values Tests ==================
+		// TC03: Intersection outside polygon (against vertex)
+		Ray ray3 = new Ray(new Point(3, 3, 1), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray3), "TC03: Should be outside – vertex");
 
-			    // TC11: Intersection on edge
-			    Ray ray4 = new Ray(new Point(1, 0, 1), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray4), "TC11: On edge – not inside");
+		// =============== Boundary Values Tests ==================
 
-			    // TC12: Intersection on vertex
-			    Ray ray5 = new Ray(new Point(0, 0, 1), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray5), "TC12: On vertex – not inside");
+		// TC11: Intersection on edge
+		Ray ray4 = new Ray(new Point(1, 0, 1), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray4), "TC11: On edge – not inside");
 
-			    // TC13: Intersection on edge extension
-			    Ray ray6 = new Ray(new Point(-1, 0, 1), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray6), "TC13: On edge extension – not inside");
+		// TC12: Intersection on vertex
+		Ray ray5 = new Ray(new Point(0, 0, 1), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray5), "TC12: On vertex – not inside");
 
-			    // TC14: Ray starts exactly in the plane
-			    Ray ray7 = new Ray(new Point(1, 1, 0), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray7), "TC14: Starts in plane – no intersection");
+		// TC13: Intersection on edge extension
+		Ray ray6 = new Ray(new Point(-1, 0, 1), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray6), "TC13: On edge extension – not inside");
 
-			    // TC15: Ray starts after the plane, away from it
-			    Ray ray8 = new Ray(new Point(1, 1, -1), new Vector(0, 0, -1));
-			    assertNull(polygon.findIntersections(ray8), "TC15: Starts beyond plane – no intersection");
+		// TC14: Ray starts exactly in the plane
+		Ray ray7 = new Ray(new Point(1, 1, 0), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray7), "TC14: Starts in plane – no intersection");
+
+		// TC15: Ray starts after the plane, away from it
+		Ray ray8 = new Ray(new Point(1, 1, -1), new Vector(0, 0, -1));
+		assertNull(polygon.findIntersections(ray8), "TC15: Starts beyond plane – no intersection");
 	}
 }

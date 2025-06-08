@@ -1,7 +1,6 @@
 package test;
 
 import static java.lang.System.out;
-
 import static primitives.Util.isZero;
 
 import primitives.*;
@@ -12,6 +11,12 @@ import primitives.*;
  * @author Dan Zilberstein
  */
 public final class Main {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public Main() {
+	}
+
 	/**
 	 * A point for tests at (1,2,3)
 	 */

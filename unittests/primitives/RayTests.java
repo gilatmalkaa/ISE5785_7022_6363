@@ -8,6 +8,11 @@ import org.junit.jupiter.api.Test;
  * Unit tests for primitives.Ray class
  */
 class RayTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public RayTests() {
+	}
 
 	/**
 	 * Test method for {@link primitives.Ray#getPoint(double)}.

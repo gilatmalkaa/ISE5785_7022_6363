@@ -4,10 +4,7 @@ import static primitives.Util.isZero;
 
 import java.util.MissingResourceException;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Camera class represents a pinhole camera model used to generate rays through
@@ -19,10 +16,10 @@ import primitives.Vector;
 public class Camera implements Cloneable {
 
 	/** Number of horizontal pixels */
-	private int _nX = 0;
+	private int _nX = 1;
 
 	/** Number of vertical pixels */
-	private int _nY = 0;
+	private int _nY = 1;
 
 	/** Width of a single pixel (calculated) */
 	private double _rX = 0.0;
@@ -281,12 +278,11 @@ public class Camera implements Cloneable {
 	 * @return Ray from the camera through the specified pixel
 	 */
 	public Ray constructRay(int nX, int nY, int j, int i) {
-		Point pc = _p0.add(_vTo.scale(_distance));
 		double rX = _width / nX;
 		double rY = _height / nY;
 		double xj = (j - (nX - 1) / 2.0) * rX;
-		double yi = -1 * (i - (nY - 1) / 2.0) * rY;
-		Point pij = pc;
+		double yi = -(i - (nY - 1) / 2.0) * rY;
+		Point pij = _p0.add(_vTo.scale(_distance)); // start with view Plane center
 		if (!isZero(xj)) {
 			pij = pij.add(_vRight.scale(xj));
 		}

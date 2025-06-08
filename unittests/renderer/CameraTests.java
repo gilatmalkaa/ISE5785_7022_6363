@@ -1,13 +1,10 @@
 package renderer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Testing Camera Class
@@ -15,6 +12,12 @@ import primitives.Vector;
  * @author Dan
  */
 class CameraTest {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public CameraTest() {
+	}
+
 	/** Camera builder for the tests */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder().setLocation(Point.ZERO).setVpDistance(10);
 	/** Assert failure message for a bad ray */

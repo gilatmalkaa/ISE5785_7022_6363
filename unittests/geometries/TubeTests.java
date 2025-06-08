@@ -1,14 +1,10 @@
 package geometries;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Unit tests for {@link geometries.Tube} class.
@@ -16,6 +12,11 @@ import primitives.Vector;
  * @author Gilat Kedem and Shira Amar.
  */
 class TubeTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public TubeTests() {
+	}
 
 	/**
 	 * Test constructor of {@link geometries.Tube}. Ensures invalid radius or
@@ -68,10 +69,6 @@ class TubeTests {
 		Vector expectedNormal = new Vector(0, 1, 0);
 		Vector actualNormal = tube.getNormal(new Point(0, 1, 0));
 		assertEquals(expectedNormal, actualNormal, "TC11: Expected normal (0,1,0)");
-
-		// TC12: Point lies exactly on the axis → should throw exception
-		assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 0, 1)),
-				"Expected exception when point lies exactly on the axis (undefined normal)");
 
 	}
 

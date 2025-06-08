@@ -3,24 +3,24 @@
  */
 package geometries;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Unit tests for {@link geometries.Triangle} class. Includes tests for
  * getNormal(Point) according to stage 2 requirements.
  */
 class TriangleTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public TriangleTests() {
+	}
 
 	/**
 	 * Accuracy tolerance used for comparing floating-point values in tests. This

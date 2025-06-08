@@ -1,12 +1,10 @@
 package geometries;
 
-import static primitives.Util.alignZero;
+import static primitives.Util.*;
 
 import java.util.List;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * A class that represents a triangle, which is a specific type of polygon. The
@@ -38,10 +36,8 @@ public class Triangle extends Polygon {
 		Point v3 = _vertices.get(2);
 
 		Vector v = ray.getDir();
-
 		// Vectors from triangle vertices to the intersection point
 		Vector p1, p2, p3;
-
 		try {
 			p1 = p.subtract(v1);
 			p2 = p.subtract(v2);
@@ -59,20 +55,22 @@ public class Triangle extends Polygon {
 
 		try {
 			double s1 = alignZero(v1v2.crossProduct(p1).dotProduct(v));
+			if (isZero(s1))
+				return null;
 			double s2 = alignZero(v2v3.crossProduct(p2).dotProduct(v));
+			if (s1 * s2 <= 0)
+				return null;
 			double s3 = alignZero(v3v1.crossProduct(p3).dotProduct(v));
+			if (s1 * s3 <= 0)
+				return null;
 
 			// If all dot products have the same sign, the point is inside the triangle
-			if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
-				return List.of(p);
-			}
-		} catch (IllegalArgumentException e) {
+			return List.of(p);
+		} catch (IllegalArgumentException ignored) {
 			// One of the cross products resulted in a zero vector → point is on an edge
 			// or vertex → not considered inside
 			return null;
 		}
-
-		return null;
 	}
 
 }

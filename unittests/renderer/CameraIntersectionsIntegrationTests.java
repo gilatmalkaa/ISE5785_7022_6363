@@ -6,13 +6,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import geometries.Intersectable;
-import geometries.Plane;
-import geometries.Sphere;
-import geometries.Triangle;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import geometries.*;
+import primitives.*;
 
 /**
  * Integration tests between camera rays and geometric shapes. Tests are based
@@ -21,6 +16,11 @@ import primitives.Vector;
  * and the given shape.
  */
 class CameraIntersectionsIntegrationTests {
+	/**
+	 * Empty explicit default constructor to satisfy JavaDoc generator
+	 */
+	public CameraIntersectionsIntegrationTests() {
+	}
 
 	/**
 	 * Helper method to count the total number of intersection points between camera
