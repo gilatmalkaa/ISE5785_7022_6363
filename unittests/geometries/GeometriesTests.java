@@ -1,13 +1,10 @@
 package geometries;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Unit tests for {@link geometries.Geometries} class. This class tests the
@@ -28,7 +25,7 @@ class GeometriesTests {
 		// Create base geometries: Plane, Triangle, Sphere, Polygon
 		Plane plane = new Plane(new Point(2, 1, 3), new Point(1, 3, 2), new Point(1, 1, 4));
 		Triangle triangle = new Triangle(new Point(1, 3, 4), new Point(4, 3, 1), new Point(2, 3, 1));
-		Sphere sphere = new Sphere(new Point(3, 3, 1), 1d);
+		Sphere sphere = new Sphere(1d, new Point(3, 3, 1));
 		Polygon polygon = new Polygon(new Point(0, 5, 2), new Point(2, 5, 1), new Point(4, 5, 1), new Point(2, 5, 5));
 
 		// Shared base geometries object
@@ -48,7 +45,7 @@ class GeometriesTests {
 
 		// TC12: Ray misses all geometries → should return null
 		Geometries geometriesWithExtra = new Geometries(plane, triangle, sphere, polygon);
-		geometriesWithExtra.add(new Sphere(new Point(4, 6, 7), 2d)); // Adding extra geometry
+		geometriesWithExtra.add(new Sphere(2d, new Point(4, 6, 7))); // Adding extra geometry
 		assertNull(geometriesWithExtra.findIntersections(new Ray(new Point(8, 9, 10), new Vector(1, 0, -1))),
 				"TC12: Ray misses all geometries");
 

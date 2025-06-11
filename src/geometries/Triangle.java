@@ -24,7 +24,7 @@ public class Triangle extends Polygon {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 		List<Point> intersectionPoints = _plane.findIntersections(ray);
 		if (intersectionPoints == null)
 			return null;
@@ -65,7 +65,7 @@ public class Triangle extends Polygon {
 				return null;
 
 			// If all dot products have the same sign, the point is inside the triangle
-			return List.of(p);
+			return List.of(new Intersection(this, p));
 		} catch (IllegalArgumentException ignored) {
 			// One of the cross products resulted in a zero vector → point is on an edge
 			// or vertex → not considered inside

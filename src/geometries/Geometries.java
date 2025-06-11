@@ -1,17 +1,14 @@
 package geometries;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-import primitives.Point;
 import primitives.Ray;
 
 /**
  * Class Geometries represents a collection of geometries in the 3D space The
  * class is based on the Intersectable
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
 
 	/**
 	 * List of all geometries in the composite.
@@ -43,15 +40,15 @@ public class Geometries implements Intersectable {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
-		List<Point> intersections = null;
+	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+		List<Intersection> intersections = null;
 		for (Intersectable geometry : _geometries) {
-			List<Point> geometryIntersections = geometry.findIntersections(ray);
+			List<Intersection> geometryIntersections = geometry.calculateIntersectionsHelper(ray);
 			if (geometryIntersections != null) {
-				if (intersections == null)
-					intersections = new LinkedList<Point>(geometryIntersections);
-				else
-					intersections.addAll(geometryIntersections);
+				if (intersections == null) {
+					intersections = new LinkedList<>();
+				}
+				intersections.addAll(geometryIntersections);
 			}
 		}
 		return intersections;

@@ -40,7 +40,7 @@ class SphereTests {
 	 */
 	@Test
 	void testGetNormal() {
-		Sphere sphere = new Sphere(new Point(0, 0, 0), 1);
+		Sphere sphere = new Sphere(1, new Point(0, 0, 0));
 
 		// ============ Equivalence Partitions Tests ==============
 
@@ -64,16 +64,16 @@ class SphereTests {
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: Valid sphere with positive radius
-		assertDoesNotThrow(() -> new Sphere(new Point(1, 1, 1), 1), "Constructor failed on valid input");
+		assertDoesNotThrow(() -> new Sphere(1, new Point(1, 1, 1)), "Constructor failed on valid input");
 
 		// =============== Boundary Values Tests ==================
 
 		// TC11: Radius is 0 → should throw exception
-		assertThrows(IllegalArgumentException.class, () -> new Sphere(new Point(1, 1, 1), 0),
+		assertThrows(IllegalArgumentException.class, () -> new Sphere(0, new Point(1, 1, 1)),
 				"Constructor should throw exception on radius = 0");
 
 		// TC12: Radius is negative → should throw exception
-		assertThrows(IllegalArgumentException.class, () -> new Sphere(new Point(1, 1, 1), -1),
+		assertThrows(IllegalArgumentException.class, () -> new Sphere(-1, new Point(1, 1, 1)),
 				"Constructor should throw exception on negative radius");
 	}
 
@@ -82,7 +82,7 @@ class SphereTests {
 	 */
 	@Test
 	void testFindIntersections() {
-		final Sphere sphere = new Sphere(_p100, 1d);
+		final Sphere sphere = new Sphere(1d, _p100);
 		final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
 		final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
 		final var exp = List.of(gp1, gp2);
@@ -147,7 +147,7 @@ class SphereTests {
 		assertEquals(1, result9.size(), "TC23: Expected one point");
 
 		// TC24: Ray starts exactly at the center of the sphere (special case)
-		Sphere centerSphere = new Sphere(new Point(0, 0, 0), 1);
+		Sphere centerSphere = new Sphere(1, new Point(0, 0, 0));
 		Ray centerRay = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0));
 		List<Point> centerResult = centerSphere.findIntersections(centerRay);
 		assertNotNull(centerResult, "TC24: Ray from center should return one intersection");

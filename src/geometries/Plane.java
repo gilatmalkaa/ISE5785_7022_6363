@@ -1,13 +1,10 @@
 package geometries;
 
-import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
+import static primitives.Util.*;
 
 import java.util.List;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * A class that represents a plane
@@ -54,7 +51,7 @@ public class Plane extends Geometry {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 		// if the ray is parallel to the plane, there is no intersection
 		double nDotV = _normal.dotProduct(ray.getDir());
 		if (isZero(nDotV))
@@ -72,6 +69,6 @@ public class Plane extends Geometry {
 		double nQMinusP0 = alignZero(_normal.dotProduct(vector));
 		double t = alignZero(nQMinusP0 / nDotV);
 		// if the intersection point is behind or at the ray's origin, return null
-		return t <= 0 ? null : List.of(ray.getPoint(t));
+		return Util.alignZero(t) <= 0 ? null : List.of(new Intersection(this, ray.getPoint(t)));
 	}
 }

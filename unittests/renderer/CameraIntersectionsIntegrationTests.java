@@ -50,23 +50,23 @@ class CameraIntersectionsIntegrationTests {
 	@Test
 	void testSphereIntersections() {
 		// TC01: Small sphere, 2 intersections (centered in front of camera)
-		assertEquals(2, countIntersections(new Sphere(new Point(0, 0, -3), 1)),
+		assertEquals(2, countIntersections(new Sphere(1, new Point(0, 0, -3))),
 				"TC01: Expected 2 intersections with sphere");
 
 		// TC02: Sphere encompassing all rays, 18 intersections
-		assertEquals(18, countIntersections(new Sphere(new Point(0, 0, -3), 2.5)),
+		assertEquals(18, countIntersections(new Sphere(2.5, new Point(0, 0, -3))),
 				"TC02: Expected 18 intersections with large sphere");
 
 		// TC03: Sphere partially within view, 10 intersections
-		assertEquals(10, countIntersections(new Sphere(new Point(0, 0, -2.5), 2)),
+		assertEquals(10, countIntersections(new Sphere(2, new Point(0, 0, -2.5))),
 				"TC03: Expected 10 intersections with medium sphere");
 
 		// TC04: Sphere enclosing the camera, 9 intersections (one per ray)
-		assertEquals(9, countIntersections(new Sphere(new Point(0, 0, -1), 4)),
+		assertEquals(9, countIntersections(new Sphere(4, new Point(0, 0, -1))),
 				"TC04: Expected 9 intersections with very large sphere");
 
 		// TC05: Sphere behind camera, 0 intersections
-		assertEquals(0, countIntersections(new Sphere(new Point(0, 0, 1), 0.5)),
+		assertEquals(0, countIntersections(new Sphere(0.5, new Point(0, 0, 1))),
 				"TC05: Expected 0 intersections with sphere behind camera");
 	}
 

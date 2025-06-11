@@ -4,9 +4,7 @@ import static primitives.Util.alignZero;
 
 import java.util.List;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Sphere class represents a three-dimensional sphere in 3D space. A sphere is
@@ -31,9 +29,9 @@ public class Sphere extends RadialGeometry {
 	 * @param center the center point of the sphere
 	 * @param radius the radius of the sphere
 	 */
-	public Sphere(Point center, double radius) {
+	public Sphere(double radius, Point center) {
 		super(radius);
-		_center = center;
+		this._center = center;
 	}
 
 	/**
@@ -47,15 +45,14 @@ public class Sphere extends RadialGeometry {
 	}
 
 	@Override
-
-	public List<Point> findIntersections(Ray ray) {
+	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 		Vector u;
 		try {
 			// u = vector from ray origin to sphere center
 			u = _center.subtract(ray.getP0());
 		} catch (IllegalArgumentException e) {
 			// Ray starts exactly at the center of the sphere → return one point
-			return List.of(ray.getPoint(_radius));
+			return List.of(new Intersection(this, ray.getPoint(_radius)));
 		}
 
 		double tm = ray.getDir().dotProduct(u);
@@ -69,7 +66,9 @@ public class Sphere extends RadialGeometry {
 		double t1 = alignZero(tm - th);
 		double t2 = alignZero(tm + th);
 
-		return t1 > 0 && t2 > 0 ? List.of(ray.getPoint(t1), ray.getPoint(t2))
-				: t1 > 0 ? List.of(ray.getPoint(t1)) : t2 > 0 ? List.of(ray.getPoint(t2)) : null;
+		return t1 > 0 && t2 > 0
+				? List.of(new Intersection(this, ray.getPoint(t1)), new Intersection(this, ray.getPoint(t2)))
+				: t1 > 0 ? List.of(new Intersection(this, ray.getPoint(t1)))
+						: t2 > 0 ? List.of(new Intersection(this, ray.getPoint(t2))) : null;
 	}
 }

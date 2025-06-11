@@ -148,6 +148,17 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Set the image writer
+		 * 
+		 * @param imageWriter the image writer
+		 * @return the camera builder
+		 */
+		public Builder setImageWriter(ImageWriter imageWriter) {
+			_camera.imageWriter = imageWriter;
+			return this;
+		}
+
 		public Builder setResolution(int nX, int nY) {
 			if (nX <= 0 || nY <= 0)
 				throw new IllegalArgumentException("Resolution values must be positive.");
@@ -196,20 +207,20 @@ public class Camera implements Cloneable {
 	}
 
 	public Ray constructRay(int nX, int nY, int j, int i) {
-		double rX = _width / nX;
-		double rY = _height / nY;
-		double xj = (j - (nX - 1) / 2.0) * rX;
-		double yi = -(i - (nY - 1) / 2.0) * rY;
-		Point pij = _p0.add(_vTo.scale(_distance)); // start with view Plane center
+		Point pIJ = _p0;
+		double yI = -(i - (nY - 1) / 2d) * _height / nY;
+		double xJ = (j - (nX - 1) / 2d) * _width / nX;
 
-		if (!isZero(xj)) {
-			pij = pij.add(_vRight.scale(xj));
-		}
+		// check if xJ or yI are not zero, so we will not add zero vector
+		if (!isZero(xJ))
+			pIJ = pIJ.add(_vRight.scale(xJ));
+		if (!isZero(yI))
+			pIJ = pIJ.add(_vUp.scale(yI));
 
-		if (!isZero(yi)) {
-			pij = pij.add(_vUp.scale(yi));
-		}
-		return new Ray(_p0, pij.subtract(_p0));
+		// we need to move the point in the direction of vTo by distance
+		pIJ = pIJ.add(_vTo.scale(_distance));
+
+		return new Ray(_p0, pIJ.subtract(_p0).normalize());
 	}
 
 	/**

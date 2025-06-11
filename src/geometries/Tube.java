@@ -1,13 +1,10 @@
 package geometries;
 
-import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
+import static primitives.Util.*;
 
 import java.util.List;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * A class that represents a tube. It extends the RadialGeometry class and
@@ -67,7 +64,7 @@ public class Tube extends RadialGeometry {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 		// Not implemented
 		return null;
 	}

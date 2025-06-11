@@ -5,6 +5,8 @@ import static primitives.Util.isZero;
 import java.util.List;
 import java.util.Objects;
 
+import geometries.Intersectable.Intersection;
+
 /**
  * A class that represents a ray.
  */
@@ -86,6 +88,17 @@ public class Ray {
 		return isZero(t) ? _head : _head.add(_direction.scale(t));
 	}
 
+	/**
+	 * Method to find the closest point to the head of the ray
+	 * 
+	 * @param points list of points
+	 * @return the closest point to the head of the ray
+	 */
+	public Point findClosestPoint(List<Point> points) {
+		return points == null || points.isEmpty() ? null
+				: findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
+	}
+
 	/*
 	 * Finds the point closest to the ray's origin (p0) from a given list.
 	 *
@@ -94,20 +107,21 @@ public class Ray {
 	 * @return Closest point to the ray's origin or null if the list is empty or
 	 * null
 	 */
-	public Point findClosestPoint(List<Point> points) {
-		if (points == null || points.isEmpty())
+	public Intersection findClosestIntersection(List<Intersection> intersections) {
+		if (intersections == null || intersections.isEmpty())
 			return null;
 
-		Point closest = null;
+		Intersection closest = null;
 		double minDistance = Double.MAX_VALUE;
 
-		for (Point point : points) {
-			double distance = _head.distance(point);
+		for (Intersection inter : intersections) {
+			double distance = _head.distance(inter.point);
 			if (distance < minDistance) {
 				minDistance = distance;
-				closest = point;
+				closest = inter;
 			}
 		}
+
 		return closest;
 	}
 }

@@ -1,33 +1,35 @@
 package lighting;
 
 import primitives.Color;
+import primitives.Double3;
 
 /**
  * Class representing ambient light in a scene. This light illuminates all
  * objects uniformly.
  */
-public class AmbientLight {
-	/** Final field holding the intensity of the ambient light (IA) */
-	private final Color intensity;
-
-	/** Public static constant representing absence of ambient light (BLACK) */
-	public static final AmbientLight NONE = new AmbientLight(Color.BLACK);
+public class AmbientLight extends Light {
+	/**
+	 * NONE is a constant for no ambient light.
+	 */
+	public final static AmbientLight NONE = new AmbientLight(Color.BLACK, 0d);
 
 	/**
-	 * Constructs an AmbientLight with the given base color.
-	 *
-	 * @param iA The intensity of the ambient light
+	 * Constructor for AmbientLight.
+	 * 
+	 * @param ia the intensity of the ambient light.
+	 * @param ka the ambient reflection coefficient.
 	 */
-	public AmbientLight(Color iA) {
-		this.intensity = iA;
+	public AmbientLight(Color ia, Double3 ka) {
+		super(ia.scale(ka));
 	}
 
 	/**
-	 * Getter for the intensity of the ambient light.
-	 *
-	 * @return the final intensity (color)
+	 * Constructor for AmbientLight.
+	 * 
+	 * @param ia the intensity of the ambient light.
+	 * @param ka the ambient reflection coefficient.
 	 */
-	public Color getIntensity() {
-		return intensity;
+	public AmbientLight(Color ia, double ka) {
+		super(ia.scale(ka));
 	}
 }
