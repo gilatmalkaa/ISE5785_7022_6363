@@ -7,59 +7,47 @@ import java.util.List;
 import primitives.*;
 
 /**
- * A class that represents a tube. It extends the RadialGeometry class and
- * includes a ray defining the tube's axis.
+ * Represents an infinite tube in 3D space. A tube is defined by a central axis
+ * (represented as a {@link Ray}) and a constant radius. Inherits the radius
+ * field from {@link RadialGeometry}.
  */
 public class Tube extends RadialGeometry {
 
 	/**
-	 * The ray that defines the axis of the tube.
+	 * The axis ray that defines the direction and base point of the tube.
 	 */
 	protected final Ray _ray;
 
 	/**
-	 * Constructor to create a tube with a specified axis and radius.
+	 * Constructs a tube with the specified axis and radius.
 	 *
-	 * @param ray    the ray defining the axis of the tube
+	 * @param ray    the axis ray of the tube
 	 * @param radius the radius of the tube
 	 */
 	public Tube(Ray ray, double radius) {
-		super(radius); // Calling the constructor of RadialGeometry to set the radius
+		super(radius);
 		_ray = ray;
 	}
 
 	/**
-	 * Calculates the normal vector at a given point on the tube's surface. The
-	 * normal vector is perpendicular to the surface of the tube at the specified
-	 * point.
+	 * Calculates the normal vector to the tube at a given point on its surface. The
+	 * normal is defined as the vector from the closest point on the tube's axis to
+	 * the given point, and is perpendicular to the axis.
 	 *
-	 * @param point the point on the surface of the tube
-	 * @return the normal vector at the given point
+	 * @param point the point on the tube surface
+	 * @return the normal vector at the point
+	 * @throws IllegalArgumentException if the point lies exactly on the axis
 	 */
 	@Override
 	public Vector getNormal(Point point) {
-		// Get the base point and direction of the tube's axis ray
 		Point p0 = _ray.getP0();
 		Vector dir = _ray.getDir();
-
-		// Vector from the axis base point to the given point
 		Vector p0ToPoint = point.subtract(p0);
-
-		// Project the vector onto the axis direction to find parameter t
 		double t = alignZero(dir.dotProduct(p0ToPoint));
-
-		// Compute the closest point on the axis to the given point
 		Point o = _ray.getPoint(t);
-
-		// Compute the normal vector from the axis to the point
 		Vector normal = point.subtract(o);
-
-		// If the point lies exactly on the axis (normal vector is zero), throw
-		// exception
 		if (isZero(normal.lengthSquared()))
 			throw new IllegalArgumentException("Point lies on the axis of the tube – normal is undefined");
-
-		// Return the normalized normal vector
 		return normal.normalize();
 	}
 

@@ -1,24 +1,29 @@
 package geometries;
 
-import static primitives.Util.*;
+import static primitives.Util.alignZero;
 
 /**
- * An abstract class that implements the geometry interface
+ * Abstract base class for all geometries with a radial (circular) shape.
+ * Inherits from {@link Geometry} and adds a radius and its square.
  */
 public abstract class RadialGeometry extends Geometry {
-	/**
-	 * Radius for a round shape
-	 */
-	final protected double _radius;
-	/**
-	 * Radius for a round shape
-	 */
-	final protected double _radiusSquared;
 
 	/**
-	 * Constructor to initialize the radius and calculate its square.
+	 * The radius of the geometry.
+	 */
+	protected final double _radius;
+
+	/**
+	 * The square of the radius (precomputed for efficiency).
+	 */
+	protected final double _radiusSquared;
+
+	/**
+	 * Constructs a radial geometry with the specified radius. Validates that the
+	 * radius is positive and computes its square.
 	 *
-	 * @param radius the radius of the round shape
+	 * @param radius the radius of the geometry
+	 * @throws IllegalArgumentException if the radius is zero or negative
 	 */
 	RadialGeometry(double radius) {
 		if (alignZero(radius) <= 0)
@@ -26,5 +31,4 @@ public abstract class RadialGeometry extends Geometry {
 		_radius = radius;
 		_radiusSquared = radius * radius;
 	}
-
 }

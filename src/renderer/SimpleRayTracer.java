@@ -7,7 +7,13 @@ import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
 
+/**
+ * A simple implementation of a ray tracer that calculates color at a given
+ * intersection point using basic Phong reflection model with ambient, diffuse,
+ * and specular components.
+ */
 public class SimpleRayTracer extends RayTracerBase {
+
 	/**
 	 * Constructs a SimpleRayTracer with the given scene.
 	 *
@@ -43,95 +49,69 @@ public class SimpleRayTracer extends RayTracerBase {
 			return Color.BLACK;
 		}
 
-		// Start with emission color
 		Color color = intersection.geometry.getEmission();
-
-		// Add ambient light component
 		color = color.add(scene.ambientLight.getIntensity().scale(intersection.material.kA));
-
-		// Add local effects from all light sources
 		color = color.add(calcColorLocalEffects(intersection));
 
 		return color;
 	}
 
 	/**
-	 * Prepares and caches necessary values at the intersection for lighting
-	 * calculations.
+	 * Prepares necessary cached data in the intersection for lighting calculations.
 	 *
 	 * @param intersection the intersection to preprocess
 	 * @param rayDirection the direction of the incoming ray
-	 * @return {@code true} if the intersection is valid and usable for shading,
-	 *         otherwise {@code false}
+	 * @return {@code true} if intersection is valid and usable for lighting
 	 */
 	boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
 		if (intersection == null || intersection.geometry == null) {
 			return false;
 		}
 
-		// Cache ray direction
 		intersection.cacheRayDirection = rayDirection;
-
-		// Calculate and cache normal vector
 		intersection.cacheNormal = intersection.geometry.getNormal(intersection.point);
-
-		// Calculate dot product of normal and ray direction
 		intersection.cacheRayDirectionDotCacheNormal = intersection.cacheNormal.dotProduct(rayDirection);
 
-		// Check if ray and normal are perpendicular (if dot product is zero)
 		return !Util.isZero(intersection.cacheRayDirectionDotCacheNormal);
 	}
 
 	/**
-	 * Sets the current light source direction and its relation to the surface
-	 * normal for shading.
+	 * Sets the light source data on the intersection for shading.
 	 *
-	 * @param intersection the intersection point being shaded
-	 * @param light        the light source to use for lighting calculations
-	 * @return {@code true} if the light affects the surface (not perpendicular),
-	 *         otherwise {@code false}
+	 * @param intersection the intersection being shaded
+	 * @param light        the light source used
+	 * @return {@code true} if the light affects the surface
 	 */
 	private boolean setLightSource(Intersection intersection, LightSource light) {
-		// Set the current light source being processed
 		intersection.cacheLightSource = light;
-
-		// Get light direction
 		intersection.cacheLightDirection = light.getL(intersection.point);
-
-		// Calculate dot product with normal
 		intersection.cacheLightSourceDirectionDotCacheNormal = intersection.cacheNormal
 				.dotProduct(intersection.cacheLightDirection);
 
-		// Check if light and normal are perpendicular (if dot product is zero)
 		return !Util.isZero(intersection.cacheLightSourceDirectionDotCacheNormal);
 	}
 
 	/**
-	 * Calculates the local lighting effects (diffuse and specular) from all light
-	 * sources.
+	 * Calculates the local lighting effects from all light sources including
+	 * diffuse and specular components.
 	 *
-	 * @param intersection the intersection point where lighting is computed
-	 * @return the resulting color from local lighting effects
+	 * @param intersection the intersection to shade
+	 * @return the resulting color from local lighting
 	 */
 	private Color calcColorLocalEffects(Intersection intersection) {
-		Color color = Color.BLACK; // Start with black color
+		Color color = Color.BLACK;
 
-		// Process each light source
 		for (LightSource light : scene.lights) {
 			if (!setLightSource(intersection, light)) {
-				continue; // Skip this light source if it doesn't affect this point
+				continue;
 			}
 
-			// Calculate diffuse and specular components
 			Double3 diffuse = calcDiffusive(intersection);
 			Double3 specular = calcSpecular(intersection);
 
 			if (Util.compareSign(intersection.cacheLightSourceDirectionDotCacheNormal,
 					intersection.cacheRayDirectionDotCacheNormal)) {
-				// Get light intensity at this point
 				Color lightIntensity = light.getIntensity(intersection.point);
-
-				// Add the light's contribution with both components
 				color = color.add(lightIntensity.scale(diffuse.add(specular)));
 			}
 		}
@@ -140,54 +120,38 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the specular component of the Phong reflection model at the
-	 * intersection point.
+	 * Calculates the specular component of the Phong reflection model.
 	 *
-	 * @param intersection the intersection point where specular reflection is
-	 *                     computed
-	 * @return the specular intensity as a {@code Double3}
+	 * @param intersection the intersection where specular is computed
+	 * @return specular intensity as {@link Double3}
 	 */
 	private Double3 calcSpecular(Intersection intersection) {
-		// Calculate the product to check if the viewer and light are on the same side
 		double product = intersection.cacheLightSourceDirectionDotCacheNormal
 				* intersection.cacheRayDirectionDotCacheNormal;
 
-		// If the viewer and light are on opposite sides, no specular reflection
-		if (product <= 0) {
+		if (product <= 0)
 			return Double3.ZERO;
-		}
 
-		// Calculate reflection vector r = l - 2(n·l)n
 		Vector n = intersection.cacheNormal;
 		Vector l = intersection.cacheLightDirection;
 		double nl = intersection.cacheLightSourceDirectionDotCacheNormal;
 		Vector r = l.subtract(n.scale(2 * nl));
 
-		// Calculate v·r (dot product of view direction and reflection vector)
-		// The viewer direction is the opposite of ray direction
 		Vector v = intersection.cacheRayDirection.scale(-1);
 		double vr = v.dotProduct(r);
-
-		// If v·r <= 0, no specular reflection
-		if (vr <= 0) {
+		if (vr <= 0)
 			return Double3.ZERO;
-		}
 
-		// kS * (v·r)^nShininess
 		return intersection.material.kS.scale(Math.pow(vr, intersection.material.nShininess));
 	}
 
 	/**
-	 * Calculates the diffuse component of the Phong reflection model at the
-	 * intersection point.
+	 * Calculates the diffuse component of the Phong reflection model.
 	 *
-	 * @param intersection the intersection point where diffuse reflection is
-	 *                     computed
-	 * @return the diffuse intensity as a {@code Double3}
+	 * @param intersection the intersection where diffuse is computed
+	 * @return diffuse intensity as {@link Double3}
 	 */
 	private Double3 calcDiffusive(Intersection intersection) {
-		// kD * |nl|
 		return intersection.material.kD.scale(Math.abs(intersection.cacheLightSourceDirectionDotCacheNormal));
 	}
-
 }

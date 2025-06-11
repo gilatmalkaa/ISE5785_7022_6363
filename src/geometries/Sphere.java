@@ -8,26 +8,27 @@ import primitives.*;
 
 /**
  * Sphere class represents a three-dimensional sphere in 3D space. A sphere is
- * defined by its center point and a radius. This class extends
- * {@link RadialGeometry} and supports calculating the normal at a given point
- * and finding intersection points with a ray.
- * 
+ * defined by its center point and radius. This class extends
+ * {@link RadialGeometry} and supports normal calculation and ray-sphere
+ * intersection.
+ * <p>
  * The sphere is considered to be infinite in all directions (no bounding box).
+ * </p>
  * 
  * @author Gilat Kedem and Shira Amar
  */
 public class Sphere extends RadialGeometry {
 
 	/**
-	 * field for the center point
+	 * The center point of the sphere.
 	 */
-	final private Point _center;
+	private final Point _center;
 
 	/**
-	 * Parameterized constructor for the sphere.
+	 * Constructs a sphere with the specified center and radius.
 	 *
-	 * @param center the center point of the sphere
 	 * @param radius the radius of the sphere
+	 * @param center the center point of the sphere
 	 */
 	public Sphere(double radius, Point center) {
 		super(radius);
@@ -35,10 +36,10 @@ public class Sphere extends RadialGeometry {
 	}
 
 	/**
-	 * Implementation of the method getNormal
+	 * Returns the normal vector to the sphere at the given point on its surface.
 	 *
-	 * @param point the point to calculate the normal vector for
-	 * @return the normal vector at the specified point
+	 * @param point the point on the sphere
+	 * @return the normalized vector from the center to the point
 	 */
 	public Vector getNormal(Point point) {
 		return point.subtract(_center).normalize();
@@ -48,10 +49,10 @@ public class Sphere extends RadialGeometry {
 	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 		Vector u;
 		try {
-			// u = vector from ray origin to sphere center
+			// Vector from ray origin to sphere center
 			u = _center.subtract(ray.getP0());
 		} catch (IllegalArgumentException e) {
-			// Ray starts exactly at the center of the sphere → return one point
+			// Ray starts at the center of the sphere
 			return List.of(new Intersection(this, ray.getPoint(_radius)));
 		}
 
@@ -60,7 +61,7 @@ public class Sphere extends RadialGeometry {
 		double thSquared = alignZero(_radiusSquared - dSquared);
 
 		if (thSquared <= 0)
-			return null; // no intersections
+			return null; // No intersections
 
 		double th = Math.sqrt(thSquared);
 		double t1 = alignZero(tm - th);

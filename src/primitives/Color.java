@@ -1,18 +1,18 @@
 package primitives;
 
 /**
- * Wrapper class for java.jwt.Color The constructors operate with any
- * non-negative RGB values. The colors are maintained without upper limit of
- * 255. Some additional operations are added that are useful for manipulating
- * light's colors
+ * Wrapper class for java.awt.Color.
+ * <p>
+ * The constructors operate with any non-negative RGB values. The color is
+ * stored without an upper limit (unlike standard 255). Supports arithmetic
+ * operations useful for manipulating light colors.
+ * </p>
  * 
  * @author Dan Zilberstein
  */
 public class Color {
-	/**
-	 * The internal fields maintain RGB components as double numbers from 0 to
-	 * whatever...
-	 */
+
+	/** The internal fields maintain RGB components as double numbers. */
 	private final Double3 rgb;
 
 	/** Black color = (0,0,0) */
@@ -24,12 +24,12 @@ public class Color {
 	}
 
 	/**
-	 * Constructor to generate a color according to RGB components Each component in
-	 * range 0..255 (for printed white color) or more [for lights]
-	 * 
-	 * @param r Red component
-	 * @param g Green component
-	 * @param b Blue component
+	 * Constructor to generate a color using explicit RGB values.
+	 *
+	 * @param r Red component (non-negative)
+	 * @param g Green component (non-negative)
+	 * @param b Blue component (non-negative)
+	 * @throws IllegalArgumentException if any component is negative
 	 */
 	public Color(double r, double g, double b) {
 		if (r < 0 || g < 0 || b < 0)
@@ -38,10 +38,10 @@ public class Color {
 	}
 
 	/**
-	 * Constructor to generate a color according to RGB components Each component in
-	 * range 0..255 (for printed white color) or more [for lights]
-	 * 
+	 * Constructor to generate a color from a Double3 RGB triple.
+	 *
 	 * @param rgb triad of Red/Green/Blue components
+	 * @throws IllegalArgumentException if any component is negative
 	 */
 	private Color(Double3 rgb) {
 		if (rgb.d1() < 0 || rgb.d2() < 0 || rgb.d3() < 0)
@@ -50,19 +50,19 @@ public class Color {
 	}
 
 	/**
-	 * Constructor on base of java.awt.Color object
-	 * 
-	 * @param other java.awt.Color's source object
+	 * Constructor based on java.awt.Color object.
+	 *
+	 * @param other java.awt.Color instance
 	 */
 	public Color(java.awt.Color other) {
 		rgb = new Double3(other.getRed(), other.getGreen(), other.getBlue());
 	}
 
 	/**
-	 * Color getter - returns the color after converting it into java.awt.Color
-	 * object During the conversion any component bigger than 255 is set to 255
-	 * 
-	 * @return java.awt.Color object based on this Color RGB components
+	 * Converts this {@code Color} into a {@code java.awt.Color}. Any component
+	 * above 255 will be clamped to 255.
+	 *
+	 * @return a java.awt.Color object representing this color
 	 */
 	public java.awt.Color getColor() {
 		int ir = (int) rgb.d1();
@@ -72,10 +72,10 @@ public class Color {
 	}
 
 	/**
-	 * Operation of adding this and one or more other colors (by component)
-	 * 
-	 * @param colors one or more other colors to add
-	 * @return new Color object which is a result of the operation
+	 * Adds one or more colors to this color (component-wise).
+	 *
+	 * @param colors other colors to add
+	 * @return new {@code Color} which is the result of the addition
 	 */
 	public Color add(Color... colors) {
 		double rr = rgb.d1();
@@ -90,10 +90,11 @@ public class Color {
 	}
 
 	/**
-	 * Scale the color by a scalar triad per rgb
-	 * 
-	 * @param k scale factor per rgb
-	 * @return new Color object which is the result of the operation
+	 * Scales this color by a scalar vector per RGB component.
+	 *
+	 * @param k scaling factors per RGB channel (must be non-negative)
+	 * @return new {@code Color} scaled accordingly
+	 * @throws IllegalArgumentException if any component of k is negative
 	 */
 	public Color scale(Double3 k) {
 		if (k.d1() < 0.0 || k.d2() < 0.0 || k.d3() < 0.0)
@@ -102,10 +103,11 @@ public class Color {
 	}
 
 	/**
-	 * Scale the color by a scalar
-	 * 
-	 * @param k scale factor
-	 * @return new Color object which is the result of the operation
+	 * Scales this color by a uniform scalar.
+	 *
+	 * @param k scale factor (must be non-negative)
+	 * @return new {@code Color} scaled accordingly
+	 * @throws IllegalArgumentException if k is negative
 	 */
 	public Color scale(double k) {
 		if (k < 0.0)
@@ -114,14 +116,15 @@ public class Color {
 	}
 
 	/**
-	 * Scale the color by (1 / reduction factor)
-	 * 
-	 * @param k reduction factor
-	 * @return new Color object which is the result of the operation
+	 * Reduces this color by dividing each component by a factor.
+	 *
+	 * @param k reduction factor (must be ≥ 1)
+	 * @return new {@code Color} with reduced intensity
+	 * @throws IllegalArgumentException if k < 1
 	 */
 	public Color reduce(int k) {
 		if (k < 1)
-			throw new IllegalArgumentException("Can't scale a color by a by a number lower than 1");
+			throw new IllegalArgumentException("Can't scale a color by a number lower than 1");
 		return new Color(rgb.reduce(k));
 	}
 

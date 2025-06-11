@@ -8,21 +8,28 @@ import primitives.*;
 
 /**
  * Unit tests for {@link geometries.Geometries} class. This class tests the
- * ability of Geometries to find intersections with a collection of geometric
- * objects.
+ * ability of {@code Geometries} to find intersections with a collection of
+ * geometric objects such as Plane, Triangle, Sphere, and Polygon.
  */
 class GeometriesTests {
-	/** Empty explicit default constructor to make javadoc generator happy */
+
+	/**
+	 * Default constructor for the test class. Required for JavaDoc generation
+	 * tools.
+	 */
 	public GeometriesTests() {
 	}
 
 	/**
-	 * Test method for {@link geometries.Geometries#findIntersections(Ray)}.
+	 * Test method for {@link geometries.Geometries#findIntersections(Ray)}. Tests
+	 * various scenarios of ray intersections with multiple geometric shapes.
+	 * Includes both equivalence partitioning (EP) and boundary value analysis (BVA)
+	 * tests.
 	 */
 	@Test
 	void testFindIntersections() {
 
-		// Create base geometries: Plane, Triangle, Sphere, Polygon
+		// Create base geometries: Plane, Triangle, Sphere, Polyg
 		Plane plane = new Plane(new Point(2, 1, 3), new Point(1, 3, 2), new Point(1, 1, 4));
 		Triangle triangle = new Triangle(new Point(1, 3, 4), new Point(4, 3, 1), new Point(2, 3, 1));
 		Sphere sphere = new Sphere(1d, new Point(3, 3, 1));
@@ -30,6 +37,7 @@ class GeometriesTests {
 
 		// Shared base geometries object
 		Geometries geometries = new Geometries(plane, triangle, sphere, polygon);
+
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: Ray intersects 3 out of 4 geometries
@@ -55,8 +63,7 @@ class GeometriesTests {
 
 		// TC14: Ray intersects all geometries → should return 3 points
 		assertEquals(3, geometries.findIntersections(new Ray(new Point(3, 7, 10), new Vector(0, -4, -8))).size(),
-				"T14: Ray intersects all geometries");
+				"TC14: Ray intersects all geometries");
 
 	}
-
 }

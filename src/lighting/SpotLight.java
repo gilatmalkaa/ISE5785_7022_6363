@@ -2,9 +2,50 @@ package lighting;
 
 import primitives.*;
 
+/**
+ * Represents a spotlight in a 3D scene.
+ * <p>
+ * A spotlight is a point light with a focused beam in a specific direction. The
+ * intensity is influenced by the direction and a "narrow beam" factor that
+ * controls the sharpness of the beam.
+ * </p>
+ */
 public class SpotLight extends PointLight {
+
+	/**
+	 * The normalized direction vector of the spotlight beam.
+	 */
 	private final Vector direction;
+
+	/**
+	 * The narrow beam factor (default = 1). Higher values result in a more focused
+	 * light.
+	 */
 	private double narrowBeam = 1d;
+
+	/**
+	 * Constructs a spotlight with the given intensity, direction, and position.
+	 *
+	 * @param color     the base intensity of the spotlight
+	 * @param direction the direction the spotlight is pointing (will be normalized)
+	 * @param position  the position of the light source
+	 */
+	public SpotLight(Color color, Vector direction, Point position) {
+		super(color, position);
+		this.direction = direction.normalize();
+	}
+
+	/**
+	 * Sets the narrow beam factor of the spotlight. Higher values produce a more
+	 * focused and intense beam.
+	 *
+	 * @param narrowBeam the narrow beam factor (must be ≥ 1)
+	 * @return this {@code SpotLight} instance (for chaining)
+	 */
+	public SpotLight setNarrowBeam(double narrowBeam) {
+		this.narrowBeam = narrowBeam;
+		return this;
+	}
 
 	@Override
 	public SpotLight setKc(double kC) {
@@ -24,44 +65,15 @@ public class SpotLight extends PointLight {
 		return this;
 	}
 
-	/**
-	 * Constructor for SpotLight.
-	 * 
-	 * @param color     The intensity of the light.
-	 * @param direction The direction of the spotlight beam.
-	 * @param position  The position of the light source.
-	 */
-	public SpotLight(Color color, Vector direction, Point position) {
-		super(color, position);
-		this.direction = direction.normalize();
-	}
-
-	/**
-	 * Set the narrow beam factor of the spotlight.
-	 * 
-	 * @param narrowBeam The narrow beam factor.
-	 * @return The SpotLight instance (for method chaining).
-	 */
-	public SpotLight setNarrowBeam(double narrowBeam) {
-		this.narrowBeam = narrowBeam;
-		return this;
-	}
-
 	@Override
 	public Color getIntensity(Point point) {
 		Color oldColor = super.getIntensity(point);
 		double dotProduct = Math.max(0d, direction.dotProduct(getL(point)));
-		return oldColor.scale(Math.pow(dotProduct, narrowBeam)); // Apply narrowBeam attenuation
+		return oldColor.scale(Math.pow(dotProduct, narrowBeam));
 	}
 
-	/**
-	 * Returns the distance between the light source and a given point.
-	 * 
-	 * @param point The point to calculate the distance to.
-	 * @return The distance between the light source and the given point.
-	 */
 	@Override
 	public double getDistance(Point point) {
-		return position.distance(point); // Added getDistance method
+		return position.distance(point);
 	}
 }

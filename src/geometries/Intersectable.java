@@ -6,22 +6,67 @@ import lighting.LightSource;
 import primitives.*;
 
 /**
- * Abstract class representing an intersectable object in the scene
+ * Abstract base class for all objects in the scene that can be intersected by
+ * rays.
  */
 public abstract class Intersectable {
 
+	/**
+	 * Passive data structure representing a single intersection point between a ray
+	 * and a geometry.
+	 */
 	public static class Intersection {
+		/**
+		 * The geometry object that was intersected.
+		 */
 		public final Geometry geometry;
+
+		/**
+		 * The point of intersection.
+		 */
 		public final Point point;
+
+		/**
+		 * The material of the intersected geometry.
+		 */
 		public final Material material;
 
+		/**
+		 * Cached direction of the ray for shading calculations.
+		 */
 		public Vector cacheRayDirection;
+
+		/**
+		 * Cached direction from the point to the light source.
+		 */
 		public Vector cacheLightDirection;
+
+		/**
+		 * Cached normal vector at the point of intersection.
+		 */
 		public Vector cacheNormal;
+
+		/**
+		 * Dot product of the ray direction and the normal vector.
+		 */
 		public double cacheRayDirectionDotCacheNormal;
+
+		/**
+		 * The light source associated with the intersection.
+		 */
 		public LightSource cacheLightSource;
+
+		/**
+		 * Dot product of the light direction and the normal vector.
+		 */
 		public double cacheLightSourceDirectionDotCacheNormal;
 
+		/**
+		 * Constructs an Intersection with the given geometry and point.
+		 *
+		 * @param geometry the intersected geometry
+		 * @param point    the point of intersection
+		 */
 		public Intersection(Geometry geometry, Point point) {
 			this.geometry = geometry;
 			this.point = point;
@@ -32,9 +77,7 @@ public abstract class Intersectable {
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
-			return obj instanceof Intersection other && geometry == other.geometry && point.equals(other.point); // Changed
-																													// geometry
-																													// comparison
+			return obj instanceof Intersection other && geometry == other.geometry && point.equals(other.point);
 		}
 
 		@Override
@@ -44,31 +87,34 @@ public abstract class Intersectable {
 	}
 
 	/**
-	 * Find intersections of a ray with the geometry (helper method)
+	 * Helper method that calculates intersections of a ray with the geometry.
+	 * Subclasses must implement this method.
 	 *
-	 * @param ray the ray to find intersections with
-	 * @return a list of intersection points
+	 * @param ray the ray to intersect with
+	 * @return list of {@link Intersection} objects, or {@code null} if none
 	 */
 	protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
 
 	/**
-	 * Find intersections of a ray with the geometry
+	 * Calculates intersections of a ray with the geometry. Delegates to
+	 * {@link #calculateIntersectionsHelper(Ray)}.
 	 *
-	 * @param ray the ray to find intersections with
-	 * @return a list of intersection points
+	 * @param ray the ray to intersect with
+	 * @return list of {@link Intersection} objects, or {@code null} if none
 	 */
 	public final List<Intersection> calculateIntersections(Ray ray) {
 		return calculateIntersectionsHelper(ray);
 	}
 
 	/**
-	 * Find intersections of a ray with the geometry
+	 * Finds the intersection points (without geometry metadata) of a ray with the
+	 * geometry.
 	 *
-	 * @param ray the ray to find intersections with
-	 * @return a list of intersection points
+	 * @param ray the ray to intersect with
+	 * @return list of {@link Point} objects, or {@code null} if none
 	 */
 	public List<Point> findIntersections(Ray ray) {
-		var list = calculateIntersections(ray); // Changed variable name
+		var list = calculateIntersections(ray);
 		return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
 	}
 }

@@ -9,10 +9,12 @@ import javax.imageio.ImageIO;
 import primitives.Color;
 
 /**
- * Image writer class combines accumulation of pixel color matrix and finally
- * producing a non-optimized jpeg image from this matrix. The class although is
- * responsible of holding image related parameters of View Plane - pixel matrix
- * size and resolution
+ * ImageWriter class combines accumulation of pixel color matrix and finally
+ * produces a non-optimized PNG image from this matrix.
+ * <p>
+ * The class is responsible for holding image-related parameters of the view
+ * plane such as resolution and pixel matrix size.
+ * </p>
  * 
  * @author Dan
  */
@@ -31,33 +33,34 @@ final class ImageWriter {
 	private final BufferedImage image;
 
 	// ***************** Constructors ********************** //
+
 	/**
-	 * Image Writer constructor accepting image name and View Plane parameters,
+	 * Constructs an ImageWriter with the specified resolution.
 	 * 
-	 * @param nX amount of pixels by Width
-	 * @param nY amount of pixels by height
+	 * @param nX number of horizontal pixels (width)
+	 * @param nY number of vertical pixels (height)
 	 */
 	ImageWriter(int nX, int nY) {
 		this.nX = nX;
 		this.nY = nY;
-
 		image = new BufferedImage(nX, nY, BufferedImage.TYPE_INT_RGB);
 	}
 
 	// ***************** Getters ********************** //
+
 	/**
-	 * View Plane Y axis resolution
+	 * Returns the number of vertical pixels (height).
 	 * 
-	 * @return the amount of vertical pixels
+	 * @return the vertical resolution of the image
 	 */
 	int nY() {
 		return nY;
 	}
 
 	/**
-	 * View Plane X axis resolution
+	 * Returns the number of horizontal pixels (width).
 	 * 
-	 * @return the amount of horizontal pixels
+	 * @return the horizontal resolution of the image
 	 */
 	int nX() {
 		return nX;
@@ -66,10 +69,10 @@ final class ImageWriter {
 	// ***************** Operations ******************** //
 
 	/**
-	 * Function writeToImage produces unoptimized png file of the image according to
-	 * pixel color matrix in the directory of the project
+	 * Writes the buffered image to a PNG file in the predefined directory.
 	 * 
-	 * @param imageName the name of png file
+	 * @param imageName the name of the PNG file (without extension)
+	 * @throws IllegalStateException if the image could not be written
 	 */
 	void writeToImage(String imageName) {
 		try {
@@ -81,8 +84,7 @@ final class ImageWriter {
 	}
 
 	/**
-	 * The function writePixel writes a color of a specific pixel into pixel color
-	 * matrix
+	 * Writes a single pixel's color to the image buffer.
 	 * 
 	 * @param xIndex X axis index of the pixel
 	 * @param yIndex Y axis index of the pixel

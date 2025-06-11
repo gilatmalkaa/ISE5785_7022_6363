@@ -5,8 +5,12 @@ import primitives.Ray;
 import scene.Scene;
 
 /**
- * Abstract base class for ray tracing. Contains a reference to a scene used for
- * tracing rays and calculating colors.
+ * Abstract base class for ray tracing.
+ * <p>
+ * Contains a reference to a scene used for tracing rays and calculating colors.
+ * Subclasses should implement specific ray tracing algorithms by overriding the
+ * {@link #traceRay(Ray)} method.
+ * </p>
  */
 public abstract class RayTracerBase {
 
@@ -16,19 +20,19 @@ public abstract class RayTracerBase {
 	protected final Scene scene;
 
 	/**
-	 * Constructor to initialize the ray tracer with a scene.
+	 * Constructs a ray tracer with the specified scene.
 	 *
-	 * @param scene the scene to be used by this ray tracer
+	 * @param scene the scene to be used for ray tracing computations
 	 */
 	public RayTracerBase(Scene scene) {
 		this.scene = scene;
 	}
 
 	/**
-	 * Traces the given ray and returns the color intensity.
+	 * Traces the given ray through the scene and returns the resulting color.
 	 *
 	 * @param ray the ray to trace
-	 * @return the color intensity at the intersection point
+	 * @return the color at the point the ray intersects the scene
 	 */
 	public abstract Color traceRay(Ray ray);
 }

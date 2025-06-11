@@ -3,9 +3,12 @@ package lighting;
 import primitives.Color;
 
 /**
- * Abstract class representing a generic light source. This class serves as a
- * base for different types of lights, such as directional light, point light,
- * or spot light. Each light has an intensity represented by a {@link Color}.
+ * Abstract base class representing a generic light source.
+ * <p>
+ * This class serves as a parent for specific types of lights, such as
+ * {@link DirectionalLight}, {@link PointLight}, and {@link SpotLight}. Each
+ * light has an intensity represented by {@link Color}.
+ * </p>
  */
 abstract class Light {
 
@@ -15,18 +18,18 @@ abstract class Light {
 	protected final Color intensity;
 
 	/**
-	 * Constructs a light source with the given intensity.
+	 * Constructs a light source with the specified intensity.
 	 *
-	 * @param intensity the intensity (color) of the light
+	 * @param intensity the color and brightness of the light
 	 */
 	protected Light(Color intensity) {
 		this.intensity = intensity;
 	}
 
 	/**
-	 * Returns the intensity (color) of the light.
+	 * Returns the intensity of the light.
 	 *
-	 * @return the light intensity
+	 * @return the color and brightness of the light
 	 */
 	public Color getIntensity() {
 		return intensity;

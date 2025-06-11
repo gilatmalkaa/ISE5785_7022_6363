@@ -1,8 +1,10 @@
 package primitives;
 
 /**
- * Util class is used for some internal utilities, e.g. controlling accuracy
- *
+ * Util class is used for some internal utilities, e.g. controlling accuracy.
+ * Provides static helper methods for numerical precision and utility
+ * calculations. This class cannot be instantiated.
+ * 
  * @author Dan
  */
 public final class Util {
@@ -18,63 +20,56 @@ public final class Util {
 	}
 
 	/**
-	 * {@code double} data format in memory (bit level):<br>
-	 * seee eeee eeee (1.)mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm<br>
-	 * 1 bit sign, 11 bits exponent, 53 bits (52 stored) normalized mantissa<br>
-	 * the number is m+2^e where 1&lt;=m&lt;2<br>
-	 * NB: exponent is stored "normalized" (i.e. always positive by adding 1023)<br>
+	 * Gets the exponent of a double number based on IEEE 754 binary representation.
 	 *
 	 * @param num the original number
-	 * @return the exponent value
+	 * @return the exponent value of the double
 	 */
 	private static int getExp(double num) {
-		// 1. doubleToRawLongBits: "convert" the stored number to set of bits
-		// 2. Shift all 52 bits to the right (removing mantissa)
-		// 3. Zero the sign of number bit by mask 0x7FF
-		// 4. "De-normalize" the exponent by subtracting 1023
 		return (int) ((Double.doubleToRawLongBits(num) >> 52) & 0x7FFL) - 1023;
 	}
 
 	/**
-	 * Checks whether the number is [almost] zero
+	 * Checks whether the given number is zero or nearly zero, based on binary
+	 * exponent comparison to a defined accuracy threshold.
 	 *
 	 * @param number the number to check
-	 * @return true if the number is zero or almost zero, false otherwise
+	 * @return true if the number is effectively zero, false otherwise
 	 */
 	public static boolean isZero(double number) {
 		return getExp(number) < ACCURACY;
 	}
 
 	/**
-	 * Aligns the number to zero if it is almost zero
+	 * Rounds a number to 0 if it is close enough to zero (numerical noise).
 	 *
 	 * @param number the number to align
-	 * @return 0.0 if the number is very close to zero, the number itself otherwise
+	 * @return 0.0 if the number is nearly zero, otherwise returns the number itself
 	 */
 	public static double alignZero(double number) {
 		return isZero(number) ? 0.0 : number;
 	}
 
 	/**
-	 * Check whether two numbers have the same sign
+	 * Checks whether two double values have the same sign.
 	 *
-	 * @param n1 1st number
-	 * @param n2 2nd number
-	 * @return true if the numbers have the same sign
+	 * @param n1 first number
+	 * @param n2 second number
+	 * @return true if both numbers are positive or both are negative
 	 */
 	public static boolean compareSign(double n1, double n2) {
 		return (n1 < 0 && n2 < 0) || (n1 > 0 && n2 > 0);
 	}
 
 	/**
-	 * Provide a real random number in range between min and max
+	 * Returns a random double value between the given minimum (inclusive) and
+	 * maximum (exclusive) bounds.
 	 *
-	 * @param min value (included)
-	 * @param max value (excluded)
-	 * @return the random value
+	 * @param min minimum value (inclusive)
+	 * @param max maximum value (exclusive)
+	 * @return a random double within the specified range
 	 */
 	public static double random(double min, double max) {
 		return Math.random() * (max - min) + min;
 	}
-
 }

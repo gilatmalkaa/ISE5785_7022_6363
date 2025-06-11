@@ -7,20 +7,21 @@ import java.util.List;
 import primitives.*;
 
 /**
- * A class that represents a triangle, which is a specific type of polygon. The
- * triangle is defined by three points in 3D space.
+ * Represents a triangle in 3D space. A triangle is a special case of a polygon
+ * with exactly three vertices. Inherits functionality from {@link Polygon}
+ * including normal calculation.
  */
 public class Triangle extends Polygon {
 
 	/**
-	 * Constructor to create a triangle from three points.
+	 * Constructs a triangle from three vertices.
 	 *
-	 * @param p1 the first point of the triangle
-	 * @param p2 the second point of the triangle
-	 * @param p3 the third point of the triangle
+	 * @param p1 the first vertex of the triangle
+	 * @param p2 the second vertex of the triangle
+	 * @param p3 the third vertex of the triangle
 	 */
 	public Triangle(Point p1, Point p2, Point p3) {
-		super(p1, p2, p3); // Calls the constructor of Polygon to create the triangle
+		super(p1, p2, p3);
 	}
 
 	@Override
@@ -36,6 +37,7 @@ public class Triangle extends Polygon {
 		Point v3 = _vertices.get(2);
 
 		Vector v = ray.getDir();
+
 		// Vectors from triangle vertices to the intersection point
 		Vector p1, p2, p3;
 		try {
@@ -43,8 +45,7 @@ public class Triangle extends Polygon {
 			p2 = p.subtract(v2);
 			p3 = p.subtract(v3);
 		} catch (IllegalArgumentException e) {
-			// If the intersection point is exactly at one of the triangle's vertices,
-			// the resulting vector will be zero → considered outside
+			// Intersection is exactly at a vertex – not considered inside
 			return null;
 		}
 
@@ -64,13 +65,11 @@ public class Triangle extends Polygon {
 			if (s1 * s3 <= 0)
 				return null;
 
-			// If all dot products have the same sign, the point is inside the triangle
+			// Point lies inside the triangle
 			return List.of(new Intersection(this, p));
 		} catch (IllegalArgumentException ignored) {
-			// One of the cross products resulted in a zero vector → point is on an edge
-			// or vertex → not considered inside
+			// One of the cross products resulted in zero vector – point is on an edge
 			return null;
 		}
 	}
-
 }

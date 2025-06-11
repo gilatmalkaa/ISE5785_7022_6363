@@ -5,36 +5,43 @@ import java.util.List;
 
 import geometries.Geometries;
 import lighting.AmbientLight;
-import lighting.LightSource; // Added import
+import lighting.LightSource;
 import primitives.Color;
 
 /**
- * The Scene class represents a 3D scene for rendering. It is a Plain Data
- * Structure (PDS), containing public fields and fluent-style setters.
- * 
- * Default values: - background: Color.BLACK - ambientLight: AmbientLight.NONE -
- * geometries: new Geometries()
+ * Represents a 3D scene for rendering. This is a Plain Data Structure (PDS),
+ * meaning it contains public fields and fluent-style setters for configuration.
+ * <p>
+ * Default values:
+ * <ul>
+ * <li>{@code background}: {@link Color#BLACK}</li>
+ * <li>{@code ambientLight}: {@link AmbientLight#NONE}</li>
+ * <li>{@code geometries}: new {@link Geometries}()</li>
+ * <li>{@code lights}: empty list</li>
+ * </ul>
  * 
  * @author Gilat Kedem and Shira Amar
  */
 public class Scene {
-	/** The name of the scene (cannot be changed after construction) */
+
+	/** The name of the scene (cannot be changed after construction). */
 	public final String name;
 
-	/** The background color of the scene */
+	/** The background color of the scene. */
 	public Color background = Color.BLACK;
 
-	/** The ambient light in the scene */
+	/** The ambient light of the scene. */
 	public AmbientLight ambientLight = AmbientLight.NONE;
 
-	/** The collection of geometries in the scene */
+	/** The collection of geometries contained in the scene. */
 	public Geometries geometries = new Geometries();
 
-	public List<LightSource> lights = new LinkedList<>(); // Added lights list
+	/** The list of light sources in the scene. */
+	public List<LightSource> lights = new LinkedList<>();
 
 	/**
 	 * Constructs a new Scene with the given name.
-	 * 
+	 *
 	 * @param name the name of the scene
 	 */
 	public Scene(String name) {
@@ -43,9 +50,9 @@ public class Scene {
 
 	/**
 	 * Sets the background color of the scene.
-	 * 
+	 *
 	 * @param background the new background color
-	 * @return the current Scene instance (for chaining)
+	 * @return this Scene instance (for method chaining)
 	 */
 	public Scene setBackground(Color background) {
 		this.background = background;
@@ -54,9 +61,9 @@ public class Scene {
 
 	/**
 	 * Sets the ambient light of the scene.
-	 * 
+	 *
 	 * @param ambientLight the new ambient light
-	 * @return the current Scene instance (for chaining)
+	 * @return this Scene instance (for method chaining)
 	 */
 	public Scene setAmbientLight(AmbientLight ambientLight) {
 		this.ambientLight = ambientLight;
@@ -64,10 +71,10 @@ public class Scene {
 	}
 
 	/**
-	 * Sets the geometries of the scene.
-	 * 
+	 * Sets the geometries collection for the scene.
+	 *
 	 * @param geometries the new set of geometries
-	 * @return the current Scene instance (for chaining)
+	 * @return this Scene instance (for method chaining)
 	 */
 	public Scene setGeometries(Geometries geometries) {
 		this.geometries = geometries;
@@ -76,9 +83,9 @@ public class Scene {
 
 	/**
 	 * Adds a light source to the scene.
-	 * 
-	 * @param light The light source to add.
-	 * @return The current Scene object (for method chaining).
+	 *
+	 * @param light the light source to add
+	 * @return this Scene instance (for method chaining)
 	 */
 	public Scene addLight(LightSource light) {
 		this.lights.add(light);

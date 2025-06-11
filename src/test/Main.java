@@ -176,5 +176,4 @@ public final class Main {
 		if (!isZero(vr.dotProduct(V1)) || !isZero(vr.dotProduct(V3)))
 			out.println("ERROR: crossProduct() result is not orthogonal to its operands");
 	}
-
 }
