@@ -15,7 +15,7 @@ public class Point {
 	public static final Point ZERO = new Point(Double3.ZERO);
 
 	/**
-	 * Creates a point from three coordinate values.
+	 * Creates a constructor by 3 points that are received as parameters.
 	 *
 	 * @param x the x-coordinate of the point
 	 * @param y the y-coordinate of the point
@@ -26,7 +26,7 @@ public class Point {
 	}
 
 	/**
-	 * Creates a point from a {@link Double3} object.
+	 * Creates a constructor with a datum that is a Point object.
 	 *
 	 * @param xyz a Double3 object representing the coordinates of the point
 	 */
@@ -34,22 +34,39 @@ public class Point {
 		_xyz = xyz;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		return (obj instanceof Point other) && this._xyz.equals(other._xyz);
+	}
+
+	@Override
+	public String toString() {
+		return "Point" + _xyz;
+	}
+
+	@Override
+	public int hashCode() {
+		return _xyz.hashCode();
+	}
+
 	/**
-	 * Subtracts another point from this point, producing a vector.
+	 * Subtracts one point from another, returning the resulting vector.
 	 *
 	 * @param other another point to subtract from this point
-	 * @return the vector from {@code other} to this point
-	 * @throws IllegalArgumentException if the result is the zero vector
+	 * @return the vector from the other point to this point
+	 * @throws IllegalArgumentException if the subtraction results in a zero vector
 	 */
 	public Vector subtract(Point other) {
 		return new Vector(_xyz.subtract(other._xyz));
 	}
 
 	/**
-	 * Adds a vector to this point and returns the resulting point.
+	 * Adds a vector to this point and returns the resulting new point.
 	 *
-	 * @param vector the vector to add
-	 * @return a new point after adding the vector to this point
+	 * @param vector the vector to add to this point
+	 * @return a new point obtained by adding the vector to this point
 	 */
 	public Point add(Vector vector) {
 		return new Point(_xyz.add(vector._xyz));
@@ -58,8 +75,8 @@ public class Point {
 	/**
 	 * Calculates the squared distance between this point and another point.
 	 *
-	 * @param other the other point
-	 * @return the squared Euclidean distance
+	 * @param other the other point to calculate the distance to
+	 * @return the squared distance between this point and the other point
 	 */
 	public double distanceSquared(Point other) {
 		double dx = other._xyz.d1() - _xyz.d1();
@@ -69,10 +86,10 @@ public class Point {
 	}
 
 	/**
-	 * Calculates the Euclidean distance between this point and another point.
+	 * Calculates the distance between 2 points
 	 *
-	 * @param other the other point
-	 * @return the Euclidean distance
+	 * @param other Another point from which the distance is calculated
+	 * @return A number
 	 */
 	public double distance(Point other) {
 		return Math.sqrt(distanceSquared(other));
