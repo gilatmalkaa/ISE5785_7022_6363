@@ -28,12 +28,6 @@ public class Camera implements Cloneable {
 	/** Number of vertical pixels */
 	private int _nY = 1;
 
-	/** Width of a single pixel (calculated) */
-	private double _rX = 0.0;
-
-	/** Height of a single pixel (calculated) */
-	private double _rY = 0.0;
-
 	/** Camera location in 3D space */
 	private Point _p0;
 
