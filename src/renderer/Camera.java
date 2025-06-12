@@ -1,6 +1,6 @@
 package renderer;
 
-import static primitives.Util.isZero;
+import static primitives.Util.*;
 
 import java.util.MissingResourceException;
 
@@ -274,7 +274,7 @@ public class Camera implements Cloneable {
 				throw new MissingResourceException(MISSING, CLASS_NAME, "Up direction (vUp)");
 			if (_camera._distance == 0)
 				throw new MissingResourceException(MISSING, CLASS_NAME, "View plane distance");
-			if (_camera._width == 0 || _camera._height == 0)
+			if (alignZero(_camera._width) <= 0 || _camera._height == 0)
 				throw new MissingResourceException(MISSING, CLASS_NAME, "View plane size");
 			if (_camera._nX <= 0 || _camera._nY <= 0)
 				throw new IllegalArgumentException("Image resolution must be positive.");
@@ -335,7 +335,7 @@ public class Camera implements Cloneable {
 	private void castRay(int i, int j) {
 		Ray ray = constructRay(_nX, _nY, j, i);
 		Color color = rayTracer.traceRay(ray);
-		imageWriter.writePixel(i, j, color);
+		imageWriter.writePixel(j, i, color);
 	}
 
 	/**
@@ -345,11 +345,9 @@ public class Camera implements Cloneable {
 	 */
 
 	public Camera renderImage() {
-		for (int j = 0; j < _nY; j++) {
-			for (int i = 0; i < _nX; i++) {
+		for (int j = 0; j < _nY; j++)
+			for (int i = 0; i < _nX; i++)
 				castRay(i, j);
-			}
-		}
 		return this;
 	}
 
@@ -361,15 +359,10 @@ public class Camera implements Cloneable {
 	 * @return this camera instance
 	 */
 	public Camera printGrid(int interval, Color color) {
-		if (imageWriter == null)
-			throw new UnsupportedOperationException("ImageWriter is not initialized.");
-		for (int j = 0; j < _nY; j++) {
-			for (int i = 0; i < _nX; i++) {
-				if (j % interval == 0 || i % interval == 0) {
+		for (int j = 0; j < _nY; j++)
+			for (int i = 0; i < _nX; i++)
+				if (j % interval == 0 || i % interval == 0)
 					imageWriter.writePixel(i, j, color);
-				}
-			}
-		}
 		return this;
 	}
 
@@ -380,8 +373,6 @@ public class Camera implements Cloneable {
 	 * @return this camera instance
 	 */
 	public Camera writeToImage(String filename) {
-		if (imageWriter == null)
-			throw new UnsupportedOperationException("ImageWriter is not initialized.");
 		imageWriter.writeToImage(filename);
 		return this;
 	}
