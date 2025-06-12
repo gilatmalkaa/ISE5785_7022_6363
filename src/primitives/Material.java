@@ -6,6 +6,11 @@ package primitives;
  * reflections.
  */
 public class Material {
+	/**
+	 * Explicit default constructor to satisfy JavaDoc generator.
+	 */
+	public Material() {
+	}
 
 	/** kD is the diffuse reflection coefficient. */
 	public Double3 kD = Double3.ZERO;

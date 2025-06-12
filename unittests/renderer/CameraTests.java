@@ -13,6 +13,12 @@ import scene.Scene;
  * @author Dan
  */
 class CameraTest {
+	/**
+	 * Explicit default constructor to satisfy JavaDoc generator.
+	 */
+	public CameraTest() {
+	}
+
 	/** Camera builder for the tests */
 	private final Camera.Builder cameraBuilder = Camera.getBuilder()
 			.setRayTracer(new Scene("Test"), RayTracerType.SIMPLE).setImageWriter(new ImageWriter(1, 1))

@@ -56,7 +56,7 @@ class SphereTests {
 	}
 
 	/**
-	 * Test method for {@link geometries.Sphere#Sphere(primitives.Point, double)}.
+	 * Test method for {@link geometries.Sphere#Sphere(double, primitives.Point)}.
 	 * Ensures invalid radius values are rejected
 	 */
 	@Test

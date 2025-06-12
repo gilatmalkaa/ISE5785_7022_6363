@@ -10,6 +10,11 @@ import primitives.*;
  * rays.
  */
 public abstract class Intersectable {
+	/**
+	 * Explicit default constructor to satisfy JavaDoc generator.
+	 */
+	public Intersectable() {
+	}
 
 	/**
 	 * Passive data structure representing a single intersection point between a ray

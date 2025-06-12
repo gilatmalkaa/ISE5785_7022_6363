@@ -8,8 +8,16 @@ import primitives.Color;
  * Unit test for the {@link ImageWriter} class. This test creates a 800x500
  * image with a colored background and a red grid.
  */
-public class ImageWriterTest {
+class ImageWriterTest {
+	/**
+	 * Explicit default constructor to satisfy JavaDoc generator.
+	 */
+	public ImageWriterTest() {
+	}
 
+	/**
+	 * Learning to work with ImageWriter class
+	 */
 	@Test
 	void testWriteImageWithGrid() {
 		int width = 800;

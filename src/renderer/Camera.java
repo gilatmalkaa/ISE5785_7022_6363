@@ -4,11 +4,7 @@ import static primitives.Util.isZero;
 
 import java.util.MissingResourceException;
 
-import primitives.Color;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
 import scene.Scene;
 
 /**

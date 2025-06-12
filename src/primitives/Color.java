@@ -120,7 +120,7 @@ public class Color {
 	 *
 	 * @param k reduction factor (must be ≥ 1)
 	 * @return new {@code Color} with reduced intensity
-	 * @throws IllegalArgumentException if k < 1
+	 * @throws IllegalArgumentException if k &lt; 1
 	 */
 	public Color reduce(int k) {
 		if (k < 1)

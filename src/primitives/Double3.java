@@ -1,6 +1,11 @@
+package primitives;
+
+import static primitives.Util.isZero;
+
 /**
- * This class represents a tuple of three double values,
- * and serves as a base for primitive mathematical operations such as addition, subtraction, scaling, etc.
+ * This class represents a tuple of three double values, and serves as a base
+ * for primitive mathematical operations such as addition, subtraction, scaling,
+ * etc.
  * <p>
  * Can be used for RGB color representation, vectors, and more.
  * </p>
@@ -10,10 +15,6 @@
  * @param d3 the third component
  * @author Dan Zilberstein
  */
-package primitives;
-
-import static primitives.Util.isZero;
-
 public record Double3(double d1, double d2, double d3) {
 
 	/** Zero triad (0,0,0) */
