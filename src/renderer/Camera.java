@@ -4,7 +4,11 @@ import static primitives.Util.isZero;
 
 import java.util.MissingResourceException;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Util;
+import primitives.Vector;
 import scene.Scene;
 
 /**
@@ -78,13 +82,30 @@ public class Camera implements Cloneable {
 		/** Internal Camera instance being configured by the Builder. */
 		private final Camera _camera;
 
+		/**
+		 * Initializes a new Builder with a fresh Camera instance.
+		 */
 		public Builder() {
 			_camera = new Camera();
 		}
 
+		/**
+		 * Initializes a new Builder with the given Camera instance.
+		 *
+		 * @param camera the Camera to initialize the Builder with
+		 */
+
 		public Builder(Camera camera) {
 			_camera = camera;
 		}
+
+		/**
+		 * Sets the camera's location point.
+		 *
+		 * @param p0 the location of the camera
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if the point is null
+		 */
 
 		public Builder setLocation(Point p0) {
 			if (p0 == null)
@@ -92,6 +113,16 @@ public class Camera implements Cloneable {
 			_camera._p0 = p0;
 			return this;
 		}
+
+		/**
+		 * Sets the camera's direction vectors explicitly using orthogonal vTo and vUp
+		 * vectors.
+		 *
+		 * @param vTo the forward direction vector
+		 * @param vUp the upward direction vector (must be orthogonal to vTo)
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if either vector is null or not orthogonal
+		 */
 
 		public Builder setDirection(Vector vTo, Vector vUp) {
 			if (vTo == null || vUp == null)
@@ -105,6 +136,18 @@ public class Camera implements Cloneable {
 			_camera._vUp = _camera._vRight.crossProduct(_camera._vTo);
 			return this;
 		}
+
+		/**
+		 * Sets the camera's viewing direction and up vector based on a target point and
+		 * an up-guess vector.
+		 *
+		 * @param target  the point the camera should look at
+		 * @param upGuess a vector approximating the up direction (must not be parallel
+		 *                to the view direction)
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if any argument is null, or if the direction
+		 *                                  vectors are invalid
+		 */
 
 		public Builder setDirection(Point target, Vector upGuess) {
 			if (target == null || upGuess == null)
@@ -123,9 +166,27 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the camera's direction using a target point, assuming a default up
+		 * direction (0, 1, 0).
+		 *
+		 * @param target the point the camera should look at
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if the target is null or invalid
+		 */
+
 		public Builder setDirection(Point target) {
 			return setDirection(target, new Vector(0, 1, 0));
 		}
+
+		/**
+		 * Sets the size of the view plane.
+		 *
+		 * @param width  the width of the view plane (must be positive)
+		 * @param height the height of the view plane (must be positive)
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if width or height is not positive
+		 */
 
 		public Builder setVpSize(double width, double height) {
 			if (width <= 0 || height <= 0)
@@ -134,6 +195,14 @@ public class Camera implements Cloneable {
 			_camera._height = height;
 			return this;
 		}
+
+		/**
+		 * Sets the distance from the camera to the view plane.
+		 *
+		 * @param distance the view plane distance (must be positive)
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if distance is not positive
+		 */
 
 		public Builder setVpDistance(double distance) {
 			if (distance <= 0)
@@ -153,6 +222,16 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the resolution of the image by specifying the number of pixels in each
+		 * dimension.
+		 *
+		 * @param nX number of horizontal pixels (must be positive)
+		 * @param nY number of vertical pixels (must be positive)
+		 * @return the updated Builder instance
+		 * @throws IllegalArgumentException if nX or nY is not positive
+		 */
+
 		public Builder setResolution(int nX, int nY) {
 			if (nX <= 0 || nY <= 0)
 				throw new IllegalArgumentException("Resolution values must be positive.");
@@ -160,6 +239,14 @@ public class Camera implements Cloneable {
 			_camera._nY = nY;
 			return this;
 		}
+
+		/**
+		 * Sets the ray tracer type for the camera based on the given scene and type.
+		 *
+		 * @param scene the scene to use for ray tracing
+		 * @param type  the type of ray tracer to apply
+		 * @return the updated Builder instance
+		 */
 
 		public Builder setRayTracer(Scene scene, RayTracerType type) {
 			if (type == RayTracerType.SIMPLE) {
@@ -169,6 +256,15 @@ public class Camera implements Cloneable {
 			}
 			return this;
 		}
+
+		/**
+		 * Builds and returns the fully configured Camera object. Validates that all
+		 * required parameters are set before construction.
+		 *
+		 * @return the constructed Camera instance
+		 * @throws MissingResourceException if any mandatory camera component is missing
+		 * @throws IllegalArgumentException if the image resolution is invalid
+		 */
 
 		public Camera build() {
 			final String MISSING = "Missing rendering data";
@@ -196,9 +292,25 @@ public class Camera implements Cloneable {
 		}
 	}
 
+	/**
+	 * Returns a new Builder instance for constructing a Camera.
+	 *
+	 * @return a new Builder object
+	 */
+
 	public static Builder getBuilder() {
 		return new Builder();
 	}
+
+	/**
+	 * Constructs a ray from the camera through a specific pixel on the view plane.
+	 *
+	 * @param nX the number of pixels in the X axis (columns)
+	 * @param nY the number of pixels in the Y axis (rows)
+	 * @param j  the index of the column (X-axis) of the pixel
+	 * @param i  the index of the row (Y-axis) of the pixel
+	 * @return the constructed ray from the camera through the specified pixel
+	 */
 
 	public Ray constructRay(int nX, int nY, int j, int i) {
 		Point pIJ = _p0;
