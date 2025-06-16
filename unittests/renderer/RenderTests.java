@@ -60,7 +60,7 @@ public class RenderTests {
 	 */
 	@Test
 	public void renderMultiColorTest() {
-		Scene scene = new Scene("Multi color").setAmbientLight(new AmbientLight(new Color(51, 51, 51), Double3.ONE)); // הוספת
+		Scene scene = new Scene("Multi color")..setAmbientLight(new AmbientLight(new Color(WHITE), Double3.ONE)); // הוספת
 																														// מקדם
 																														// תאורה
 																														// סביבתית
@@ -71,17 +71,17 @@ public class RenderTests {
 						.setMaterial(new Material().setKa(0.4).setKd(0.5).setKs(0.3).setShininess(20)), // הגדרת חומר
 																										// לכדור
 				new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100))
-						.setEmission(new Color(GREEN)).setMaterial(new Material().setKa(new Double3(0.8, 0, 0))), // הגדרת
+						.setMaterial(new Material().setKa(new Double3(0, 0.8, 0))), // הגדרת
 																													// חומר
 																													// למשולש
 																													// הירוק
 				new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100))
-						.setEmission(new Color(RED)).setMaterial(new Material().setKa(new Double3(0.8, 0, 0))), // הגדרת
+						.setMaterial(new Material().setKa(new Double3(0.8, 0, 0))), // הגדרת
 																												// חומר
 																												// למשולש
 																												// האדום
 				new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))
-						.setEmission(new Color(BLUE)).setMaterial(new Material().setKa(new Double3(0, 0, 0.8))) // הגדרת
+						.setMaterial(new Material().setKa(new Double3(0, 0, 0.8))) // הגדרת
 																												// חומר
 																												// למשולש
 																												// הכחול

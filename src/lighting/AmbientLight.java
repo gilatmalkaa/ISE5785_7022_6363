@@ -12,11 +12,10 @@ import primitives.Double3;
  * </p>
  */
 public class AmbientLight extends Light {
-
 	/**
 	 * Constant representing no ambient light.
 	 */
-	public static final AmbientLight NONE = new AmbientLight(Color.BLACK, 0d);
+	public static final AmbientLight NONE = new AmbientLight(Color.BLACK, Double3.ZERO);
 
 	/**
 	 * Constructs ambient light with given intensity and a reflection coefficient.
