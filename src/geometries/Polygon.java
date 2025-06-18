@@ -1,6 +1,6 @@
 package geometries;
 
-import static primitives.Util.*;
+import static primitives.Util.isZero;
 
 import java.util.List;
 
@@ -107,23 +107,19 @@ public class Polygon extends Geometry {
 			Vector v2 = vertex.subtract(p0);
 
 			Vector cross = v1.crossProduct(v2);
-			double currentSign = alignZero(v.dotProduct(cross));
-
-			if (isZero(currentSign)) {
+			double currentSign = v.dotProduct(cross);
+			if (isZero(currentSign))
 				return null; // on edge or vertex → not inside polygon
-			}
 
-			if (sign == 0) {
+			if (sign == 0)
 				sign = currentSign > 0 ? 1 : -1;
-			} else if (sign * currentSign < 0) {
+			else if (sign * currentSign < 0)
 				return null; // point is outside
-			}
 
 			v1 = v2;
 		}
 
-		Point intersectionPoint = intersections.getFirst();
-		return List.of(new Intersection(this, intersectionPoint));
+		return List.of(new Intersection(this, intersections.getFirst()));
 	}
 
 }

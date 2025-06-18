@@ -1,6 +1,6 @@
 package renderer;
 
-import java.util.List;
+import static primitives.Util.alignZero;
 
 import geometries.Intersectable.Intersection;
 import lighting.LightSource;
@@ -25,14 +25,11 @@ public class SimpleRayTracer extends RayTracerBase {
 
 	@Override
 	public Color traceRay(Ray ray) {
-		List<Intersection> intersections = scene.geometries.calculateIntersections(ray);
+		var intersections = scene.geometries.calculateIntersections(ray);
 		if (intersections == null)
 			return scene.background;
 
-		Intersection closest = ray.findClosestIntersection(intersections);
-		if (closest == null)
-			return scene.background;
-
+		var closest = ray.findClosestIntersection(intersections);
 		return calcColor(closest, ray);
 	}
 
@@ -64,15 +61,14 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return {@code true} if intersection is valid and usable for lighting
 	 */
 	boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
-		if (intersection == null || intersection.geometry == null) {
+		if (intersection == null || intersection.geometry == null)
 			return false;
-		}
 
-		intersection.cacheRayDirection = rayDirection;
-		intersection.cacheNormal = intersection.geometry.getNormal(intersection.point);
-		intersection.cacheRayDirectionDotCacheNormal = intersection.cacheNormal.dotProduct(rayDirection);
+		intersection.rayDirection = rayDirection;
+		intersection.normal = intersection.geometry.getNormal(intersection.point);
+		intersection.rayDirectionDotNormal = alignZero(intersection.normal.dotProduct(rayDirection));
 
-		return !Util.isZero(intersection.cacheRayDirectionDotCacheNormal);
+		return intersection.rayDirectionDotNormal != 0;
 	}
 
 	/**
@@ -83,12 +79,12 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return {@code true} if the light affects the surface
 	 */
 	private boolean setLightSource(Intersection intersection, LightSource light) {
-		intersection.cacheLightSource = light;
-		intersection.cacheLightDirection = light.getL(intersection.point);
-		intersection.cacheLightSourceDirectionDotCacheNormal = intersection.cacheNormal
-				.dotProduct(intersection.cacheLightDirection);
+		intersection.light = light;
+		intersection.l = light.getL(intersection.point);
+		intersection.pointToLight = intersection.l.scale(-1);
+		intersection.lDotNormal = alignZero(intersection.normal.dotProduct(intersection.l));
 
-		return !Util.isZero(intersection.cacheLightSourceDirectionDotCacheNormal);
+		return intersection.lDotNormal * intersection.rayDirectionDotNormal > 0;
 	}
 
 	/**
@@ -102,18 +98,13 @@ public class SimpleRayTracer extends RayTracerBase {
 		Color color = Color.BLACK;
 
 		for (LightSource light : scene.lights) {
-			if (!setLightSource(intersection, light)) {
+			if (!setLightSource(intersection, light))
 				continue;
-			}
 
 			Double3 diffuse = calcDiffusive(intersection);
 			Double3 specular = calcSpecular(intersection);
-
-			if (Util.compareSign(intersection.cacheLightSourceDirectionDotCacheNormal,
-					intersection.cacheRayDirectionDotCacheNormal)) {
-				Color lightIntensity = light.getIntensity(intersection.point);
-				color = color.add(lightIntensity.scale(diffuse.add(specular)));
-			}
+			Color lightIntensity = light.getIntensity(intersection.point);
+			color = color.add(lightIntensity.scale(diffuse.add(specular)));
 		}
 
 		return color;
@@ -126,23 +117,10 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return specular intensity as {@link Double3}
 	 */
 	private Double3 calcSpecular(Intersection intersection) {
-		double product = intersection.cacheLightSourceDirectionDotCacheNormal
-				* intersection.cacheRayDirectionDotCacheNormal;
-
-		if (product <= 0)
-			return Double3.ZERO;
-
-		Vector n = intersection.cacheNormal;
-		Vector l = intersection.cacheLightDirection;
-		double nl = intersection.cacheLightSourceDirectionDotCacheNormal;
-		Vector r = l.subtract(n.scale(2 * nl));
-
-		Vector v = intersection.cacheRayDirection.scale(-1);
-		double vr = v.dotProduct(r);
-		if (vr <= 0)
-			return Double3.ZERO;
-
-		return intersection.material.kS.scale(Math.pow(vr, intersection.material.nShininess));
+		Vector r = intersection.l.subtract(intersection.normal.scale(2 * intersection.lDotNormal));
+		double minusVR = -intersection.rayDirection.dotProduct(r);
+		return minusVR <= 0 ? Double3.ZERO
+				: intersection.material.kS.scale(Math.pow(minusVR, intersection.material.nShininess));
 	}
 
 	/**
@@ -152,6 +130,6 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return diffuse intensity as {@link Double3}
 	 */
 	private Double3 calcDiffusive(Intersection intersection) {
-		return intersection.material.kD.scale(Math.abs(intersection.cacheLightSourceDirectionDotCacheNormal));
+		return intersection.material.kD.scale(Math.abs(intersection.lDotNormal));
 	}
 }

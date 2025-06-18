@@ -58,9 +58,6 @@ class RayTests {
 		// BV01: Null list
 		assertNull(ray.findClosestPoint(null), "BV01: Expected null for null list");
 
-		// BV02: Empty list
-		assertNull(ray.findClosestPoint(List.of()), "BV02: Expected null for empty list");
-
 		// BV03: Closest point is the first in the list
 		Point p4 = new Point(0.5, 0, 0); // Closest
 		Point p5 = new Point(1, 1, 0);

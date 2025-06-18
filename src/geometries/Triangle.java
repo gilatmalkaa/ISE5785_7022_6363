@@ -30,7 +30,7 @@ public class Triangle extends Polygon {
 		if (intersectionPoints == null)
 			return null;
 
-		Point p = intersectionPoints.get(0); // Intersection point with the plane
+		Point p = intersectionPoints.getFirst(); // Intersection point with the plane
 
 		Point v1 = _vertices.get(0);
 		Point v2 = _vertices.get(1);

@@ -22,15 +22,13 @@ public abstract class Intersectable {
 	 */
 	public static class Intersection {
 		/**
-		 * The geometry object that was intersected.
-		 */
-		public final Geometry geometry;
-
-		/**
 		 * The point of intersection.
 		 */
 		public final Point point;
-
+		/**
+		 * The geometry object that was intersected.
+		 */
+		public final Geometry geometry;
 		/**
 		 * The material of the intersected geometry.
 		 */
@@ -39,32 +37,32 @@ public abstract class Intersectable {
 		/**
 		 * Cached direction of the ray for shading calculations.
 		 */
-		public Vector cacheRayDirection;
-
-		/**
-		 * Cached direction from the point to the light source.
-		 */
-		public Vector cacheLightDirection;
-
+		public Vector rayDirection;
 		/**
 		 * Cached normal vector at the point of intersection.
 		 */
-		public Vector cacheNormal;
-
+		public Vector normal;
 		/**
 		 * Dot product of the ray direction and the normal vector.
 		 */
-		public double cacheRayDirectionDotCacheNormal;
+		public double rayDirectionDotNormal;
 
 		/**
 		 * The light source associated with the intersection.
 		 */
-		public LightSource cacheLightSource;
-
+		public LightSource light;
+		/**
+		 * Cached direction from the light source to the point.
+		 */
+		public Vector l;
+		/**
+		 * Cached direction from the point to the light source.
+		 */
+		public Vector pointToLight;
 		/**
 		 * Dot product of the light direction and the normal vector.
 		 */
-		public double cacheLightSourceDirectionDotCacheNormal;
+		public double lDotNormal;
 
 		/**
 		 * Constructs an Intersection with the given geometry and point.

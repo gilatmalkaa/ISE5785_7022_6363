@@ -1,7 +1,5 @@
 package primitives;
 
-import static primitives.Util.isZero;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +33,7 @@ public class Ray {
 
 	@Override
 	public String toString() {
-		return "Ray= " + "head: " + _head + ", direction: " + _direction + '}';
+		return "Ray{" + _head + _direction + '}';
 	}
 
 	@Override
@@ -85,17 +83,21 @@ public class Ray {
 	 */
 	public Point getPoint(double t) {
 		// if t is zero, return the head point
-		return isZero(t) ? _head : _head.add(_direction.scale(t));
+		try {
+			return _head.add(_direction.scale(t));
+		} catch (IllegalArgumentException ignored) {
+			return _head;
+		}
 	}
 
 	/**
 	 * Method to find the closest point to the head of the ray
 	 * 
-	 * @param points list of points
+	 * @param points list of points (either null or non-empty)
 	 * @return the closest point to the head of the ray
 	 */
 	public Point findClosestPoint(List<Point> points) {
-		return points == null || points.isEmpty() ? null
+		return points == null ? null
 				: findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
 	}
 
@@ -108,17 +110,17 @@ public class Ray {
 	 *         exist
 	 */
 	public Intersection findClosestIntersection(List<Intersection> intersections) {
-		if (intersections == null || intersections.isEmpty())
+		if (intersections == null)
 			return null;
 
 		Intersection closest = null;
-		double minDistance = Double.MAX_VALUE;
+		double minDistanceSquared = Double.POSITIVE_INFINITY;
 
-		for (Intersection inter : intersections) {
-			double distance = _head.distance(inter.point);
-			if (distance < minDistance) {
-				minDistance = distance;
-				closest = inter;
+		for (Intersection intersection : intersections) {
+			double distanceSquared = _head.distanceSquared(intersection.point);
+			if (distanceSquared < minDistanceSquared) {
+				minDistanceSquared = distanceSquared;
+				closest = intersection;
 			}
 		}
 

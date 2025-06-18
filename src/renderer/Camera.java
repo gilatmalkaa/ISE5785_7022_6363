@@ -329,10 +329,10 @@ public class Camera implements Cloneable {
 	 * Casts a ray through the center of a specific pixel, traces its color, and
 	 * writes the result into the image.
 	 *
-	 * @param i the column index (X)
 	 * @param j the row index (Y)
+	 * @param i the column index (X)
 	 */
-	private void castRay(int i, int j) {
+	private void castRay(int j, int i) {
 		Ray ray = constructRay(_nX, _nY, j, i);
 		Color color = rayTracer.traceRay(ray);
 		imageWriter.writePixel(j, i, color);

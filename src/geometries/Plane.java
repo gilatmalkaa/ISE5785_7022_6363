@@ -66,9 +66,9 @@ public class Plane extends Geometry {
 			return null;
 		}
 
-		double nQMinusP0 = alignZero(_normal.dotProduct(vector));
+		double nQMinusP0 = _normal.dotProduct(vector);
 		double t = alignZero(nQMinusP0 / nDotV);
 
-		return Util.alignZero(t) <= 0 ? null : List.of(new Intersection(this, ray.getPoint(t)));
+		return t <= 0 ? null : List.of(new Intersection(this, ray.getPoint(t)));
 	}
 }

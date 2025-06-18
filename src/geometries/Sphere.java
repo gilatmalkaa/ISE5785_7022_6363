@@ -63,13 +63,14 @@ public class Sphere extends RadialGeometry {
 		if (thSquared <= 0)
 			return null; // No intersections
 
-		double th = Math.sqrt(thSquared);
-		double t1 = alignZero(tm - th);
-		double t2 = alignZero(tm + th);
+		double th = Math.sqrt(thSquared); // th > 0
 
-		return t1 > 0 && t2 > 0
-				? List.of(new Intersection(this, ray.getPoint(t1)), new Intersection(this, ray.getPoint(t2)))
-				: t1 > 0 ? List.of(new Intersection(this, ray.getPoint(t1)))
-						: t2 > 0 ? List.of(new Intersection(this, ray.getPoint(t2))) : null;
+		double t2 = alignZero(tm + th);
+		if (t2 <= 0) // t1 < t2 <= 0
+			return null;
+
+		double t1 = alignZero(tm - th);
+		return t1 <= 0 ? List.of(new Intersection(this, ray.getPoint(t2)))
+				: List.of(new Intersection(this, ray.getPoint(t1)), new Intersection(this, ray.getPoint(t2)));
 	}
 }

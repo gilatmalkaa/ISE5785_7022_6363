@@ -119,8 +119,7 @@ class SphereTests {
 		// TC11: Ray starts at sphere and goes inside (1 point)
 		Ray ray5 = new Ray(new Point(1, 0, 1), new Vector(0, 0, -1));
 		List<Point> result5 = sphere.findIntersections(ray5);
-		assertNotNull(result5, "TC11: Expected one intersection from surface inward");
-		assertEquals(1, result5.size(), "TC11: Expected one point");
+		assertEquals(List.of(new Point(1, 0, -1)), result5, "TC11: Expected one point");
 
 		// TC12: Ray starts at sphere and goes outside (0 points)
 		Ray ray6 = new Ray(new Point(0, 0, 0), new Vector(-1, 0, 0)); // Exiting the surface
@@ -150,9 +149,7 @@ class SphereTests {
 		Sphere centerSphere = new Sphere(1, new Point(0, 0, 0));
 		Ray centerRay = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0));
 		List<Point> centerResult = centerSphere.findIntersections(centerRay);
-		assertNotNull(centerResult, "TC24: Ray from center should return one intersection");
-		assertEquals(1, centerResult.size(), "TC24: Expected one point from center");
-		assertEquals(new Point(1, 0, 0), centerResult.get(0), "TC24: Intersection should be at radius distance");
+		assertEquals(List.of(new Point(1, 0, 0)), centerResult, "TC24: Intersection should be at radius distance");
 
 		// TC25: Ray through center, starts after (0 points)
 		Ray ray11 = new Ray(new Point(2, 0, 0), _v001); // Starting after the sphere
