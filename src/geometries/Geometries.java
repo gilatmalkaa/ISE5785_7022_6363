@@ -44,12 +44,12 @@ public class Geometries extends Intersectable {
 	protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 		List<Intersection> intersections = null;
 		for (Intersectable geometry : _geometries) {
-			List<Intersection> geometryIntersections = geometry.calculateIntersectionsHelper(ray);
+			var geometryIntersections = geometry.calculateIntersections(ray);
 			if (geometryIntersections != null) {
-				if (intersections == null) {
-					intersections = new LinkedList<>();
-				}
-				intersections.addAll(geometryIntersections);
+				if (intersections == null)
+					intersections = new LinkedList<>(geometryIntersections);
+				else
+					intersections.addAll(geometryIntersections);
 			}
 		}
 		return intersections;

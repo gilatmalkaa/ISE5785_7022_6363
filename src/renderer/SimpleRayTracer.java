@@ -42,9 +42,8 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return the calculated color at the intersection
 	 */
 	private Color calcColor(Intersection intersection, Ray ray) {
-		if (!preprocessIntersection(intersection, ray.getDir())) {
+		if (!preprocessIntersection(intersection, ray.getDir()))
 			return Color.BLACK;
-		}
 
 		Color color = intersection.geometry.getEmission();
 		color = color.add(scene.ambientLight.getIntensity().scale(intersection.material.kA));
@@ -61,13 +60,9 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return {@code true} if intersection is valid and usable for lighting
 	 */
 	boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
-		if (intersection == null || intersection.geometry == null)
-			return false;
-
 		intersection.rayDirection = rayDirection;
 		intersection.normal = intersection.geometry.getNormal(intersection.point);
 		intersection.rayDirectionDotNormal = alignZero(intersection.normal.dotProduct(rayDirection));
-
 		return intersection.rayDirectionDotNormal != 0;
 	}
 
@@ -83,7 +78,6 @@ public class SimpleRayTracer extends RayTracerBase {
 		intersection.l = light.getL(intersection.point);
 		intersection.pointToLight = intersection.l.scale(-1);
 		intersection.lDotNormal = alignZero(intersection.normal.dotProduct(intersection.l));
-
 		return intersection.lDotNormal * intersection.rayDirectionDotNormal > 0;
 	}
 

@@ -345,9 +345,9 @@ public class Camera implements Cloneable {
 	 */
 
 	public Camera renderImage() {
-		for (int j = 0; j < _nY; j++)
-			for (int i = 0; i < _nX; i++)
-				castRay(i, j);
+		for (int i = 0; i < _nY; i++)
+			for (int j = 0; j < _nX; j++)
+				castRay(j, i);
 		return this;
 	}
 
@@ -370,10 +370,8 @@ public class Camera implements Cloneable {
 	 * Writes the rendered image to disk.
 	 * 
 	 * @param filename the name of the image file (without extension)
-	 * @return this camera instance
 	 */
-	public Camera writeToImage(String filename) {
+	public void writeToImage(String filename) {
 		imageWriter.writeToImage(filename);
-		return this;
 	}
 }
