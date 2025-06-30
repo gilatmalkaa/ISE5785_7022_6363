@@ -30,7 +30,7 @@ public class Material {
 	 * @param kD the diffuse reflection coefficient as {@link Double3}
 	 * @return the updated {@code Material} instance
 	 */
-	public Material setKd(Double3 kD) {
+	public Material setKD(Double3 kD) {
 		this.kD = kD;
 		return this;
 	}
@@ -41,7 +41,7 @@ public class Material {
 	 * @param kD the diffuse reflection coefficient as a scalar
 	 * @return the updated {@code Material} instance
 	 */
-	public Material setKd(double kD) {
+	public Material setKD(double kD) {
 		this.kD = new Double3(kD);
 		return this;
 	}
@@ -52,7 +52,7 @@ public class Material {
 	 * @param kS the specular reflection coefficient as {@link Double3}
 	 * @return the updated {@code Material} instance
 	 */
-	public Material setKs(Double3 kS) {
+	public Material setKS(Double3 kS) {
 		this.kS = kS;
 		return this;
 	}
@@ -63,7 +63,7 @@ public class Material {
 	 * @param kS the specular reflection coefficient as a scalar
 	 * @return the updated {@code Material} instance
 	 */
-	public Material setKs(double kS) {
+	public Material setKS(double kS) {
 		this.kS = new Double3(kS);
 		return this;
 	}
@@ -74,7 +74,7 @@ public class Material {
 	 * @param kA the ambient reflection coefficient as {@link Double3}
 	 * @return the updated {@code Material} instance
 	 */
-	public Material setKa(Double3 kA) {
+	public Material setKA(Double3 kA) {
 		this.kA = kA;
 		return this;
 	}
@@ -85,7 +85,7 @@ public class Material {
 	 * @param kA the ambient reflection coefficient as a scalar
 	 * @return the updated {@code Material} instance
 	 */
-	public Material setKa(double kA) {
+	public Material setKA(double kA) {
 		this.kA = new Double3(kA);
 		return this;
 	}

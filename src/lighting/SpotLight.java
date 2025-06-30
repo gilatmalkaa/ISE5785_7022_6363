@@ -30,7 +30,7 @@ public class SpotLight extends PointLight {
 	 * @param direction the direction the spotlight is pointing (will be normalized)
 	 * @param position  the position of the light source
 	 */
-	public SpotLight(Color color, Vector direction, Point position) {
+	public SpotLight(Color color, Point position, Vector direction) {
 		super(color, position);
 		this.direction = direction.normalize();
 	}
@@ -72,8 +72,4 @@ public class SpotLight extends PointLight {
 		return oldColor.scale(Math.pow(dotProduct, narrowBeam));
 	}
 
-	@Override
-	public double getDistance(Point point) {
-		return position.distance(point);
-	}
 }

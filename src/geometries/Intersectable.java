@@ -116,7 +116,7 @@ public abstract class Intersectable {
 	 * @param ray the ray to intersect with
 	 * @return list of {@link Point} objects, or {@code null} if none
 	 */
-	public List<Point> findIntersections(Ray ray) {
+	public final List<Point> findIntersections(Ray ray) {
 		var list = calculateIntersections(ray);
 		return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
 	}

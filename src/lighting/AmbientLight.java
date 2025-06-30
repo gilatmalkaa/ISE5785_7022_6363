@@ -11,20 +11,17 @@ import primitives.Color;
  * </p>
  */
 public class AmbientLight extends Light {
-
 	/**
 	 * Constant representing no ambient light.
 	 */
 	public static final AmbientLight NONE = new AmbientLight(Color.BLACK);
 
 	/**
-	 * Constructs ambient light with given intensity and a reflection coefficient.
-	 * The final intensity is calculated by scaling {@code ia} with {@code ka}.
-	 *
-	 * @param ia the base intensity of the ambient light
+	 * Constructs ambient light with a given color intensity.
+	 * 
+	 * @param intensity Color representing the ambient light intensity (IA)
 	 */
-	public AmbientLight(Color ia) {
-		super(ia);
+	public AmbientLight(Color intensity) {
+		super(intensity);
 	}
-
 }

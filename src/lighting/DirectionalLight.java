@@ -4,14 +4,12 @@ import primitives.*;
 
 /**
  * Represents a directional light source in the scene. Directional light
- * simulates a light source at infinite distance (such as sunlight), with
- * parallel rays in a fixed direction.
+ * simulates a light source at infinite distance (e.g., sunlight), with parallel
+ * rays in a fixed direction.
  */
 public class DirectionalLight extends Light implements LightSource {
 
-	/**
-	 * The direction vector of the light (normalized).
-	 */
+	/** The direction vector of the light (normalized). */
 	private final Vector direction;
 
 	/**
@@ -32,8 +30,7 @@ public class DirectionalLight extends Light implements LightSource {
 
 	@Override
 	public Color getIntensity(Point point) {
-		double dotProduct = Math.max(0, direction.dotProduct(getL(point)));
-		return intensity.scale(dotProduct);
+		return intensity;
 	}
 
 	@Override
