@@ -12,7 +12,13 @@ import scene.Scene;
  * intersection point using basic Phong reflection model with ambient, diffuse,
  * and specular components.
  */
+
 public class SimpleRayTracer extends RayTracerBase {
+
+	/**
+	 * Offset to avoid self-intersection.
+	 */
+	private static final double DELTA = 0.1;
 
 	/**
 	 * Constructs a SimpleRayTracer with the given scene.
@@ -101,6 +107,9 @@ public class SimpleRayTracer extends RayTracerBase {
 			if (!setLightSource(intersection, light))
 				continue;
 
+			if (!unshaded(intersection))
+				continue;
+
 			Double3 diffuse = calcDiffusive(intersection);
 			Double3 specular = calcSpecular(intersection);
 			Color lightIntensity = light.getIntensity(intersection.point);
@@ -131,5 +140,28 @@ public class SimpleRayTracer extends RayTracerBase {
 	 */
 	private Double3 calcDiffusive(Intersection intersection) {
 		return intersection.material.kD.scale(Math.abs(intersection.lDotNormal));
+	}
+
+	/**
+	 * Checks if a point on a surface is unshaded (not blocked from the light
+	 * source).
+	 *
+	 * @param intersection the intersection point with normal and light info
+	 * @return true if no geometry blocks the light (point is lit), false otherwise
+	 */
+
+	private boolean unshaded(Intersection intersection) {
+		Vector pointToLight = intersection.l.scale(-1);
+		Ray shadowRay = new Ray(intersection.point, pointToLight, intersection.normal);
+		double lightDistance = intersection.light.getDistance(intersection.point);
+		var intersections = scene.geometries.findIntersections(shadowRay);
+		if (intersections == null)
+			return true;
+		for (Point p : intersections) {
+			double distancePoint = intersection.point.distance(p);
+			if (distancePoint < lightDistance)
+				return false;
+		}
+		return true;
 	}
 }

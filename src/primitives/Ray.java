@@ -11,6 +11,12 @@ import geometries.Intersectable.Intersection;
 public class Ray {
 
 	/**
+	 * Small delta value used to move the ray origin slightly to avoid
+	 * self-intersection (shadow acne).
+	 */
+	private static final double DELTA = 0.1;
+
+	/**
 	 * Creating the point
 	 */
 	private final Point _head;
@@ -29,6 +35,19 @@ public class Ray {
 	public Ray(Point head, Vector direction) {
 		this._head = head;
 		this._direction = direction.normalize();
+	}
+
+	/**
+	 * Ray from point, offset by normal to avoid self-intersection.
+	 * 
+	 * @param p      starting point
+	 * @param dir    direction vector
+	 * @param normal surface normal
+	 */
+	public Ray(Point p, Vector dir, Vector normal) {
+		Vector _delta = normal.scale(dir.dotProduct(normal) > 0 ? DELTA : -DELTA);
+		this._head = p.add(_delta);
+		this._direction = dir.normalize();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ package primitives;
  * A class that represents a point in the 3D Euclidean coordinate system.
  */
 public class Point {
+
 	/**
 	 * The point that consists of 3 numbers (coordinates).
 	 */
@@ -13,6 +14,13 @@ public class Point {
 	 * The point at the head of the 3D Euclidean coordinate system.
 	 */
 	public static final Point ZERO = new Point(Double3.ZERO);
+
+	/**
+	 * Dummy constructor to support placeholder use only. Not for actual usage.
+	 */
+	public Point() {
+		_xyz = Double3.ZERO;
+	}
 
 	/**
 	 * Creates a constructor by 3 points that are received as parameters.

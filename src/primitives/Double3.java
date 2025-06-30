@@ -121,4 +121,5 @@ public record Double3(double d1, double d2, double d3) {
 	public String toString() {
 		return "(" + d1 + "," + d2 + "," + d3 + ")";
 	}
+
 }
