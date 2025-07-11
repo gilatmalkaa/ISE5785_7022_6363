@@ -21,6 +21,16 @@ public class Material {
 	/** kA is the ambient reflection coefficient. */
 	public Double3 kA = Double3.ONE;
 
+	/**
+	 * Transparency coefficient. Controls how much light passes through the surface.
+	 */
+	public Double3 kT = Double3.ZERO;
+
+	/**
+	 * Reflection coefficient. Controls how much light is reflected like a mirror.
+	 */
+	public Double3 kR = Double3.ZERO;
+
 	/** Shininess factor for specular reflection. */
 	public int nShininess = 0;
 
@@ -88,6 +98,48 @@ public class Material {
 	public Material setKA(double kA) {
 		this.kA = new Double3(kA);
 		return this;
+	}
+
+	/**
+	 * Sets the transparency coefficient using a {@link Double3}.
+	 *
+	 * @param kT the transparency coefficient as a {@code Double3}
+	 * @return the current {@code Material} object for method chaining
+	 */
+	public Material setKT(Double3 kT) {
+		this.kT = kT;
+		return this;
+	}
+
+	/**
+	 * Sets the transparency coefficient using a single double value.
+	 *
+	 * @param kT the transparency coefficient value
+	 * @return the current {@code Material} object for method chaining
+	 */
+	public Material setKT(double kT) {
+		return setKT(new Double3(kT));
+	}
+
+	/**
+	 * Sets the reflection coefficient using a {@link Double3}.
+	 *
+	 * @param kR the reflection coefficient as a {@code Double3}
+	 * @return the current {@code Material} object for method chaining
+	 */
+	public Material setKR(Double3 kR) {
+		this.kR = kR;
+		return this;
+	}
+
+	/**
+	 * Sets the reflection coefficient using a single double value.
+	 *
+	 * @param kR the reflection coefficient value
+	 * @return the current {@code Material} object for method chaining
+	 */
+	public Material setKR(double kR) {
+		return setKR(new Double3(kR));
 	}
 
 	/**
