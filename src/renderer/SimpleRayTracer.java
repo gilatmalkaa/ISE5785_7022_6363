@@ -54,29 +54,19 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the color at a given intersection point based on lighting and
-	 * material.
+	 * Calculates the final color at a specific intersection point by combining
+	 * ambient lighting with local lighting effects such as diffuse and specular
+	 * reflection.
 	 *
-	 * @param intersection the intersection point in the scene
-	 * @param ray          the ray that caused the intersection
-	 * @return the calculated color at the intersection
+	 * @param intersection the intersection in the scene
+	 * @param ray          the ray that produced the intersection
+	 * @return the computed color at the intersection point
 	 */
 	private Color calcColor(Intersection intersection, Ray ray) {
-<<<<<<< HEAD
 		return preprocessIntersection(intersection, ray.getDir())
 				? calcColor(intersection, MAX_CALC_COLOR_LEVEL, INITIAL_K).add(
 						scene.ambientLight.getIntensity().scale(intersection.material.kA))
 				: Color.BLACK;
-=======
-		if (!preprocessIntersection(intersection, ray.getDir()))
-			return Color.BLACK;
-
-		Color color = intersection.geometry.getEmission();
-		color = color.add(scene.ambientLight.getIntensity().scale(intersection.material.kA));
-		color = color.add(calcColorLocalEffects(intersection));
-
-		return color;
->>>>>>> branch 'main' of https://github.com/Gilat1/ISE5785_7022_6363.git
 	}
 
 	/**
