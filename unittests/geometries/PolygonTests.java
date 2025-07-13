@@ -110,7 +110,7 @@ class PolygonTests {
 		Ray ray1 = new Ray(new Point(1, 1, 1), new Vector(0, 0, -1));
 		List<Point> result1 = polygon.findIntersections(ray1);
 		assertNotNull(result1, "TC01: Expected intersection inside polygon");
-		assertEquals(1, result1.size(), "TC01: Expected one intersection point");
+		assertEquals(List.of(new Point(1, 1, 0)), result1, "TC01: Incorrect intersection point inside polygon");
 
 		// TC02: Ray intersects outside polygon (against edge)
 		Ray ray2 = new Ray(new Point(3, 1, 1), new Vector(0, 0, -1));

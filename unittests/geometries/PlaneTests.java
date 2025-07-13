@@ -121,7 +121,7 @@ class PlaneTests {
 		Ray ray1 = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
 		List<Point> result1 = plane.findIntersections(ray1);
 		assertNotNull(result1, "TC01: Expected intersection point");
-		assertEquals(1, result1.size(), "TC01: Should be exactly 1 intersection");
+		assertEquals(List.of(new Point(0, 0, 1)), result1, "TC01: Incorrect intersection point");
 
 		// TC02: Ray goes away from the plane
 		Ray ray2 = new Ray(new Point(0, 0, 2), new Vector(0, 0, 1));

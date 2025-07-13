@@ -103,7 +103,7 @@ class SphereTests {
 		Ray ray3 = new Ray(_p100, _v001); // Starting inside the sphere
 		List<Point> result3 = sphere.findIntersections(ray3);
 		assertNotNull(result3, "TC03: Ray starts inside – should intersect once");
-		assertEquals(1, result3.size(), "TC03: Expected one point");
+		assertEquals(List.of(new Point(1, 0, 1)), result3, "TC03: Expected intersection point");
 
 		// TC04: Ray starts after the sphere (0 points)
 		Ray ray4 = new Ray(new Point(3, 0, 0), new Vector(1, 0, 0));
@@ -130,18 +130,19 @@ class SphereTests {
 		List<Point> result7 = sphere.findIntersections(ray7);
 		assertNotNull(result7, "TC21: Ray through center");
 		assertEquals(2, result7.size(), "TC21: Expected two points");
+		assertEquals(List.of(new Point(0, 0, 0), new Point(2, 0, 0)), result7, "TC21: Incorrect intersection points");
 
 		// TC22: Ray through center, starts at surface (1 point)
 		Ray ray8 = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)); // At the surface, heading toward the center
 		List<Point> result8 = sphere.findIntersections(ray8);
 		assertNotNull(result8, "TC22: Ray through center from surface");
-		assertEquals(1, result8.size(), "TC22: Expected one point");
+		assertEquals(List.of(new Point(2, 0, 0)), result8, "TC22: Expected intersection at far side");
 
 		// TC23: Ray through center, starts inside (1 point)
 		Ray ray9 = new Ray(_p100, _v001); // Starting inside the sphere
 		List<Point> result9 = sphere.findIntersections(ray9);
 		assertNotNull(result9, "TC23: Inside ray");
-		assertEquals(1, result9.size(), "TC23: Expected one point");
+		assertEquals(List.of(new Point(1, 0, 1)), result9, "TC23: Expected intersection point");
 
 		// TC24: Ray starts exactly at the center of the sphere (special case)
 		Sphere centerSphere = new Sphere(1, new Point(0, 0, 0));
@@ -157,7 +158,7 @@ class SphereTests {
 		Ray rayBackward = new Ray(new Point(2, 0, 0), new Vector(-1, 0, 0)); // Going backward through the center
 		List<Point> resultBackward = sphere.findIntersections(rayBackward);
 		assertNotNull(resultBackward, "TC26: Ray goes backward through center");
-		assertEquals(1, resultBackward.size(), "TC26: Expected one point");
+		assertEquals(List.of(new Point(0, 0, 0)), resultBackward, "TC26: Expected intersection at far side");
 
 		// **** Group 3: Ray is tangent to the sphere (0 points)
 
