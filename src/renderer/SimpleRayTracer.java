@@ -158,7 +158,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @param intersection the intersection point with normal and light info
 	 * @return true if no geometry blocks the light (point is lit), false otherwise
 	 */
-
+	@SuppressWarnings("unused")
 	private boolean unshaded(Intersection intersection) {
 		Vector pointToLight = intersection.l.scale(-1);
 		Ray shadowRay = new Ray(intersection.point, pointToLight, intersection.normal);
