@@ -73,14 +73,13 @@ public abstract class Intersectable {
 		public Intersection(Geometry geometry, Point point) {
 			this.geometry = geometry;
 			this.point = point;
-			this.material = geometry != null ? geometry.getMaterial() : null;
+			this.material = geometry == null ? null : geometry.getMaterial();
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			return obj instanceof Intersection other && geometry == other.geometry && point.equals(other.point);
+			return this == obj || obj instanceof Intersection other && //
+					geometry == other.geometry && point.equals(other.point);
 		}
 
 		@Override

@@ -1,6 +1,6 @@
 package geometries;
 
-import static primitives.Util.*;
+import static primitives.Util.isZero;
 
 import primitives.*;
 
@@ -28,10 +28,9 @@ public class Cylinder extends Tube {
 
 	@Override
 	public Vector getNormal(Point point) {
-		Point p0 = _ray.getP0();
 		Vector dir = _ray.getDir();
-		Vector p0ToPoint = point.subtract(p0);
-		double t = alignZero(dir.dotProduct(p0ToPoint));
+		Vector p0ToPoint = point.subtract(_ray.getP0());
+		double t = dir.dotProduct(p0ToPoint);
 
 		if (isZero(t))
 			return dir.scale(-1);

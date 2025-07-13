@@ -1,5 +1,7 @@
 package lighting;
 
+import static primitives.Util.alignZero;
+
 import primitives.*;
 
 /**
@@ -49,7 +51,7 @@ public class PointLight extends Light implements LightSource {
 	 * @return this {@code PointLight} instance (for chaining)
 	 */
 	public PointLight setKc(double kC) {
-		this.kC = Math.max(0, kC);
+		this.kC = alignZero(kC) <= 0 ? 1 : kC;
 		return this;
 	}
 
@@ -79,8 +81,6 @@ public class PointLight extends Light implements LightSource {
 	public Color getIntensity(Point point) {
 		double d = position.distance(point);
 		double factor = kC + kL * d + kQ * d * d;
-		if (Util.isZero(factor))
-			return Color.BLACK;
 		return intensity.scale(1d / factor);
 	}
 

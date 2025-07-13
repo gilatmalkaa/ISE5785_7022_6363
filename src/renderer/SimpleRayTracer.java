@@ -62,10 +62,21 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return the calculated color at the intersection
 	 */
 	private Color calcColor(Intersection intersection, Ray ray) {
+<<<<<<< HEAD
 		return preprocessIntersection(intersection, ray.getDir())
 				? calcColor(intersection, MAX_CALC_COLOR_LEVEL, INITIAL_K).add(
 						scene.ambientLight.getIntensity().scale(intersection.material.kA))
 				: Color.BLACK;
+=======
+		if (!preprocessIntersection(intersection, ray.getDir()))
+			return Color.BLACK;
+
+		Color color = intersection.geometry.getEmission();
+		color = color.add(scene.ambientLight.getIntensity().scale(intersection.material.kA));
+		color = color.add(calcColorLocalEffects(intersection));
+
+		return color;
+>>>>>>> branch 'main' of https://github.com/Gilat1/ISE5785_7022_6363.git
 	}
 
 	/**
@@ -76,13 +87,9 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return {@code true} if intersection is valid and usable for lighting
 	 */
 	boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
-		if (intersection == null || intersection.geometry == null)
-			return false;
-
 		intersection.rayDirection = rayDirection;
 		intersection.normal = intersection.geometry.getNormal(intersection.point);
 		intersection.rayDirectionDotNormal = alignZero(intersection.normal.dotProduct(rayDirection));
-
 		return intersection.rayDirectionDotNormal != 0;
 	}
 
@@ -98,7 +105,6 @@ public class SimpleRayTracer extends RayTracerBase {
 		intersection.l = light.getL(intersection.point);
 		intersection.pointToLight = intersection.l.scale(-1);
 		intersection.lDotNormal = alignZero(intersection.normal.dotProduct(intersection.l));
-
 		return intersection.lDotNormal * intersection.rayDirectionDotNormal > 0;
 	}
 
