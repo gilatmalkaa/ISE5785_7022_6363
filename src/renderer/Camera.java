@@ -274,7 +274,7 @@ public class Camera implements Cloneable {
 				throw new MissingResourceException(MISSING, CLASS_NAME, "Up direction (vUp)");
 			if (_camera._distance == 0)
 				throw new MissingResourceException(MISSING, CLASS_NAME, "View plane distance");
-			if (alignZero(_camera._width) <= 0 || _camera._height == 0)
+			if (alignZero(_camera._width) <= 0 || _camera._height <= 0)
 				throw new MissingResourceException(MISSING, CLASS_NAME, "View plane size");
 			if (_camera._nX <= 0 || _camera._nY <= 0)
 				throw new IllegalArgumentException("Image resolution must be positive.");
