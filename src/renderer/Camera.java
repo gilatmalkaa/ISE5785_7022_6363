@@ -1,7 +1,9 @@
 package renderer;
 
+import static java.lang.Math.max;
 import static primitives.Util.*;
 
+import java.util.List;
 import java.util.MissingResourceException;
 
 import primitives.*;
@@ -50,6 +52,33 @@ public class Camera implements Cloneable {
 	private double _distance = 0.0;
 
 	/**
+	 * The number of rays per pixel for antialiasing.
+	 */
+	private int _raysPerPixelAA = 1;
+
+	/**
+	 * Number of threads to use for rendering.
+	 */
+	private int threadsCount = 0;
+
+	/**
+	 * Number of spare threads to leave unused by the rendering system. This ensures
+	 * the computer remains responsive.
+	 */
+	private static final int SPARE_THREADS = 2;
+
+	/**
+	 * Interval (in percentage) for printing progress reports during rendering.
+	 */
+	private double printInterval = 0;
+
+	/**
+	 * Pixel manager responsible for handling rendering progress and distributing
+	 * pixel calculation tasks across threads.
+	 */
+	private PixelManager pixelManager;
+
+	/**
 	 * Private default constructor for internal use. No other constructors are
 	 * allowed according to project instructions.
 	 */
@@ -93,6 +122,36 @@ public class Camera implements Cloneable {
 
 		public Builder(Camera camera) {
 			_camera = camera;
+		}
+
+		/**
+		 * Sets the number of threads to use for rendering.
+		 * <ul>
+		 * <li>threads = 0 → no multithreading (single-thread)</li>
+		 * <li>threads = -1 → use Java parallel streams</li>
+		 * <li>threads = -2 → use all available processors except
+		 * {@code SPARE_THREADS}</li>
+		 * <li>threads >= 1 → fixed number of threads</li>
+		 * </ul>
+		 *
+		 * @param threads number of threads (special values: -2, -1, 0)
+		 * @return the updated Builder instance
+		 */
+		public Builder setMultithreading(int threads) {
+			_camera.threadsCount = threads;
+			return this;
+		}
+
+		/**
+		 * Enables or disables debug printing of rendering progress.
+		 *
+		 * @param interval interval in seconds for progress updates; use 0 to disable
+		 *                 printing
+		 * @return the updated Builder instance
+		 */
+		public Builder setDebugPrint(double interval) {
+			_camera.printInterval = Math.max(0, interval);
+			return this;
 		}
 
 		/**
@@ -286,6 +345,20 @@ public class Camera implements Cloneable {
 			_camera._vRight = _camera._vTo.crossProduct(_camera._vUp).normalize();
 			return _camera.clone();
 		}
+
+		/**
+		 * Sets the number of rays per pixel for anti-aliasing (AA). Higher value =>
+		 * smoother edges, but slower rendering.
+		 *
+		 * @param raysPerPixelAA number of rays per pixel (must be >= 1)
+		 * @return this Builder (for chaining)
+		 */
+		public Builder setRaysPerPixelAA(int raysPerPixelAA) {
+			if (raysPerPixelAA < 1)
+				throw new IllegalArgumentException("raysPerPixelAA must be >= 1");
+			_camera._raysPerPixelAA = raysPerPixelAA;
+			return this;
+		}
 	}
 
 	/**
@@ -326,16 +399,50 @@ public class Camera implements Cloneable {
 	}
 
 	/**
-	 * Casts a ray through the center of a specific pixel, traces its color, and
-	 * writes the result into the image.
+	 * Casts rays through the specified pixel (column, row), using anti-aliasing if
+	 * enabled, and computes the resulting color considering soft shadows.
 	 *
-	 * @param j the row index (Y)
-	 * @param i the column index (X)
+	 * @param column the column index of the pixel
+	 * @param row    the row index of the pixel
 	 */
 	private void castRay(int j, int i) {
-		Ray ray = constructRay(_nX, _nY, j, i);
-		Color color = rayTracer.traceRay(ray);
-		imageWriter.writePixel(j, i, color);
+		if (_raysPerPixelAA > 1) {
+			Color acc = Color.BLACK;
+
+			double rY = _height / (double) _nY;
+			double rX = _width / (double) _nX;
+
+			double xJ = (j - (_nX - 1) / 2.0) * rX;
+			double yI = -(i - (_nY - 1) / 2.0) * rY;
+
+			Point pIJ = _p0.add(_vTo.scale(_distance));
+			if (!isZero(xJ))
+				pIJ = pIJ.add(_vRight.scale(xJ));
+			if (!isZero(yI))
+				pIJ = pIJ.add(_vUp.scale(yI));
+
+			int side = (int) Math.round(Math.sqrt(_raysPerPixelAA));
+			if (side < 1)
+				side = 1;
+
+			JitterSampler sampler = new JitterSampler(pIJ, _vRight, _vUp, max(rX, rY), side);
+			List<Point> samples = sampler.getJitteredPoints();
+
+			for (Point s : samples) {
+				Ray ray = new Ray(_p0, s.subtract(_p0));
+				if (isZero(ray.getDir().lengthSquared()))
+					continue;
+				acc = acc.add(rayTracer.traceRay(ray));
+			}
+
+			Color avg = acc.reduce(samples.size());
+			imageWriter.writePixel(j, i, avg);
+
+		} else {
+			Ray ray = constructRay(_nX, _nY, j, i);
+			Color color = rayTracer.traceRay(ray);
+			imageWriter.writePixel(j, i, color);
+		}
 	}
 
 	/**
@@ -345,9 +452,19 @@ public class Camera implements Cloneable {
 	 */
 
 	public Camera renderImage() {
-		for (int i = 0; i < _nY; i++)
-			for (int j = 0; j < _nX; j++)
+		if (imageWriter == null)
+			throw new MissingResourceException("Missing imageWriter", "Camera", "");
+		if (rayTracer == null)
+			throw new MissingResourceException("Missing rayTracer", "Camera", "");
+
+		pixelManager = new PixelManager(_nY, _nX, printInterval);
+
+		for (int i = 0; i < _nY; i++) {
+			for (int j = 0; j < _nX; j++) {
 				castRay(j, i);
+				pixelManager.pixelDone(); // moved here
+			}
+		}
 		return this;
 	}
 
@@ -374,4 +491,5 @@ public class Camera implements Cloneable {
 	public void writeToImage(String filename) {
 		imageWriter.writeToImage(filename);
 	}
+
 }

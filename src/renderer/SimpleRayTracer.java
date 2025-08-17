@@ -2,6 +2,8 @@ package renderer;
 
 import static primitives.Util.alignZero;
 
+import java.util.List;
+
 import geometries.Intersectable.Intersection;
 import lighting.LightSource;
 import primitives.*;
@@ -33,10 +35,6 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * full intensity (1.0 for all RGB channels).
 	 */
 	private static final Double3 INITIAL_K = Double3.ONE;
-	/**
-	 * Offset to avoid self-intersection.
-	 */
-	private static final double DELTA = 0.1;
 
 	/**
 	 * Constructs a SimpleRayTracer with the given scene.
@@ -160,19 +158,29 @@ public class SimpleRayTracer extends RayTracerBase {
 	 */
 	@SuppressWarnings("unused")
 	private boolean unshaded(Intersection intersection) {
-		Vector pointToLight = intersection.l.scale(-1);
-		Ray shadowRay = new Ray(intersection.point, pointToLight, intersection.normal);
-		double lightDistance = intersection.light.getDistance(intersection.point);
-
-		var intersections = scene.geometries.findIntersections(shadowRay);
+		var intersections = getShadowRayIntersections(intersection);
 		if (intersections == null)
 			return true;
-		for (Point p : intersections) {
-			double distancePoint = intersection.point.distance(p);
+
+		double lightDistance = intersection.light.getDistance(intersection.point);
+		for (var p : intersections) {
+			double distancePoint = intersection.point.distance(p.point);
 			if (distancePoint < lightDistance)
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Returns intersections of a shadow ray from the given point toward the light.
+	 *
+	 * @param intersection the intersection point with normal and light direction
+	 * @return list of shadow ray intersections (empty if none)
+	 */
+	private List<Intersection> getShadowRayIntersections(Intersection intersection) {
+		Ray shadowRay = new Ray(intersection.point, intersection.pointToLight, intersection.normal);
+		var intersections = scene.geometries.calculateIntersections(shadowRay);
+		return intersections;
 	}
 
 	/**
@@ -242,7 +250,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @param level the remaining recursion depth
 	 * @param k     the current cumulative attenuation factor
 	 * @param kx    the reflection or refraction coefficient of the geometry
-	 * @return the color contribution of the global effect, scaled by kx
+	 * @return the color contribution of the global effect, scaled by k<sub>x</sub>
 	 */
 	private Color calcGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
 		Double3 kkx = k.product(kx);
@@ -263,12 +271,12 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return the closest valid intersection, or {@code null} if none found
 	 */
 	private Intersection findClosestIntersection(Ray ray) {
-		var intersection = scene.geometries.calculateIntersections(ray);
-		return ray.findClosestIntersection(intersection);
+		return ray.findClosestIntersection(scene.geometries.calculateIntersections(ray));
 	}
 
 	/**
-	 * Calculates the transparency factor (ktr) at a given intersection point.
+	 * Calculates the transparency factor (k<sub>tr</sub>) at a given intersection
+	 * point.
 	 * <p>
 	 * This method traces a shadow ray from the intersection point toward the light
 	 * source and checks if any geometry blocks the light. If a blocking geometry is
@@ -285,17 +293,15 @@ public class SimpleRayTracer extends RayTracerBase {
 	 */
 	private Double3 transparency(Intersection intersection) {
 		Double3 ktr = Double3.ONE;
-		Vector pointToLight = intersection.l.scale(-1);
-		Ray shadowRay = new Ray(intersection.point, pointToLight, intersection.normal);
-		double lightDistance = intersection.light.getDistance(intersection.point);
-
-		var shadowIntersections = scene.geometries.calculateIntersections(shadowRay);
+		var shadowIntersections = getShadowRayIntersections(intersection);
 		if (shadowIntersections == null)
 			return ktr;
 
-		for (Intersection shadowInter : shadowIntersections) {
-			if (intersection.point.distance(shadowInter.point) < lightDistance) {
-				if (shadowInter.geometry.getMaterial().kT.lowerThan(MIN_CALC_COLOR_K))
+		double lightDistance = intersection.light.getDistance(intersection.point);
+		for (Intersection shadowIntersection : shadowIntersections) {
+			if (intersection.point.distance(shadowIntersection.point) < lightDistance) {
+				ktr = ktr.product(shadowIntersection.geometry.getMaterial().kT);
+				if (ktr.lowerThan(MIN_CALC_COLOR_K))
 					return Double3.ZERO;
 			}
 		}

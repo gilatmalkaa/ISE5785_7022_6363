@@ -128,8 +128,6 @@ class SphereTests {
 		// TC21: Ray goes through center, starts before (2 points)
 		Ray ray7 = new Ray(new Point(-1, 0, 0), new Vector(1, 0, 0)); // Passing through the center
 		List<Point> result7 = sphere.findIntersections(ray7);
-		assertNotNull(result7, "TC21: Ray through center");
-		assertEquals(2, result7.size(), "TC21: Expected two points");
 		assertEquals(List.of(new Point(0, 0, 0), new Point(2, 0, 0)), result7, "TC21: Incorrect intersection points");
 
 		// TC22: Ray through center, starts at surface (1 point)

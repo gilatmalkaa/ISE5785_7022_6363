@@ -40,14 +40,14 @@ public class Ray {
 	/**
 	 * Ray from point, offset by normal to avoid self-intersection.
 	 * 
-	 * @param p      starting point
-	 * @param dir    direction vector
-	 * @param normal surface normal
+	 * @param p         starting point
+	 * @param direction direction vector (must be normalized ahead)
+	 * @param normal    surface normal
 	 */
-	public Ray(Point p, Vector dir, Vector normal) {
-		Vector _delta = normal.scale(dir.dotProduct(normal) > 0 ? DELTA : -DELTA);
+	public Ray(Point p, Vector direction, Vector normal) {
+		Vector _delta = normal.scale(direction.dotProduct(normal) > 0 ? DELTA : -DELTA);
 		this._head = p.add(_delta);
-		this._direction = dir.normalize();
+		this._direction = direction;
 	}
 
 	@Override
@@ -57,9 +57,7 @@ public class Ray {
 
 	@Override
 	public boolean equals(Object object) {
-		if (this == object)
-			return true;
-		return (object instanceof Ray other) && this._head.equals(other._head)
+		return this == object || (object instanceof Ray other) && this._head.equals(other._head)
 				&& this._direction.equals(other._direction);
 	}
 
