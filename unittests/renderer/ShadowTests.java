@@ -118,24 +118,34 @@ class ShadowTests {
 				.writeToImage("shadowTrianglesSphere");
 	}
 
-	/**
-	 * computed together correctly, including transparency and mirror-like behavior.
-	 * The rendered image is saved as "combinedEffectsImage".
+	/*
+	 * * computed together correctly, including transparency and mirror-like
+	 * behavior. The rendered image is saved as "combinedEffectsImage".
 	 */
+
 	@Test
 	void myCombinedEffectsImage() {
 		scene.geometries.add(
+				// Sphere – unchanged
 				new Sphere(50d, new Point(0, 0, -100))
 						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(300).setKT(0.6)),
-				new Triangle(new Point(-100, 0, -120), new Point(100, 0, -120), new Point(0, 100, -120))
+
+				// Triangle – moved slightly back to avoid intersecting the sphere (only Z
+				// changed)
+				new Triangle(new Point(-100, 0, -200), new Point(100, 0, -200), new Point(0, 100, -200))
 						.setMaterial(new Material().setKR(0.5)).setEmission(new Color(BLUE)),
-				new Plane(new Point(0, 0, -150), new Vector(0, 0, 1))
+
+				// Plane – pushed a bit farther back so it doesn't touch the sphere's back (only
+				// Z changed)
+				new Plane(new Point(0, 0, -220), new Vector(0, 0, 1))
 						.setMaterial(new Material().setKD(0.3).setKS(0.2).setShininess(100)));
 
+		// Lights – unchanged
 		scene.lights.add(new SpotLight(new Color(1000, 600, 600), new Point(50, 50, 0), new Vector(-1, -1, -2))
 				.setKl(1E-5).setKq(1.5E-7));
 
-		camera.setResolution(500, 500).build().renderImage().writeToImage("combinedEffectsImage");
+		camera.setResolution(500, 500).build().renderImage().writeToImage("combinedEffectsImage_fixed");
+
 	}
 
 }

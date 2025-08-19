@@ -179,9 +179,10 @@ class SphereTests {
 		assertNull(sphere.findIntersections(ray15), "TC41: Ray orthogonal and misses");
 
 		// TC43: Ray orthogonal to line from center, starts inside sphere
-		Ray rayInsideOrthogonal = new Ray(new Point(0.5, 0, 0), new Vector(0, 1, 0));
-		List<Point> resultInsideOrthogonal = sphere.findIntersections(rayInsideOrthogonal);
-		assertNotNull(resultInsideOrthogonal, "TC43: Ray orthogonal, starts inside – expect 1 intersection");
-		assertEquals(1, resultInsideOrthogonal.size(), "TC43: Expected one point");
+		Ray ray16 = new Ray(new Point(0.5, 0, 0), new Vector(0, 1, 0));
+		List<Point> result16 = sphere.findIntersections(ray16);
+		assertEquals(List.of(new Point(0.5, Math.sqrt(0.75), 0)), result16,
+				"TC43: Ray orthogonal, starts inside – wrong intersection point");
+
 	}
 }
