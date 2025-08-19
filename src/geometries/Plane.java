@@ -71,4 +71,10 @@ public class Plane extends Geometry {
 
 		return t <= 0 ? null : List.of(new Intersection(this, ray.getPoint(t)));
 	}
+
+	@Override
+	protected primitives.AABB computeBoundingBox() {
+		// Infinite plane: no finite AABB (skip early-reject)
+		return null;
+	}
 }

@@ -10,6 +10,17 @@ import primitives.*;
  * rays.
  */
 public abstract class Intersectable {
+
+	/** Axis-aligned bounding box (computed lazily). */
+	protected AABB _aabb;
+
+	/**
+	 * Compute the axis-aligned bounding box for this geometry.
+	 * 
+	 * @return bounding box, or null if not bounded
+	 */
+	protected abstract AABB computeBoundingBox();
+
 	/**
 	 * Explicit default constructor to satisfy JavaDoc generator.
 	 */
@@ -98,13 +109,19 @@ public abstract class Intersectable {
 	protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
 
 	/**
-	 * Calculates intersections of a ray with the geometry. Delegates to
-	 * {@link #calculateIntersectionsHelper(Ray)}.
-	 *
-	 * @param ray the ray to intersect with
-	 * @return list of {@link Intersection} objects, or {@code null} if none
+	 * Find intersections of a ray with this geometry.
+	 * 
+	 * @param ray the ray to test
+	 * @return list of intersection points (empty if none)
 	 */
 	public final List<Intersection> calculateIntersections(Ray ray) {
+		var cfg = scene.Scene.currentConfig();
+		if (cfg != null && cfg.enableCBR()) {
+			primitives.AABB box = (_aabb != null) ? _aabb : (_aabb = computeBoundingBox());
+			if (box != null && !box.hit(ray, Double.POSITIVE_INFINITY))
+				return null;
+		}
+
 		return calculateIntersectionsHelper(ray);
 	}
 

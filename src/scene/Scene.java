@@ -91,4 +91,31 @@ public class Scene {
 		this.lights.add(light);
 		return this;
 	}
+
+	/**
+	 * Current acceleration configuration for the scene. Shared across all scenes,
+	 * set in tests only.
+	 */
+	private static AccelConfig _config = new AccelConfig();
+
+	/**
+	 * Set the acceleration configuration (from tests only).
+	 * 
+	 * @param cfg AccelConfig instance
+	 * @return this Scene instance
+	 */
+	public Scene setConfig(AccelConfig cfg) {
+		_config = (cfg != null ? cfg : new AccelConfig());
+		return this;
+	}
+
+	/**
+	 * Get the current acceleration configuration. Used internally by geometries and
+	 * the ray tracer.
+	 * 
+	 * @return current AccelConfig
+	 */
+	public static AccelConfig currentConfig() {
+		return _config;
+	}
 }

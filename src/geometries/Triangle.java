@@ -72,4 +72,33 @@ public class Triangle extends Polygon {
 			return null;
 		}
 	}
+
+	@Override
+	protected primitives.AABB computeBoundingBox() {
+		// Extract coordinates via projection on axes (no direct field access)
+		primitives.Vector v0 = _vertices.get(0).subtract(primitives.Point.ZERO);
+		primitives.Vector v1 = _vertices.get(1).subtract(primitives.Point.ZERO);
+		primitives.Vector v2 = _vertices.get(2).subtract(primitives.Point.ZERO);
+
+		double x0 = v0.dotProduct(primitives.Vector.AXIS_X);
+		double y0 = v0.dotProduct(primitives.Vector.AXIS_Y);
+		double z0 = v0.dotProduct(primitives.Vector.AXIS_Z);
+
+		double x1 = v1.dotProduct(primitives.Vector.AXIS_X);
+		double y1 = v1.dotProduct(primitives.Vector.AXIS_Y);
+		double z1 = v1.dotProduct(primitives.Vector.AXIS_Z);
+
+		double x2 = v2.dotProduct(primitives.Vector.AXIS_X);
+		double y2 = v2.dotProduct(primitives.Vector.AXIS_Y);
+		double z2 = v2.dotProduct(primitives.Vector.AXIS_Z);
+
+		double minX = Math.min(x0, Math.min(x1, x2));
+		double minY = Math.min(y0, Math.min(y1, y2));
+		double minZ = Math.min(z0, Math.min(z1, z2));
+		double maxX = Math.max(x0, Math.max(x1, x2));
+		double maxY = Math.max(y0, Math.max(y1, y2));
+		double maxZ = Math.max(z0, Math.max(z1, z2));
+
+		return new primitives.AABB(minX, minY, minZ, maxX, maxY, maxZ);
+	}
 }

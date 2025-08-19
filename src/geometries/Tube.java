@@ -56,4 +56,10 @@ public class Tube extends RadialGeometry {
 		// Not implemented
 		return null;
 	}
+
+	@Override
+	protected primitives.AABB computeBoundingBox() {
+		// Infinite tube along its axis -> no finite AABB (skip early-reject)
+		return null;
+	}
 }

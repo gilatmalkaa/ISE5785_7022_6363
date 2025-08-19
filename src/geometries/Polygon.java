@@ -122,4 +122,34 @@ public class Polygon extends Geometry {
 		return List.of(new Intersection(this, intersections.getFirst()));
 	}
 
+	@Override
+	protected primitives.AABB computeBoundingBox() {
+		// Project each vertex onto axes to extract coordinates
+		double minX = Double.POSITIVE_INFINITY, minY = Double.POSITIVE_INFINITY, minZ = Double.POSITIVE_INFINITY;
+		double maxX = Double.NEGATIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
+
+		for (primitives.Point p : _vertices) {
+			// v = p - (0,0,0)
+			primitives.Vector v = p.subtract(primitives.Point.ZERO);
+
+			double x = v.dotProduct(primitives.Vector.AXIS_X);
+			double y = v.dotProduct(primitives.Vector.AXIS_Y);
+			double z = v.dotProduct(primitives.Vector.AXIS_Z);
+
+			if (x < minX)
+				minX = x;
+			if (x > maxX)
+				maxX = x;
+			if (y < minY)
+				minY = y;
+			if (y > maxY)
+				maxY = y;
+			if (z < minZ)
+				minZ = z;
+			if (z > maxZ)
+				maxZ = z;
+		}
+
+		return new primitives.AABB(minX, minY, minZ, maxX, maxY, maxZ);
+	}
 }

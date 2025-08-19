@@ -73,4 +73,17 @@ public class Sphere extends RadialGeometry {
 		return t1 <= 0 ? List.of(new Intersection(this, ray.getPoint(t2)))
 				: List.of(new Intersection(this, ray.getPoint(t1)), new Intersection(this, ray.getPoint(t2)));
 	}
+
+	@Override
+	protected primitives.AABB computeBoundingBox() {
+		double r = _radius;
+
+		// Project center onto the coordinate axes without touching _xyz
+		primitives.Vector c = _center.subtract(primitives.Point.ZERO);
+		double cx = c.dotProduct(primitives.Vector.AXIS_X); // center X
+		double cy = c.dotProduct(primitives.Vector.AXIS_Y); // center Y
+		double cz = c.dotProduct(primitives.Vector.AXIS_Z); // center Z
+
+		return new primitives.AABB(cx - r, cy - r, cz - r, cx + r, cy + r, cz + r);
+	}
 }

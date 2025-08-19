@@ -402,8 +402,8 @@ public class Camera implements Cloneable {
 	 * Casts rays through the specified pixel (column, row), using anti-aliasing if
 	 * enabled, and computes the resulting color considering soft shadows.
 	 *
-	 * @param column the column index of the pixel
-	 * @param row    the row index of the pixel
+	 * @param j the column index of the pixel
+	 * @param i the row index of the pixel
 	 */
 	private void castRay(int j, int i) {
 		if (_raysPerPixelAA > 1) {
