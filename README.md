@@ -1,7 +1,10 @@
-# 🎨 Ray Tracer — ISE5785
+# 🎨 Java Ray Tracer
 
-A full-featured **physically-based ray tracer** built from scratch in Java as part of the Software Engineering course (ISE, Bar-Ilan University).  
-The engine implements the classic Phong shading model extended with global illumination — recursive reflections, refractions, soft shadows, and multi-source lighting.
+A feature-rich **ray tracing engine developed and extended in Java** as part of a Software Engineering course at **Jerusalem College of Technology**.
+
+The renderer implements the **Phong shading model** together with recursive reflections and refractions, transparency, multiple light sources, anti-aliasing, BVH acceleration, and multithreaded rendering.
+
+The project focuses on object-oriented design, software architecture, rendering algorithms, testing, and performance optimization.
 
 ---
 
@@ -9,10 +12,8 @@ The engine implements the classic Phong shading model extended with global illum
 
 | Glass Showroom | Solar System |
 |:---:|:---:|
-| <img width="1000" height="1000" alt="showcase_glass_showroom" src="https://github.com/user-attachments/assets/ae75ce5f-ea68-4f4e-8e3c-43eec238d170" />
- | <img width="1200" height="800" alt="showcase_solar_system" src="https://github.com/user-attachments/assets/d46975b2-2997-43f6-a885-f7dfe2860709" />
- |
-| Chrome mirrors · glass spheres · 4-light rig | Planetary system · star field · Phong shading |
+| <img width="1000" height="1000" alt="showcase_glass_showroom" src="https://github.com/user-attachments/assets/ae75ce5f-ea68-4f4e-8e3c-43eec238d170" /> | <img width="1200" height="800" alt="showcase_solar_system" src="https://github.com/user-attachments/assets/d46975b2-2997-43f6-a885-f7dfe2860709" /> |
+| Chrome mirrors · glass spheres · multiple light sources | Planetary system · star field · Phong shading |
 
 ---
 
@@ -21,92 +22,239 @@ The engine implements the classic Phong shading model extended with global illum
 | Feature | Details |
 |---|---|
 | **Geometry** | Sphere, Triangle, Plane, Polygon, Cylinder, Tube |
-| **Shading** | Phong model — ambient · diffuse · specular |
-| **Global illumination** | Recursive reflections & refractions (configurable depth) |
-| **Shadow** | Hard shadows with partial transparency (soft kT) |
-| **Lights** | Ambient · Directional · Point · SpotLight (with narrow-beam) |
-| **Anti-aliasing** | Multi-ray per pixel (jitter sampling) |
-| **Performance** | BVH acceleration (AABB) · multi-threaded rendering |
-| **Materials** | kD · kS · kA · kR (reflection) · kT (transparency) · shininess |
-| **Camera** | Configurable position, direction, FOV, resolution |
+| **Shading** | Phong model — ambient, diffuse, and specular lighting |
+| **Global Effects** | Recursive reflections and refractions |
+| **Shadows** | Hard shadows with partial transparency |
+| **Lighting** | Ambient, Directional, Point, and Spot lights |
+| **Anti-Aliasing** | Multi-ray sampling per pixel |
+| **Performance** | BVH acceleration using AABB and multithreaded rendering |
+| **Materials** | Diffuse, specular, reflection, transparency, and shininess properties |
+| **Camera** | Configurable position, direction, field of view, and resolution |
 
 ---
 
 ## 🏗️ Architecture
 
-```
+```text
 src/
-├── primitives/      # Point · Vector · Ray · Color · Double3 · Material · AABB
-├── geometries/      # Intersectable · Geometry · Sphere · Plane · Triangle
-│                    # Polygon · Cylinder · Tube · Geometries (composite + BVH)
-├── lighting/        # Light · AmbientLight · DirectionalLight · PointLight · SpotLight
-├── scene/           # Scene (PDS) · AccelConfig
-├── renderer/        # Camera (Builder) · SimpleRayTracer · ImageWriter
-│                    # JitterSampler · PixelManager
-└── showcase/        # Standalone demo scenes (no JUnit required)
+├── primitives/      # Point, Vector, Ray, Color, Double3, Material, AABB
+├── geometries/      # Intersectable, Geometry, Sphere, Plane, Triangle
+│                    # Polygon, Cylinder, Tube, Geometries
+├── lighting/        # Light, AmbientLight, DirectionalLight, PointLight, SpotLight
+├── scene/           # Scene and acceleration configuration
+├── renderer/        # Camera, SimpleRayTracer, ImageWriter
+│                    # JitterSampler, PixelManager
+└── showcase/        # Demo scenes
 
-unittests/           # JUnit 5 test suite — geometries, lighting, renderer
+unittests/           # JUnit 5 test suite
 ```
 
-### Ray-tracing pipeline
+---
 
+## 🔄 Ray-Tracing Pipeline
+
+```text
+Camera
+   │
+   │ Rays
+   ▼
+Scene
+   │
+   │ Intersections
+   ▼
+SimpleRayTracer
+   │
+   ├────────────── Local Effects
+   │               Phong shading
+   │               Diffuse + Specular
+   │               Shadow rays
+   │
+   └────────────── Global Effects
+                   Reflection
+                   Refraction
+                   Recursive rays
 ```
-Camera  ──(rays)──►  Scene  ──(intersections)──►  SimpleRayTracer
-                                                        │
-                                          ┌─────────────┴──────────────┐
-                                    Local Effects               Global Effects
-                                  (Phong: kD, kS)         (reflection kR / refraction kT)
-                                          │                             │
-                                    Shadow rays                  Recursive rays
-                                   (transparency)               (depth ≤ MAX=10)
-```
+
+The renderer traces rays from the camera through each pixel into the scene.
+
+For every intersection, the engine calculates local lighting effects and can recursively generate additional rays for reflection and transparency.
+
+---
+
+## 💡 Lighting and Shading
+
+The renderer uses the **Phong reflection model** to calculate lighting.
+
+Supported lighting components include:
+
+- Ambient lighting
+- Diffuse reflection
+- Specular reflection
+- Multiple light sources
+- Directional lights
+- Point lights
+- Spot lights
+- Transparent shadow effects
+
+Material properties control the appearance of each object, including:
+
+- Diffuse coefficient
+- Specular coefficient
+- Shininess
+- Reflection
+- Transparency
+
+---
+
+## 🪞 Reflections and Refractions
+
+The ray tracer supports recursive global effects.
+
+When a ray hits a reflective or transparent surface, additional rays are generated to calculate:
+
+- Reflected color
+- Refracted / transmitted color
+- Combined contribution to the final pixel
+
+The recursion depth is limited to prevent unnecessary computation.
+
+---
+
+## ⚡ Performance Optimization
+
+### BVH Acceleration
+
+The project includes a **Bounding Volume Hierarchy (BVH)** using Axis-Aligned Bounding Boxes (AABB).
+
+BVH reduces the number of intersection calculations required when rendering complex scenes.
+
+Instead of checking every object in the scene, the renderer can first determine whether a ray intersects a bounding region.
+
+### Multithreading
+
+Rendering can be performed using multiple threads.
+
+Pixels are distributed between worker threads, allowing rendering work to be executed concurrently and improving performance on multi-core processors.
+
+---
+
+## 🎯 Anti-Aliasing
+
+Anti-aliasing is implemented by tracing multiple rays through each pixel.
+
+The final pixel color is calculated from the sampled rays, helping reduce jagged edges and improving image quality.
+
+---
+
+## 🧩 Design Patterns
+
+The project applies several software design patterns.
+
+### Builder Pattern
+
+`Camera.Builder` is used to construct and validate camera objects.
+
+### Composite Pattern
+
+`Geometries` represents collections of geometric objects and allows them to be handled through a common interface.
+
+### Strategy Pattern
+
+The ray-tracing implementation is separated behind the `RayTracerBase` abstraction, allowing different tracing strategies to be used.
+
+---
+
+## 🧪 Testing
+
+The project includes a **JUnit 5** test suite covering major parts of the rendering engine.
+
+Examples include:
+
+| Test Class | Coverage |
+|---|---|
+| `ReflectionRefractionTests` | Reflection, transparency, and glass effects |
+| `ShadowTests` | Shadow and transparency behavior |
+| `LightsTests` | Different light sources |
+| `RenderTests` | Rendering pipeline |
+| `PerformanceTests` | BVH and performance behavior |
+
+Tests are also included for geometric intersections and other core components.
 
 ---
 
 ## 🚀 Running the Showcase
 
-No build tool required — compile and run with plain `javac`/`java`:
+The showcase scenes can be compiled and executed directly.
+
+### 1. Compile
 
 ```bash
-# 1. Compile
 find src -name "*.java" | xargs javac -d bin -sourcepath src
+```
 
-# 2. Create output directory
+### 2. Create the output directory
+
+```bash
 mkdir -p images
+```
 
-# 3. Render
+### 3. Run the showcase
+
+```bash
 java -cp bin showcase.ShowcaseRenderer
-# → images/showcase_glass_showroom.png
-# → images/showcase_solar_system.png
+```
+
+Generated images will be saved in:
+
+```text
+images/
+```
+
+Example outputs:
+
+```text
+showcase_glass_showroom.png
+showcase_solar_system.png
 ```
 
 ---
 
 ## 🧪 Running the Tests
 
-The test suite requires **JUnit 5**.  Open in Eclipse or IntelliJ and run all tests in `unittests/`.
+The test suite requires **JUnit 5**.
 
-Key test classes:
+Open the project in **IntelliJ IDEA** or **Eclipse** and run the tests inside:
 
-| Test class | What it covers |
-|---|---|
-| `ReflectionRefractionTests` | Mirror spheres · glass · partial transparency |
-| `ShadowTests` | Hard & soft (transparent) shadows |
-| `LightsTests` | All light types on spheres & triangles |
-| `RenderTests` | Basic scene rendering pipeline |
-| `PerformanceTests` | BVH acceleration benchmark |
+```text
+unittests/
+```
 
 ---
 
-## 📐 Design Highlights
+## 📚 Development Highlights
 
-* **Builder pattern** — `Camera.Builder` validates and constructs immutable cameras.
-* **Composite pattern** — `Geometries` acts as both a leaf and a container (BVH tree).
-* **Strategy pattern** — `RayTracerBase` / `SimpleRayTracer` are swappable.
-* **Intersection caching** — `Intersectable.Intersection` carries cached dot-products and normals to avoid recomputation in Phong shading.
+This project demonstrates experience with:
+
+- Java
+- Object-Oriented Programming
+- Software Engineering
+- Ray-Tracing Algorithms
+- Computer Graphics
+- Recursive Algorithms
+- Design Patterns
+- Multithreading
+- Performance Optimization
+- Bounding Volume Hierarchy
+- Unit Testing with JUnit
+- Software Architecture
 
 ---
 
 ## 👩‍💻 Authors
 
-**Gilat Kedem & Shira Amar** 
+Developed as a pair project by:
+
+- **Gilat Malka**
+- **Shira Amar**
+
+as part of the **Software Engineering course at Jerusalem College of Technology**.
