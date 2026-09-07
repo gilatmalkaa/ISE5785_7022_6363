@@ -1,7 +1,7 @@
 ### IntelliJ IDEA ###
 out/
 doc/
-images/
+# images/ -- now tracked for showcase
 
 ### Eclipse ###
 .apt_generated

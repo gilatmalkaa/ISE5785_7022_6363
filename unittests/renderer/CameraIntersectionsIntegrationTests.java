@@ -103,4 +103,5 @@ class CameraIntersectionsIntegrationTests {
 				countIntersections(new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2))),
 				"TC02: Expected 2 intersections with larger triangle");
 	}
+
 }
