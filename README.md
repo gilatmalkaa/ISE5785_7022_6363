@@ -1,265 +1,112 @@
-# Tour Guide Management System  
----
+# 🎨 Ray Tracer — ISE5785
 
-## Cover Page
-
-**Submitted by:**  
-Gilat Malka – 213196363  
-Shirel Ankawa – 209692029  
-
-**System Name:**  
-Tour Guide Management System  
-
-**Selected Unit:**  
-Guided Tour Management  
+A full-featured **physically-based ray tracer** built from scratch in Java as part of the Software Engineering course (ISE, Bar-Ilan University).  
+The engine implements the classic Phong shading model extended with global illumination — recursive reflections, refractions, soft shadows, and multi-source lighting.
 
 ---
 
-## Table of Contents
-1. Introduction  
-2. System Screens (AI)  
-3. ERD Diagram  
-4. DSD Diagram  
-5. Design Decisions  
-6. Data Insertion  
-7. Backup and Restore  
+## ✨ Showcase Renders
+
+| Glass Showroom | Solar System |
+|:---:|:---:|
+| <img width="1000" height="1000" alt="showcase_glass_showroom" src="https://github.com/user-attachments/assets/ae75ce5f-ea68-4f4e-8e3c-43eec238d170" />
+ | <img width="1200" height="800" alt="showcase_solar_system" src="https://github.com/user-attachments/assets/d46975b2-2997-43f6-a885-f7dfe2860709" />
+ |
+| Chrome mirrors · glass spheres · 4-light rig | Planetary system · star field · Phong shading |
 
 ---
 
-##  Introduction
+## 🔬 Core Features
 
-**System Purpose:**  
-The system is intended for the full operational management of a tour company. It serves as a central working tool for company managers, enabling them to manage the human resource aspect (guides), the product aspect (tour routes), the sales aspect (customer registrations), as well as the financial and feedback aspects.
-
-**Data Stored in the System:**  
-• **Guides:** Personal information, contact details, languages, professional specializations, quality rating, and daily salary.  
-• **Routes:** Geographical definitions (region), difficulty level, estimated length, and a list of Points of Interest (POI) that make up the route.  
-• **Tours:** Specific instances of routes on certain dates, including guide assignment, participant limit, and real-time occupancy tracking.  
-• **Customers & Registrations:** Customer database and their linkage to specific tours, including payment status tracking and number of reserved seats.  
-• **Payments & Feedback:** Documentation of financial transactions and collection of traveler reviews for service improvement.  
-
-**Main Functionalities:**  
-• **Tour Lifecycle Management:** From creating the route, through scheduling the tour and assigning a guide, to customer registration and payment collection.  
-• **Data Analysis (Analytics):** A dashboard displaying revenues, occupancy rates in tours, and guide availability.  
-• **Advanced Search and Filtering:** Ability to locate guides by language or region, and routes by difficulty level or length.  
-• **Status Management:** Dynamic tracking of guide status (active/inactive) and tour status (planned/completed/canceled).  
-
-The purpose of the system is to enable efficient, organized, and data-driven management of guided tour operations.
+| Feature | Details |
+|---|---|
+| **Geometry** | Sphere, Triangle, Plane, Polygon, Cylinder, Tube |
+| **Shading** | Phong model — ambient · diffuse · specular |
+| **Global illumination** | Recursive reflections & refractions (configurable depth) |
+| **Shadow** | Hard shadows with partial transparency (soft kT) |
+| **Lights** | Ambient · Directional · Point · SpotLight (with narrow-beam) |
+| **Anti-aliasing** | Multi-ray per pixel (jitter sampling) |
+| **Performance** | BVH acceleration (AABB) · multi-threaded rendering |
+| **Materials** | kD · kS · kA · kR (reflection) · kT (transparency) · shininess |
+| **Camera** | Configurable position, direction, FOV, resolution |
 
 ---
 
-## System Screens (AI)
+## 🏗️ Architecture
 
-The system was characterized using a Top-Down approach with the help of AI tools for generating initial screens.
+```
+src/
+├── primitives/      # Point · Vector · Ray · Color · Double3 · Material · AABB
+├── geometries/      # Intersectable · Geometry · Sphere · Plane · Triangle
+│                    # Polygon · Cylinder · Tube · Geometries (composite + BVH)
+├── lighting/        # Light · AmbientLight · DirectionalLight · PointLight · SpotLight
+├── scene/           # Scene (PDS) · AccelConfig
+├── renderer/        # Camera (Builder) · SimpleRayTracer · ImageWriter
+│                    # JitterSampler · PixelManager
+└── showcase/        # Standalone demo scenes (no JUnit required)
 
-### Navigation Menu
+unittests/           # JUnit 5 test suite — geometries, lighting, renderer
+```
 
-The system includes a side menu that allows quick and convenient access to all parts of the system:
+### Ray-tracing pipeline
 
-- Dashboard  
-- Guides  
-- Tours  
-- Routes  
-- Customers  
-- Registrations  
-- Assignments  
-- Payments  
-- Feedback  
-- Reports  
-- Settings  
-
-<img width="396" height="676" alt="image" src="https://github.com/user-attachments/assets/f64f9c91-c484-461d-9275-a512ecf5469a" />
-
-<img width="394" height="660" alt="image" src="https://github.com/user-attachments/assets/53b42abd-c6bf-468f-ab38-a9045648fd3a" />
-
-<img width="390" height="675" alt="image" src="https://github.com/user-attachments/assets/a04710bf-ad0a-4e03-9391-d036e1f1d3ea" />
-
----
-
-### Dashboard
-
-The home screen of the system presenting key data:
-
-- Number of active guides  
-- Upcoming tours  
-- Open registrations  
-- Total revenues  
-- Graphs showing activity trends  
-
-<img width="1494" height="723" alt="image" src="https://github.com/user-attachments/assets/1878516d-bc31-4c6c-b319-ba34a8015e04" />
-
-<img width="1493" height="724" alt="image" src="https://github.com/user-attachments/assets/2676ce0b-bf04-4acd-9516-6963edd3e2ec" />
-
-<img width="1489" height="721" alt="image" src="https://github.com/user-attachments/assets/e59abd5f-0781-405e-bf2a-01afe28c837e" />
+```
+Camera  ──(rays)──►  Scene  ──(intersections)──►  SimpleRayTracer
+                                                        │
+                                          ┌─────────────┴──────────────┐
+                                    Local Effects               Global Effects
+                                  (Phong: kD, kS)         (reflection kR / refraction kT)
+                                          │                             │
+                                    Shadow rays                  Recursive rays
+                                   (transparency)               (depth ≤ MAX=10)
+```
 
 ---
 
-### Guide Management
+## 🚀 Running the Showcase
 
-A module for managing tour guides:
+No build tool required — compile and run with plain `javac`/`java`:
 
-- Guide list  
-- Guide details  
-- Add and edit guides  
+```bash
+# 1. Compile
+find src -name "*.java" | xargs javac -d bin -sourcepath src
 
-<img width="1491" height="734" alt="image" src="https://github.com/user-attachments/assets/9c8fd7cf-76b8-41d1-8aa9-3e4a4d76c267" />
+# 2. Create output directory
+mkdir -p images
 
----
-
-### Route Management
-
-Management of routes including Points of Interest (POI):
-
-- Route list  
-- Route description  
-- Points of Interest  
-- Create and edit routes  
-
-<img width="1492" height="724" alt="image" src="https://github.com/user-attachments/assets/45f53d88-2999-4893-a680-dfac11fecaa9" />
+# 3. Render
+java -cp bin showcase.ShowcaseRenderer
+# → images/showcase_glass_showroom.png
+# → images/showcase_solar_system.png
+```
 
 ---
 
-###  Tour Management
+## 🧪 Running the Tests
 
-The operational core of the system:
+The test suite requires **JUnit 5**.  Open in Eclipse or IntelliJ and run all tests in `unittests/`.
 
-- Tour list  
-- Tour details  
-- Create a new tour  
-- Assign a guide  
+Key test classes:
 
-<img width="1478" height="716" alt="image" src="https://github.com/user-attachments/assets/997e7d5a-51f4-4a75-91c7-bd39d9314cbd" />
-
----
-
-###  Customers and Registrations
-
-Managing customers and their participation in tours:
-
-- Customer database  
-- Tour registrations  
-- Payment status
-- 
-<img width="1491" height="718" alt="image" src="https://github.com/user-attachments/assets/e5eb7872-7f00-4849-be71-1e149961fe6a" />
-
-<img width="1488" height="732" alt="image" src="https://github.com/user-attachments/assets/d8bc9be3-ec0e-4a39-aed4-0485b3a1bd0e" />
+| Test class | What it covers |
+|---|---|
+| `ReflectionRefractionTests` | Mirror spheres · glass · partial transparency |
+| `ShadowTests` | Hard & soft (transparent) shadows |
+| `LightsTests` | All light types on spheres & triangles |
+| `RenderTests` | Basic scene rendering pipeline |
+| `PerformanceTests` | BVH acceleration benchmark |
 
 ---
 
-### 🔄Assignments
+## 📐 Design Highlights
 
-A dedicated screen for assigning guides to tours.
-
-<img width="1473" height="706" alt="image" src="https://github.com/user-attachments/assets/d4a666a3-2eed-4b7d-9707-e5fca52e8d86" />
-
-<img width="1490" height="791" alt="image" src="https://github.com/user-attachments/assets/7b00f63d-dcbd-4aac-90f7-9fba82924bbf" />
-
----
-
-###  Payments and Feedback
-
-- Payment tracking  
-- Customer feedback  
-<img width="1487" height="720" alt="image" src="https://github.com/user-attachments/assets/520da0b6-2a7b-44c8-bfda-2e3159f5dc2e" />
-
-<img width="1473" height="717" alt="image" src="https://github.com/user-attachments/assets/b8269322-6041-4f3c-8063-628a3d1d51b5" />
-
-<img width="1468" height="719" alt="image" src="https://github.com/user-attachments/assets/2eeaaf07-e7db-4c66-8d1c-332062a14931" />
+* **Builder pattern** — `Camera.Builder` validates and constructs immutable cameras.
+* **Composite pattern** — `Geometries` acts as both a leaf and a container (BVH tree).
+* **Strategy pattern** — `RayTracerBase` / `SimpleRayTracer` are swappable.
+* **Intersection caching** — `Intersectable.Intersection` carries cached dot-products and normals to avoid recomputation in Phong shading.
 
 ---
 
-###  Settings
+## 👩‍💻 Authors
 
-Management of business details and general system settings.
-
-<img width="1484" height="707" alt="image" src="https://github.com/user-attachments/assets/45f9c33a-bf52-44f8-95d1-d094ae4191a9" />
-<img width="1491" height="729" alt="image" src="https://github.com/user-attachments/assets/7239ab39-62df-4035-94be-d2efc0a9230c" />
-
-
----
-
-##  ERD Diagram
-
-The ERD diagram presents the entities in the system and the relationships between them.
-
-<img width="4704" height="1908" alt="ERD" src="https://github.com/user-attachments/assets/417feaee-2e51-488f-9660-7ecac34a407d" />
-
----
-
-##  DSD Diagram
-
-The DSD diagram presents the actual structure of the database:
-
-- Tables  
-- Primary keys  
-- Foreign keys  
-- Constraints  
-
-<img width="4704" height="1908" alt="DSD" src="https://github.com/user-attachments/assets/e9172dae-f240-4b32-80da-083fa8224ce0" />
-
----
-
-##  Design Decisions
-
-During the construction of the system, several design and architectural decisions were made in order to improve efficiency and stability:
-
-**A. Transition from a "Sites" model to a "Points of Interest" model:**  
-• **The decision:** We canceled the independent "Site" entity and replaced it with an array of text strings inside the Route entity.  
-• **The reason:** Flexibility and simplicity. In tour management, sometimes the stopping point is "a viewpoint under the oak tree" or "a historic street corner," which does not always justify creating a full entity in the database with address and images. The new model allows the tour manager to build a dynamic and fast route without dependence on a rigid site repository.  
-
-**B. Separation between "Route" and "Tour":**  
-• **The decision:** A complete separation between the route definition and the calendar event.  
-• **The reason:** Reusability of data. A route is a company asset that does not change often. A tour is its specific instance. This separation makes it possible to run the same route dozens of times with different guides and on different dates without duplicating the route data itself.  
-
-**C. Use of Enums for status management:**  
-• **The decision:** Defining fixed statuses (such as TourStatus, PaymentStatus).  
-• **The reason:** Preventing human error and ensuring Data Integrity. Using fixed values ensures that the business logic (for example: "it is not possible to register a customer for a canceled tour") works consistently throughout all parts of the system.  
-
-**D. Dashboard-First interface design based on cards and tables:**  
-• **The decision:** Using Tailwind CSS to create a clean interface with emphasis on a visual dashboard.  
-• **The reason:** User Experience (UX). Operations managers need fast, scannable information. The statistic cards at the top of the page allow business decisions to be made within seconds, while the detailed tables allow deeper examination of the data when needed.  
-
-**E. Centralizing logic in ScreenRenderer:**  
-• **The decision:** Managing navigation and screen display through one central component that manages the state.  
-• **The reason:** Simplicity of maintenance. Since מדובר in a Single Page Application (SPA), managing navigation in this way enables smooth transitions between screens without page refresh, and preserves full synchronization between the global search and the information displayed on the current screen.  
-
----
-
-##  Data Insertion
-
-Data insertion into the system was carried out using three methods:
-
-### Method 1 – Manual Data Insertion (SQL)
-![generateData](https://github.com/user-attachments/assets/c0abb5ce-6324-4495-a401-c8321b2fdd1b)
-
----
-
-### Method 2 – Using CSV / Mockaroo Files
-![mockotoo](https://github.com/user-attachments/assets/051b5030-e6d1-4728-a691-3ca3442cfc4d)
-
----
-
-### Method 3 – Creating Data Through Code
-![ai_studio](https://github.com/user-attachments/assets/a45370d9-ab88-45fb-8e56-12bf5b36c443)
-
----
-
-##  Backup and Restore
-
-## 🔹 Backup File
-<img width="1913" height="953" alt="צילום מסך 2026-03-22 002051" src="https://github.com/user-attachments/assets/65431765-ce45-4ad7-a71f-2b0ce3dfbaff" />
-
-## 🔹 Restore
-<img width="1532" height="337" alt="צילום מסך 2026-03-22 002903" src="https://github.com/user-attachments/assets/5c609770-f66d-435c-94e1-c2739d27ded9" />
-
-##  Summary
-
-At this stage, the following were completed:
-
-- System characterization  
-- Construction of ERD and DSD diagrams  
-- Database creation  
-- Data insertion using three methods  
-- Performing backup and restore  
-
-The system constitutes a stable foundation for continued development in the next stages.
+**Gilat Kedem & Shira Amar** 
